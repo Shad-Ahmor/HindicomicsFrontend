@@ -1,0 +1,46 @@
+Apply zoom effect to the parent card and image
+.zoom-card {
+  margin-right: 20px;
+  display: inline-block;
+  border-radius: 15px; /* Rounded corners */
+  background: rgba(255, 255, 255, 0.3); /* Translucent white background for glass effect */
+  backdrop-filter: blur(10px); /* Frosted glass blur effect */
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2), -4px -4px 15px rgba(255, 255, 255, 0.4); /* Softer neumorphism shadow */
+  transition: transform 0.3s ease-in-out; /* Smooth transition for card zoom */
+  overflow: hidden; /* Prevent overflow for rounded corners */
+  position: relative; /* To position the reflection within the parent div */
+}
+
+.zoom-card:hover {
+  transform: scale(1.1); /* Scale the entire card on hover */
+}
+
+/* Apply zoom effect to the image */
+.zoom-image {
+  transition: transform 0.3s ease-in-out; /* Smooth zoom transition for image */
+}
+
+.zoom-card:hover .zoom-image {
+  width: 100rem; /* Increase the width when hovered */
+  min-width: 20rem;
+  height: 50vh;
+  padding-bottom: 20px;
+}
+/* CSS to hide filename initially */
+.zoom-card .filename {
+  opacity: 0; /* Hide the filename by default */
+  transition: opacity 0.3s ease-in-out; /* Smooth transition when it appears */
+  position: absolute;
+  bottom: 0; /* Position it at the bottom of the image */
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  background: #4d0099; /* Slightly dark background for better contrast */
+  color: #fff; /* White text color */
+  font-weight: bold;
+}
+
+/* Show filename when hovering over the image */
+.zoom-card:hover .filename {
+  opacity: 1; /* Show filename when the image is hovered */
+}

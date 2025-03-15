@@ -1,0 +1,238 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+@media (min-width: 600px) {
+  .css-1jj9qdu-MuiDrawer-docked .MuiDrawer-paper {
+    width: 70px !important;
+  }
+}
+.css-1lwhjos-MuiPaper-root-MuiDrawer-paper {
+  background-color: #eaf7ff !important;
+}
+.css-k008qs {
+    width: 100% !important;
+}
+.css-cfd5wn-MuiListItem-root {
+  padding-left: 0px !important; 
+  padding-right: 0px !important;
+
+}
+.css-1h7jg92 {
+  margin-left: 0px !important;
+}
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* General Styles */
+/* Body Styling */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* App Layout */
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  position: relative;
+  padding: 50px;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 240px;
+  background-color: #2f3136;
+  color: white;
+  padding-top: 20px;
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.sidebar .logo {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #61dafb;
+}
+
+.sidebar nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar nav ul li {
+  margin: 15px 0;
+}
+
+.sidebar nav ul li a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.sidebar nav ul li a:hover {
+  background-color: #3a3f47;
+  border-radius: 5px;
+}
+
+.sidebar .link {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .link svg {
+  margin-right: 10px;
+}
+
+/* Main Content Styling */
+.mainContent {
+  margin-left: 240px;
+  padding: 20px;
+  flex: 1;
+}
+
+/* Card Styling */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 250px;
+  margin-bottom: 20px;
+}
+
+.imageContainer {
+  margin-right: 12px;
+}
+
+.image {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+}
+
+.cardContent {
+  flex: 1;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.role {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Toggle Button Styling */
+.toggleButton {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+
+  position: absolute;
+  top: 130px;
+  left: 46%;
+  transform: translateX(-50%);
+
+}
+
+/* Tree Node Styling */
+.treeNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: 40px;
+  transition: transform 0.3s ease;
+}
+
+/* Centered Card Header Styling */
+.cardHeader {
+  display: grid;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Children Nodes Styling - Left/Right Layout */
+.childrenContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 40px;
+  margin-top: 30px;
+  position: relative;
+}
+
+/* Vertical Line (connecting nodes) */
+.verticalLine {
+  width: 2px;
+  background-color: #ccc;
+  height: 30px;
+  position: absolute;
+  top: -0px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Child Nodes (horizontal arrangement) */
+.childNodes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* Adjust the margin for the nested child nodes */
+.childNodes .treeNode {
+  margin-left: 0;
+  margin-top: 20px;
+}

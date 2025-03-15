@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* main{
+  max-width: 99vw;
+} */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+/* Add this style in your CSS file or as a style in your JSX */
+.css-8epspg-MuiPaper-root-MuiCard-root {
+  max-height: 30vh;  /* Set the max height to 50% of the viewport height */
+  overflow: hidden;  /* Hide the overflowing content */
+}
+
+.submitcard {
+  margin: 30px;
+  border-radius: 8px;
+  padding: 10px 15px;
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+}
+
+.neumorphcard{
+  margin: 0px 0px 60px 0px;
+  max-width: 80rem;
+  border-radius: 30px;
+background: #f7f7f7;
+box-shadow:  26px 26px 53px #dbdada,
+             -26px -26px 53px #ffffff;
+}

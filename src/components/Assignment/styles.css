@@ -1,0 +1,12 @@
+/* styles.css */
+
+.assigned-status {
+    background-color: #28a745; /* Green */
+    color: white;
+  }
+  
+  .expired-status {
+    background-color: #d4edda; /* Light Green */
+    color: black;
+  }
+  
