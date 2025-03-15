@@ -28,7 +28,7 @@ function App() {
   useEffect(() => {
     const fetchFirebaseConfig = async () => {
       try {
-        const response = await fetch("https://hindicomicsbackend.onrender.com/firebase-config");
+        const response = await fetch("https://hindicomicsbackend.onrender.com/api/firebase-config");
         if (response.ok) {
           const encryptedConfig = await response.json(); // Get encrypted config as JSON
           const decryptedConfig = {};
