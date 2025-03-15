@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for redire
 
 // Configure axios instance (for example, in a central axios.js file)
 const api = axios.create({
-  baseURL: 'http://localhost:5000', // Your base URL
+  baseURL: 'https://hindicomicsbackend.onrender.com', // Your base URL
 });
 
 // Add response interceptor to handle token expiration (401 Unauthorized)

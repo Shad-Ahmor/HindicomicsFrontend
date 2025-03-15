@@ -133,7 +133,7 @@ const Sidebar = ({  Setuserimg,open, handleDrawerClose, isLoggedIn, role, setIsL
 
 
       const response = await axios.post(
-        `https://hindicomicsbackend.onrender.comapi/role-permission`,
+        `https://hindicomicsbackend.onrender.com/role-permission`,
         {
           role: decryptrole,
           userId: userlocal,
