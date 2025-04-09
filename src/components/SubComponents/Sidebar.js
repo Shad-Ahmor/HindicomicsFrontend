@@ -79,7 +79,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const Sidebar = ({  Setuserimg,open, handleDrawerClose, isLoggedIn, role, setIsLoggedIn, setRole, setError, setSuccess, setLoading, history, firebase }) => {
   const theme = useTheme();
   const [finalrole, setFinalRole] = useState([]);
-
+  const couusesenc=localStorage.getItem("course")
+  const coursesdec = decryptData(couusesenc)
   const navigate = useNavigate();
   // State to hold user profile data
   const [userProfile, setUserProfile] = useState({
@@ -133,7 +134,7 @@ const Sidebar = ({  Setuserimg,open, handleDrawerClose, isLoggedIn, role, setIsL
 
 
       const response = await axios.post(
-        `https://hindicomicsbackend.onrender.com/role-permission`,
+        `https://hindicomicsbackend.onrender.com/api/role-permission`,
         {
           role: decryptrole,
           userId: userlocal,
@@ -154,7 +155,10 @@ const Sidebar = ({  Setuserimg,open, handleDrawerClose, isLoggedIn, role, setIsL
     fetchpermission();
   }, []);
   const usersubrole = localStorage.getItem('subrole');
+  const userroles = localStorage.getItem('role');
   const decryptsubrole = decryptData(usersubrole)
+  const decryptroles = decryptData(userroles);
+
   return (
     <div>
    <Drawer variant="permanent" open={open}>
@@ -183,7 +187,7 @@ const Sidebar = ({  Setuserimg,open, handleDrawerClose, isLoggedIn, role, setIsL
         <Divider />
         
         <Divider sx={{ backgroundColor: '#fff' }} />
-        <MenuBar decryptsubrole={decryptsubrole} open={open} handleNavigate={handleNavigate} hasPermission={hasPermission} isLoggedIn={isLoggedIn} handleLoginButtonClick={handleLoginButtonClick} handleLogoutButtonClick={handleLogoutButtonClick}/>
+        <MenuBar coursesdec={coursesdec} decryptroles={decryptroles} decryptsubrole={decryptsubrole} open={open} handleNavigate={handleNavigate} hasPermission={hasPermission} isLoggedIn={isLoggedIn} handleLoginButtonClick={handleLoginButtonClick} handleLogoutButtonClick={handleLogoutButtonClick}/>
       </Drawer>
     </div>
   );

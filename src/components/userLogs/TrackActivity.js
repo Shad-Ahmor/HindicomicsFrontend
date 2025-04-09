@@ -12,10 +12,10 @@ const TrackActivity = ({ startTime, userId, page }) => {
         const token = localStorage.getItem('token');
         if (!token) {
           console.error('Token not found.');
-          navigate('/'); 
+          navigate('/login'); 
           return;
         }
-        const { data } = await api.post('https://hindicomicsbackend.onrender.comusers', { database: 'main' }, {
+        const { data } = await api.post('/users', { database: 'main' }, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -40,10 +40,10 @@ const TrackActivity = ({ startTime, userId, page }) => {
           const token = localStorage.getItem('token');
           if (!token) {
             console.error('Token not found.');
-            navigate('/');  // Redirect to login if no token exists
+            navigate('/login');  // Redirect to login if no token exists
             return;
           }
-          await api.post('https://hindicomicsbackend.onrender.comuseractivity/track', {
+          await api.post('/useractivity/track', {
             userEmail,
             page,
             sessionDuration,

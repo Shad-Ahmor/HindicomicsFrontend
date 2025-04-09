@@ -14,7 +14,7 @@ const JokeForm = ({ jokeId, onSave }) => {
     if (jokeId) {
       const fetchJoke = async () => {
         try {
-          const response = await api.get(`https://hindicomicsbackend.onrender.comjokes/${jokeId}`);
+          const response = await api.get(`/jokes/${jokeId}`);
           const { category, joke, likes, dislikes } = response.data;
           setCategory(category);
           setJoke(joke);
@@ -35,14 +35,14 @@ const JokeForm = ({ jokeId, onSave }) => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('Token not found.');
-      navigate('/');  // Redirect to login if no token exists
+      navigate('/login');  // Redirect to login if no token exists
       return;
     }
     try {
       if (jokeId) {
         // Edit existing joke
         const response = await api.put(
-          `https://hindicomicsbackend.onrender.comjokes/${jokeId}`,
+          `/jokes/${jokeId}`,
           jokeData,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -54,7 +54,7 @@ const JokeForm = ({ jokeId, onSave }) => {
       } else {
         // Add new joke
         const response = await api.post(
-          `https://hindicomicsbackend.onrender.comjokes/create`,
+          `/jokes/create`,
           jokeData,
           {
             headers: { Authorization: `Bearer ${token}` },

@@ -17,6 +17,14 @@
     width: 70px !important;
   }
 }
+.css-l31w18 {
+   -webkit-flex-grow: 0 !important;
+}
+.css-5akcb5-MuiContainer-root {
+   max-width: 100% !important; 
+   background-color: #fbffff !important;
+
+}
 .css-1lwhjos-MuiPaper-root-MuiDrawer-paper {
   background-color: #eaf7ff !important;
 }
@@ -235,4 +243,56 @@ body {
 .childNodes .treeNode {
   margin-left: 0;
   margin-top: 20px;
+}
+
+
+
+.threeDbutton{
+  transform: rotate(0deg) skewX(14deg);
+
+}
+.threeDbutton  .loginpassword{
+  list-style: none;
+  margin: 0 5px;
+  text-decoration: none;
+  margin: 20px 50px;
+  display: absolute;
+  display: block;
+  background: #fff;
+  
+  transform: perspective(500px) rotateX(15deg) rotateY(-5deg);
+  box-shadow: -30px 40px 20px rgba(0, 0, 0, 0.8);
+}
+
+.threeDbutton .loginemail{
+  list-style: none;
+  margin: 0 5px;
+  text-decoration: none;
+  margin: 20px 50px;
+  display: absolute;
+  display: block;
+  background: #fff;
+  
+  transform: perspective(500px) rotateX(15deg) rotateY(-5deg);
+  box-shadow: -30px 40px 20px rgba(0, 0, 0, 0.8);
+}
+.threeDbutton button{
+
+  margin: 20px 50px;  
+  transform: perspective(500px) rotateX(15deg) rotateY(-5deg);
+  box-shadow: -20px 10px 20px rgba(160, 141, 88, 0.8);
+}
+
+.css-1adel2b-MuiPaper-root-MuiTableContainer-root {
+  margin: 0 !important;
+  padding: 0% !important;
+  max-width: 100% !important;
+}
+.css-phtu12 {
+min-height: 50vh !important;
+}
+
+.css-18c608r {
+  min-height: 50vh !important;
+
 }

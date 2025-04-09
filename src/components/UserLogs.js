@@ -29,10 +29,10 @@ const UserLogs = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }      
-      const response = await api.get('https://hindicomicsbackend.onrender.comuserlogs', {
+      const response = await api.get('/userlogs', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -62,10 +62,10 @@ const UserLogs = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
-            const response = await api.post('https://hindicomicsbackend.onrender.comusers', { database: 'users' }, {
+            const response = await api.post('/users', { database: 'users' }, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

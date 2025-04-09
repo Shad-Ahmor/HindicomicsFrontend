@@ -7,29 +7,46 @@ const api = axios.create({
 });
 
 // Add response interceptor to handle token expiration (401 Unauthorized)
+
+
+// Add response interceptor to handle token expiration (401 Unauthorized)
 api.interceptors.response.use(
   (response) => response, // Pass the response as is if it's successful
+  
   async (error) => {
-    if (error.response && error.response.status === 401) {
+    const token = localStorage.getItem('token');
+    
+    // Check if token is missing or expired
+    if (!token || error.response?.status === 401) {
+      console.error('Token is missing or expired');
+      
+      // Call the backend logout API to invalidate the token
       try {
-        // Send a request to the logout API to invalidate the token
-        await axios.post('https://hindicomicsbackend.onrender.comlogout');  // Replace with your actual logout endpoint
-        
-        // After logout, clear the local storage
-        localStorage.removeItem('token');
-        localStorage.removeItem('role');
-        localStorage.removeItem('uid');
-        
-        // Use navigate from react-router-dom to redirect to the login page
-        const navigate = useNavigate();
-        navigate('/login');  // Redirect user to the login page
-
+        await axios.post(
+          'https://hindicomicsbackend.onrender.com/auth/logout', 
+          {}, 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Send the token to the backend for logout
+            },
+          }
+        );
       } catch (logoutError) {
-        console.error('Error during logout:', logoutError);
+        console.error('Error during logout API call:', logoutError);
       }
+
+      // Clear local storage if token is missing or expired
+      localStorage.clear();
+
+      // Redirect to login page
+      const navigate = useNavigate();
+      navigate('/login');  // Redirect user to the login page
     }
+    
     return Promise.reject(error);  // Return the error for the caller to handle
   }
 );
+
+
 
 export default api;

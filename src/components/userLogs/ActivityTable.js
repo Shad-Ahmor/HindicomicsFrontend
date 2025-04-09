@@ -16,7 +16,7 @@ const ActivityTable = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
       if (!userId || !token) {
@@ -28,7 +28,7 @@ const ActivityTable = () => {
       try {
         // Sending POST request with userId in the body
         const response = await api.post(
-          'https://hindicomicsbackend.onrender.comuseractivity/logs', 
+          '/useractivity/logs', 
           { userId },
           { headers: { Authorization: `Bearer ${token}` } }
         );

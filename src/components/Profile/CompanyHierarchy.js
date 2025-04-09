@@ -15,11 +15,11 @@ export default function CompanyHierarchy() {
             const token = localStorage.getItem('token');
             if (!token) {
               console.error('Token not found.');
-              navigate('/');  // Redirect to login if no token exists
+              navigate('/login');  // Redirect to login if no token exists
               return;
             }    
             // Fetch organization data
-            const response = await api.get('https://hindicomicsbackend.onrender.comusers/organization', {
+            const response = await api.get('/users/organization', {
               headers: {
                 Authorization: `Bearer ${token}`, // Pass the token in the header
               },

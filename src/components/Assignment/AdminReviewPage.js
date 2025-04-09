@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
-import { Container, IconButton , Select,MenuItem,Grid, Typography, Box, CircularProgress, TextField } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Container, IconButton, Select, MenuItem, Grid, Typography, Box, CircularProgress, TextField, Table, TableHead, TableBody, TableRow, TableCell, TableContainer, Paper } from '@mui/material';
 import { CheckCircle, Cancel, Edit } from '@mui/icons-material'; // Import colorful icons
 
 const AdminReviewPage = () => {
@@ -19,10 +18,10 @@ const AdminReviewPage = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
-      const response = await api.get('https://hindicomicsbackend.onrender.comassignments/finalsubmission', {
+      const response = await api.get('/assignments/finalsubmission', {
         headers: {
           Authorization: `Bearer ${token}`,
         }
@@ -34,9 +33,8 @@ const AdminReviewPage = () => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-  
 
+  useEffect(() => {
     fetchAssignments();
   }, []);
 
@@ -46,11 +44,11 @@ const AdminReviewPage = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
       const response = await api.post(
-        'https://hindicomicsbackend.onrender.comassignments/final-review', 
+        '/assignments/final-review',
         { taskId, action, rating, comments, uid },
         {
           headers: {
@@ -67,91 +65,95 @@ const AdminReviewPage = () => {
     }
   };
 
-  const columns = [
-    { field: 'taskId', headerName: 'Task Id', width: 150 },
-    { field: 'taskName', headerName: 'Task Name', width: 200 },
-    { field: 'internName', headerName: 'Intern Name', width: 150 },
-    { field: 'managerStatus', headerName: 'Manager Status', width: 150 },
-    { field: 'adminStatus', headerName: 'Admin Status', width: 150 },
-    { field: 'marks', headerName: 'Marks', width: 100 },
-    { field: 'action', headerName: 'Action', width: 500, renderCell: (params) => (
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-        
-   
-   <Select
-          label="Rating"
-          value={rating}
-          onChange={(e) => setRating(e.target.value)}
-          disabled={params.row.adminStatus === 'approved' || params.row.adminStatus === 'rejected'}
-          sx={{ width: '80px', marginRight: 1 }}
-        >
-          <MenuItem value="A">A</MenuItem>
-          <MenuItem value="B">B</MenuItem>
-          <MenuItem value="C">C</MenuItem>
-          <MenuItem value="D">D</MenuItem>
-        </Select>
-        {/* Comments Input */}
-        <TextField
-          label="Comments"
-          value={comments}
-          onChange={(e) => setComments(e.target.value)}
-          disabled={params.row.adminStatus === 'approved' || params.row.adminStatus === 'rejected'}
-          sx={{ width: '200px', marginRight: 1 }}
-        />
-
-<IconButton
-          color="success"
-          disabled={params.row.adminStatus === 'approved' || params.row.adminStatus === 'rejected'}
-          onClick={() => handleReviewSubmission(params.row.taskId, 'approve', params.row.uid)}
-          sx={{ marginRight: 1 }}
-        >
-          <CheckCircle />
-        </IconButton>
-
-        <IconButton
-          color="error"
-          disabled={params.row.adminStatus === 'approved' || params.row.adminStatus === 'rejected'}
-          onClick={() => handleReviewSubmission(params.row.taskId, 'reject', params.row.uid)}
-          sx={{ marginRight: 1 }}
-        >
-          <Cancel />
-        </IconButton>
-
-        <IconButton
-          color="warning"
-          disabled={params.row.adminStatus === 'approved' || params.row.adminStatus === 'rejected'}
-          onClick={() => handleReviewSubmission(params.row.taskId, 'modify', params.row.uid)}
-          sx={{ marginRight: 1 }}
-        >
-          <Edit />
-        </IconButton>
-     
-      </Box>
-    )},
-  ];
-
-  const rows = assignments.map((task) => ({
-    id: task.taskId,
-    taskId: task.taskId,
-    taskName: task.taskName,
-    internName: task.submissions[0].email,
-    managerStatus: task.submissions[0].managerStatus,
-    adminStatus: task.submissions[0].adminStatus,
-    marks: task.submissions[0].marks,
-    uid: task.submissions[0].uid,
-  }));
-
   return (
     <Container maxWidth="lg" sx={{ padding: '2rem' }}>
       <Typography variant="h6" gutterBottom>
         Admin Review Page
       </Typography>
 
-      {/* Display DataGrid */}
+      {/* Display Loading Indicator */}
       {loading ? (
         <CircularProgress />
       ) : (
-        <DataGrid rows={rows} columns={columns} pageSize={5} />
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Task Id</TableCell>
+                <TableCell>Task Name</TableCell>
+                <TableCell>Intern Name</TableCell>
+                <TableCell>Manager Status</TableCell>
+                <TableCell>Admin Status</TableCell>
+                <TableCell>Marks</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {assignments.map((task) => (
+                <TableRow key={task.taskId}>
+                  <TableCell>{task.taskId}</TableCell>
+                  <TableCell>{task.taskName}</TableCell>
+                  <TableCell>{task.submissions[0].email}</TableCell>
+                  <TableCell>{task.submissions[0].managerStatus}</TableCell>
+                  <TableCell>{task.submissions[0].adminStatus}</TableCell>
+                  <TableCell>{task.submissions[0].marks}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                      <Select
+                        label="Rating"
+                        value={rating}
+                        onChange={(e) => setRating(e.target.value)}
+                        disabled={task.submissions[0].adminStatus === 'approved' || task.submissions[0].adminStatus === 'rejected'}
+                        sx={{ width: '80px', marginRight: 1 }}
+                      >
+                        <MenuItem value="A">A</MenuItem>
+                        <MenuItem value="B">B</MenuItem>
+                        <MenuItem value="C">C</MenuItem>
+                        <MenuItem value="D">D</MenuItem>
+                      </Select>
+
+                      {/* Comments Input */}
+                      <TextField
+                        label="Comments"
+                        value={comments}
+                        onChange={(e) => setComments(e.target.value)}
+                        disabled={task.submissions[0].adminStatus === 'approved' || task.submissions[0].adminStatus === 'rejected'}
+                        sx={{ width: '200px', marginRight: 1 }}
+                      />
+
+                      <IconButton
+                        color="success"
+                        disabled={task.submissions[0].adminStatus === 'approved' || task.submissions[0].adminStatus === 'rejected'}
+                        onClick={() => handleReviewSubmission(task.taskId, 'approve', task.submissions[0].uid)}
+                        sx={{ marginRight: 1 }}
+                      >
+                        <CheckCircle />
+                      </IconButton>
+
+                      <IconButton
+                        color="error"
+                        disabled={task.submissions[0].adminStatus === 'approved' || task.submissions[0].adminStatus === 'rejected'}
+                        onClick={() => handleReviewSubmission(task.taskId, 'reject', task.submissions[0].uid)}
+                        sx={{ marginRight: 1 }}
+                      >
+                        <Cancel />
+                      </IconButton>
+
+                      <IconButton
+                        color="warning"
+                        disabled={task.submissions[0].adminStatus === 'approved' || task.submissions[0].adminStatus === 'rejected'}
+                        onClick={() => handleReviewSubmission(task.taskId, 'modify', task.submissions[0].uid)}
+                        sx={{ marginRight: 1 }}
+                      >
+                        <Edit />
+                      </IconButton>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
 
       {/* Status Message */}

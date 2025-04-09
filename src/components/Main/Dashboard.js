@@ -49,7 +49,7 @@ const Dashboard = () => {
           console.error('Token not found');
           return;
         }
-        const response = await api.get('https://hindicomicsbackend.onrender.comdashboard/role-counts', {
+        const response = await api.get('/dashboard/role-counts', {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the header
           },

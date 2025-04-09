@@ -26,11 +26,39 @@ code {
   overflow-y: auto; /* Enable vertical scrolling when content overflows */
 }
 
-.neumorphcard{
+/* Style for Neumorphic Card */
+.neumorphcard {
   margin: 0px 0px 60px 0px;
   max-width: 80rem;
-  border-radius: 30px;
-background: #f7f7f7;
-box-shadow:  26px 26px 53px #dbdada,
-             -26px -26px 53px #ffffff;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff, #ffffff);
+  box-shadow: 
+    10px 10px 20px rgba(0, 0, 0, 0.2),  /* Bottom Right Shadow */
+    -10px -10px 20px rgba(255, 255, 255, 0.7), /* Top Left Shadow */
+    10px 10px 30px rgba(0, 0, 0, 0.3),  /* Bottom Right Shadow (deeper) */
+    -10px -10px 30px rgba(255, 255, 255, 0.6), /* Top Left Shadow (deeper) */
+    15px 15px 40px rgba(0, 0, 0, 0.4), /* Bottom Right Larger Shadow */
+    -15px -15px 40px rgba(255, 255, 255, 0.5); /* Top Left Larger Shadow */
+  padding: 20px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Styling for Buttons */
+button, .MuiButton-root {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover, .MuiButton-root:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 -4px 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Shadow Effect for Inputs */
+input[type="text"], textarea, .MuiTextField-root {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus, textarea:focus, .MuiTextField-root:focus-within {
+  box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.2), inset -4px -4px 12px rgba(255, 255, 255, 0.2);
 }

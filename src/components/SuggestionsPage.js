@@ -30,10 +30,10 @@ const SuggestionsPage = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
-            const response = await api.get('https://hindicomicsbackend.onrender.comsuggestions', {
+            const response = await api.get('/suggestions', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSuggestions(response.data);
@@ -56,8 +56,13 @@ const SuggestionsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const token = localStorage.getItem('token');
-        const headers = { Authorization: `Bearer ${token}` };
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found.');
+        navigate('/login');  // Redirect to login if no token exists
+        return;
+      }
+      const headers = { Authorization: `Bearer ${token}` };
 
         let newId = newSuggestion.id || Date.now().toString(); // Generate an ID if missing
 
@@ -70,9 +75,9 @@ const SuggestionsPage = () => {
 
         let response;
         if (isEditing) {
-            response = await axios.put(`https://hindicomicsbackend.onrender.comsuggestions/${selectedSuggestionId}`, suggestionData, { headers });
+            response = await api.put(`/suggestions/${selectedSuggestionId}`, suggestionData, { headers });
         } else {
-            response = await axios.post('https://hindicomicsbackend.onrender.comsuggestions/create', suggestionData, { headers });
+            response = await api.post('/suggestions/create', suggestionData, { headers });
         }
 
         if (response.status === 200 || response.status === 201) {
@@ -104,10 +109,10 @@ const SuggestionsPage = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
-            await api.delete(`https://hindicomicsbackend.onrender.comsuggestions/${id}`, {
+            await api.delete(`/suggestions/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchSuggestions();

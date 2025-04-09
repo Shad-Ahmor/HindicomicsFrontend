@@ -42,9 +42,9 @@ const CouponPage = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
-      }      const response = await api.post('https://hindicomicsbackend.onrender.comusers', { database: 'users' }, {
+      }      const response = await api.post('/users', { database: 'users' }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const userMapping = response.data.reduce((acc, user) => {
@@ -62,10 +62,10 @@ const CouponPage = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
-      const response = await api.get('https://hindicomicsbackend.onrender.comcoupons', {
+      const response = await api.get('/coupons', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const expandedCoupons = response.data.flatMap((coupon) =>
@@ -93,18 +93,24 @@ const CouponPage = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
+
+      if (!token) {
+        console.error('Token not found.');
+        navigate('/login');  // Redirect to login if no token exists
+        return;
+      }
       const headers = { Authorization: `Bearer ${token}` };
       let couponData = { ...newCoupon };
-      
+    
       // Generate a unique ID if not provided
       if (!couponData.id) {
         couponData.id = uuidv4();
       }
       
       if (isEditing) {
-        await api.put(`https://hindicomicsbackend.onrender.comcoupons/${selectedCode}`, couponData, { headers });
+        await api.put(`/coupons/${selectedCode}`, couponData, { headers });
       } else {
-        await axios.post('https://hindicomicsbackend.onrender.comcoupons/create', couponData, { headers });
+        await api.post('/coupons/create', couponData, { headers });
       }
       await fetchCoupons();
       setNewCoupon({ code: '', expiredate: '', id: '', name: '', points: '' });
@@ -134,10 +140,10 @@ const CouponPage = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
-      await api.delete(`https://hindicomicsbackend.onrender.comcoupons/${rowId.split('-')[0]}`, {
+      await api.delete(`/coupons/${rowId.split('-')[0]}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       await fetchCoupons();

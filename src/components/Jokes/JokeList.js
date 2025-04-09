@@ -16,14 +16,14 @@ const JokeList = () => {
     const storedToken = localStorage.getItem('token');
       if (!storedToken) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
     setToken(storedToken); // Correct way to update state with the token
     if (storedToken) {
       const fetchJokes = async () => {
         try {
-          const response = await api.post(`https://hindicomicsbackend.onrender.comjokes`, {
+          const response = await api.post(`/jokes`, {
             database: 'jokes',
           }, {
             headers: {
@@ -48,7 +48,7 @@ const JokeList = () => {
   const handleDelete = async (id) => {
     try {
       await api.delete(
-        `https://hindicomicsbackend.onrender.comjokes/${id}`,
+        `/jokes/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -64,7 +64,7 @@ const JokeList = () => {
     setOpenDialog(false); // Close the dialog
     // Reload jokes after saving
     const fetchJokes = async () => {
-      const response = await api.get(`https://hindicomicsbackend.onrender.comjokes/create`);
+      const response = await api.get(`/jokes/create`);
       setJokes(response.data);
     };
     fetchJokes();

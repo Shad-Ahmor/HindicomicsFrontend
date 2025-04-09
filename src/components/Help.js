@@ -13,6 +13,8 @@ import {
   Typography
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import api from './api';
+import { useNavigate } from 'react-router-dom';
 
 const Help = () => {
   const [helpSettings, setHelpSettings] = useState([]);
@@ -27,15 +29,21 @@ const Help = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedHelpId, setSelectedHelpId] = useState(null);
   const [openForm, setOpenForm] = useState(false);
+  const navigate = useNavigate();
 
   // Fetch existing help settings from the backend
   const fetchHelpSettings = async () => {
     try {
-        const token = localStorage.getItem('token');
-        const rolelocal = localStorage.getItem('role');
-        const userlocal = localStorage.getItem("uid");
-        const response = await axios.post(
-            `https://hindicomicsbackend.onrender.comhelp/`,
+      const rolelocal = localStorage.getItem('role');
+      const userlocal = localStorage.getItem("uid");
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found.');
+        navigate('/login');  // Redirect to login if no token exists
+        return;
+      }
+        const response = await api.post(
+            `/help/`,
             {
               database: "Help",
               role: rolelocal,
@@ -71,6 +79,12 @@ const Help = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found.');
+        navigate('/login');  // Redirect to login if no token exists
+        return;
+      }
+      
       const helpData = {
           id: newHelpSetting.id,
         adminResponse: newHelpSetting.adminResponse,
@@ -83,8 +97,8 @@ const Help = () => {
 
       if (isEditing) {
         // Update existing help setting
-        response = await axios.put(
-          `https://hindicomicsbackend.onrender.comhelp/${selectedHelpId}`,
+        response = await api.put(
+          `/help/${selectedHelpId}`,
           helpData,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -92,8 +106,8 @@ const Help = () => {
         );
       } else {
         // Create a new help setting
-        response = await axios.post(
-          'https://hindicomicsbackend.onrender.comhelp/helpcreate',
+        response = await api.post(
+          '/help/helpcreate',
           helpData,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -140,7 +154,13 @@ const Help = () => {
   const handleDelete = async (helpId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://hindicomicsbackend.onrender.comhelp/${helpId}`, {
+      if (!token) {
+        console.error('Token not found.');
+        navigate('/login');  // Redirect to login if no token exists
+        return;
+      }
+      
+      await api.delete(`/help/${helpId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchHelpSettings();

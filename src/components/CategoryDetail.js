@@ -19,14 +19,14 @@ const CategoryDetail = () => {
         const token = localStorage.getItem('token');
         if (!token) {
           console.error('Token not found.');
-          navigate('/');  // Redirect to login if no token exists
+          navigate('/login');
           return;
         }
         if (!token) {
           console.error('Authorization token is missing');
           return;
         }
-        const response = await api.get(`https://hindicomicsbackend.onrender.comdashboard/category-details/${category}`, {
+        const response = await api.get(`/dashboard/category-details/${category}`, {
           headers: {
             Authorization: `Bearer ${token}`,  // Add token to the request headers
           },

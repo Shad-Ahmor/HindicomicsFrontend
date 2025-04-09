@@ -45,11 +45,11 @@ const AdmobPage = () => {
   // Check if token exists, otherwise skip the request
   if (!token) {
     console.error('Token not found.');
-    navigate('/');  // Redirect to login if no token exists
+    navigate('/login');  // Redirect to login if no token exists
     return;
   }
       const response = await api.post(
-        `https://hindicomicsbackend.onrender.comadmob/`,
+        `/admob/`,
         {
           database: selectedAd,
           role: rolelocal,
@@ -81,8 +81,8 @@ const AdmobPage = () => {
     localStorage.removeItem('uid');
 
     // Redirect to login page
-    navigate('/');
-  };
+    navigate('/login');
+    };
   // Handle form input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -108,7 +108,7 @@ const AdmobPage = () => {
       const token = localStorage.getItem('token'); // Retrieve token from localStorage for authentication
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
          
@@ -118,7 +118,7 @@ const AdmobPage = () => {
       if (isEditing) {
         // If editing, send PUT request to update existing Admob setting
         response = await api.put(
-          `https://hindicomicsbackend.onrender.comadmob/${selectedAd}`, // Use selectedAd for the Admob ID to be updated
+          `/admob/${selectedAd}`, // Use selectedAd for the Admob ID to be updated
           newAdmobData,
           {
             headers: { Authorization: `Bearer ${token}` }, // Pass token for authentication
@@ -127,7 +127,7 @@ const AdmobPage = () => {
       } else {
         // If adding a new Admob setting, send POST request to create a new one
         response = await api.post(
-          `https://hindicomicsbackend.onrender.comadmob/addads`, // Endpoint to create a new Admob setting
+          `/admob/addads`, // Endpoint to create a new Admob setting
           newAdmobData,
           {
             headers: { Authorization: `Bearer ${token}` }, // Pass token for authentication
@@ -184,11 +184,11 @@ const handleEdit = (adId) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
-        return;
+        navigate('/login');
+                return;
       }
       await api.delete(
-        `https://hindicomicsbackend.onrender.comadmob/${adId}`, // Use the selectedDatabase and filename in the URL
+        `/admob/${adId}`, // Use the selectedDatabase and filename in the URL
         {
           headers: { Authorization: `Bearer ${token}` },
         }

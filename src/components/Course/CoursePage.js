@@ -9,7 +9,7 @@ const CoursePage = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`https://hindicomicsbackend.onrender.comcourses/${courseId}`); // API call to get course details
+        const res = await axios.get(`/courses/${courseId}`); // API call to get course details
         setCourse(res.data); // Set course details in state
       } catch (error) {
         console.error("Error fetching course details", error);

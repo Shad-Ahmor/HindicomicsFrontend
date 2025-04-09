@@ -33,7 +33,7 @@ const Users = ({ role, userId }) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
             const rolelocal = localStorage.getItem('role') ;
@@ -44,7 +44,7 @@ const Users = ({ role, userId }) => {
         throw new Error("Token is missing");
       }
   
-      const response = await api.post("https://hindicomicsbackend.onrender.comusers", {
+      const response = await api.post("/users", {
         database: 'users',
       }, {
         headers: {
@@ -98,11 +98,11 @@ const Users = ({ role, userId }) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
            
-      await api.delete(`https://hindicomicsbackend.onrender.comusers/${userId}`, {
+      await api.delete(`/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchUsers(); // Re-fetch users after deletion
@@ -146,10 +146,10 @@ const Users = ({ role, userId }) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
-            const response = await api.put(`https://hindicomicsbackend.onrender.comusers/${newUser.uid}`, updatedUserData, {
+            const response = await api.put(`/users/${newUser.uid}`, updatedUserData, {
         headers: { Authorization: `Bearer ${token}` },
       });
   

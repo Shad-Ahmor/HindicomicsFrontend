@@ -3,12 +3,17 @@ import { Button, MenuItem, Select, InputLabel, FormControl, Container, Box, Dial
 import Cookies from "js-cookie";
 import api from './api';
 import { useNavigate } from 'react-router-dom';
+import { decryptData } from "./Security/cryptoUtils";
 
 const ComicsBulkUpload = () => {
-    const [jsonData, setJsonData] = useState(""); // State to hold the pasted JSON
+  const [jsonData, setJsonData] = useState(""); // State to hold the pasted JSON
   const [message, setMessage] = useState(""); // State for messages
-  const [selectedDatabase, setSelectedDatabase] = useState("Comics"); // Default database
+  const rolelocal = decryptData(localStorage.getItem('role')); // Assuming `decryptData` function is used to decrypt the stored role
+  const [selectedDatabase, setSelectedDatabase] = useState(rolelocal === "intern" ? "ComicsDemo" : "Comics"); // Default database
   const navigate = useNavigate();
+
+  // Define the default database options based on user role
+  const defaultDatabases = rolelocal === "intern" ? ["ComicsDemo", "EducationDemo", "ReligiousDemo"] : ["Comics", "Education", "Religious"];
 
   const handleDatabaseChange = (e) => {
     setSelectedDatabase(e.target.value); // Update the selected database
@@ -23,31 +28,33 @@ const ComicsBulkUpload = () => {
       setMessage("Please paste valid JSON data.");
       return;
     }
-
+  
     try {
       const parsedData = JSON.parse(jsonData); // Try parsing the pasted JSON data
-
+  
       if (!Array.isArray(parsedData)) {
         setMessage("Invalid JSON format. Expected an array of comics.");
         return;
       }
-
+  
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
+  
       const response = await api.post(
-        `https://hindicomicsbackend.onrender.comcomics/upload/${selectedDatabase}`,
+        `/comics/upload/${selectedDatabase}`, 
         { comics: parsedData }, // Send the parsed JSON as part of the request body
         {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         }
       );
-
+  
       if (response.status === 200) {
         setMessage("Bulk comics uploaded successfully.");
+        setJsonData("");  // Clear the textarea after successful upload
       } else {
         setMessage("Error uploading comics.");
       }
@@ -56,6 +63,7 @@ const ComicsBulkUpload = () => {
       setMessage("Error uploading comics. Please check the format.");
     }
   };
+  
 
   // Modal state
   const [open, setOpen] = useState(false);
@@ -79,40 +87,40 @@ const ComicsBulkUpload = () => {
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>Bulk Upload Comics</DialogTitle>
         <DialogContent>
-        <Box sx={{ mb: 2, color: "gray" }}>
+          <Box sx={{ mb: 2, color: "gray" }}>
             <strong>Expected JSON Format:</strong>
             <pre>
-              {`[
-  {
-    "name": "Comic Name",
-    "Date": "2025-02-02",
-    "Discription": "Description of the comic",
-    "Premium": true,
-    "Tag": "Action",
-    "category": "Adventure",
-    "filename": "comic-1",
-    "fileurl": "https://example.com/comic-1.pdf",
-    "imageurl": "https://example.com/comic-1.jpg",
-    "imgurl": "https://example.com/comic-1-small.jpg",
-    "nov": 100
-  },
-  {
-    "name": "Comic Name 2",
-    "Date": "2025-02-03",
-    "Discription": "Description of comic 2",
-    "Premium": false,
-    "Tag": "Drama",
-    "category": "Fantasy",
-    "filename": "comic-2",
-    "fileurl": "https://example.com/comic-2.pdf",
-    "imageurl": "https://example.com/comic-2.jpg",
-    "imgurl": "https://example.com/comic-2-small.jpg",
-    "nov": 200
-  }
-]`}
+              {`[{
+  "name": "Comic Name",
+  "Date": "2025-02-02",
+  "Discription": "Description of the comic",
+  "Premium": true,
+  "Tag": "Action",
+  "category": "Adventure",
+  "filename": "comic-1",
+  "fileurl": "https://example.com/comic-1.pdf",
+  "imageurl": "https://example.com/comic-1.jpg",
+  "imgurl": "https://example.com/comic-1-small.jpg",
+  "nov": 100
+},
+{
+  "name": "Comic Name 2",
+  "Date": "2025-02-03",
+  "Discription": "Description of comic 2",
+  "Premium": false,
+  "Tag": "Drama",
+  "category": "Fantasy",
+  "filename": "comic-2",
+  "fileurl": "https://example.com/comic-2.pdf",
+  "imageurl": "https://example.com/comic-2.jpg",
+  "imgurl": "https://example.com/comic-2-small.jpg",
+  "nov": 200
+}]`}
             </pre>
             <small>Each comic should be an object with the fields shown above. Ensure the entire JSON is wrapped in square brackets ([]) as an array of comics.</small>
           </Box>
+          
+          {/* Dropdown to select Database */}
           <FormControl fullWidth sx={{ mb: 2 }}>
             <InputLabel>Choose Database</InputLabel>
             <Select
@@ -120,15 +128,16 @@ const ComicsBulkUpload = () => {
               value={selectedDatabase}
               onChange={handleDatabaseChange}
             >
-              <MenuItem value="Comics">Comics</MenuItem>
-              <MenuItem value="Education">Education</MenuItem>
-              <MenuItem value="Religious">Religious</MenuItem>
+              {/* Render the database options dynamically based on user role */}
+              {defaultDatabases.map((database) => (
+                <MenuItem key={database} value={database}>
+                  {database}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
           {/* JSON Format Hint */}
-        
-
           <textarea
             rows="10"
             placeholder="Paste JSON here"
@@ -140,6 +149,7 @@ const ComicsBulkUpload = () => {
             {message}
           </Box>
         </DialogContent>
+        
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
             Cancel

@@ -1,0 +1,327 @@
+/* Full-screen layout */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+.css-l31w18 {
+    -webkit-box-flex: 0;
+    }
+.container {
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  height: 100%;
+  margin-top: 10px;
+
+  overflow-y: auto;
+}
+
+.leftsidebar {
+    width: 100%;
+}
+
+/* Header */
+.header {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.courseslist {
+  width: 50%;
+  overflow-y: auto;
+  max-height: 100vh;
+  padding-left: 20px;
+}
+
+.courseImage {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.headerContent {
+  text-align: center;
+}
+
+.courseTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.instructor {
+  font-size: 16px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.statsContainer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statText {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Progress Section */
+.progressContainer {
+  width: 100%;
+  margin-top: 20px;
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.progressBar {
+  height: 8px;
+  background-color: #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #0077B5;
+  border-radius: 4px;
+}
+
+.progressText {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Course Content */
+.contentContainer {
+  width: 100%;
+  margin-top: 20px;
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.section {
+  margin-bottom: 16px;
+}
+
+.sectionHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.sectionHeader:hover {
+  background-color: #f0f0f0;
+}
+
+.sectionHeaderLeft {
+  display: flex;
+  align-items: center;
+}
+
+.sectionHeaderTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.sectionDuration {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Expanded Section */
+.expandedSection {
+  margin-top: 16px;
+}
+
+.lessonsList {
+  margin-top: 16px;
+}
+
+.videoContainer {
+    width: 50vw;
+  position: relative;
+  height: 50vh;
+  padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+  
+  .customVideoPlayer {
+ 
+    width: 50vw !important; /* Full width of the parent container */
+    height: 60vh !important; /* Full height of the parent container */
+  }
+  @media (max-width: 768px) {
+    .videoContainer {
+      height: 300px; /* Or any other height you prefer for mobile */
+    }
+    .customVideoPlayer {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  
+.lessonImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.lessonItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  width: 96%;
+  border: none;
+  border-radius: 20px;
+  background: none;
+  cursor: pointer;
+}
+
+.lessonItem.activeLessonItem {
+  background-color: #f0f8ff;
+}
+
+.lessonItem:hover {
+  background-color: #f9f9f9;
+}
+
+.lessonItemLeft {
+  display: flex;
+}
+
+.lessonDetails {
+  margin-left: 10px;
+}
+
+.lessonTitle {
+  font-weight: bold;
+  margin-right: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.lessonDuration {
+  font-size: 14px;
+  color: #666;
+  margin-left: 15px;
+}
+
+.activeLessonTitle {
+  color: #0077B5;
+  font-weight: 500;
+}
+
+/* Bottom Action Bar */
+.actionBar {
+  width: 100%;
+  background-color: white;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.continueButton {
+  background-color: #0077B5;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.continueButton:hover {
+  background-color: #005f87;
+}
+
+.continueButtonText {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+.activeTab {
+    background-color: #fff;
+    color: #0077B5;
+    border-color: #0077B5;
+    border-bottom: 3px solid #0077B5; /* Add bottom border for active tab */
+  }
+    /* Button Group */
+.tabs {
+    display: flex;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden; /* Ensures the buttons are joined without space */
+    background-color: #f8f8f8;
+    width: 100%;
+  }
+  .tabButton {
+    background-color: #f8f8f8;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    border-radius: 0; /* Remove rounded corners on individual buttons */
+    flex-grow: 1; /* Ensure buttons take equal width */
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .tabButton:hover {
+    background-color: #f0f0f0;
+  }

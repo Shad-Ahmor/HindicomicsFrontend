@@ -2,27 +2,27 @@ import React, { useState, useEffect } from "react";
 import api from './api';
 
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, Grid,Container, Box, Typography, TextField, Dialog, DialogActions, DialogContent, DialogTitle , FormControlLabel, Checkbox, MenuItem, Select, InputLabel, FormControl} from "@mui/material";
+import { Button, Grid,Container, Box,Tooltip , Typography, TextField, Dialog, DialogActions, DialogContent, DialogTitle , FormControlLabel, Checkbox, MenuItem, Select, InputLabel, FormControl} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // import the css for the datepicker
 import { encryptData, decryptData } from './Security/cryptoUtils.js';  // Import the library functions
 import ComicsBulkUpload from "./ComicsBulkUpload";
-
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 const Comics = ({role,userId}) => {
   const [comics, setComics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openForm, setOpenForm] = useState(false); // State to control form dialog visibility
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedDatabase, setSelectedDatabase] = useState("Comics"); // Default database
   const [searchQuery, setSearchQuery] = useState("");
+  
   const navigate = useNavigate();
+  const rolelocal = decryptData(localStorage.getItem('role'));
+  const [selectedDatabase, setSelectedDatabase] = useState(rolelocal === "intern" ? "ComicsDemo" : "Comics"); // Default database
 
-  const [databases, setDatabases] = useState([
-    "Comics", 
-    "Education", 
-    "Religious", // Add the databases you want to show in the dropdown
-  ]);
+  const defaultDatabases = rolelocal === "intern" ? ["ComicsDemo", "EducationDemo", "ReligiousDemo"] : ["Comics", "Education", "Religious"];
   
   const [newComic, setNewComic] = useState({
     name: "",
@@ -53,13 +53,13 @@ const Comics = ({role,userId}) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
-      }      const rolelocal = localStorage.getItem('role') ;
-      const userlocal=localStorage.getItem("uid");
+      }      const rolelocal = decryptData(localStorage.getItem('role')) ;
+      const userlocal=decryptData(localStorage.getItem("uid"));
 
 
-      const response = await api.post("https://hindicomicsbackend.onrender.comcomics", {
+      const response = await api.post("/comics", {
         database: selectedDatabase,
         role: rolelocal,
         userId: userlocal
@@ -107,12 +107,12 @@ const Comics = ({role,userId}) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }  
       // Perform the DELETE request with the selectedDatabase and filename in the URL
       const response = await api.delete(
-        `https://hindicomicsbackend.onrender.comcomics/${selectedDatabase}/${filename}`, // Use the selectedDatabase and filename in the URL
+        `/comics/${selectedDatabase}/${filename}`, // Use the selectedDatabase and filename in the URL
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -131,15 +131,8 @@ const Comics = ({role,userId}) => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-  const filteredComics = comics.filter((comic) => {
-    return (
-      comic.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      comic.filename.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      comic.Discription.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  });
-  
 
+  
   const handleCreateComic = async () => {
     try {
       // Format the date
@@ -166,12 +159,12 @@ const Comics = ({role,userId}) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }  
       // Make the POST request to create a new comic
       const response = await api.post(
-        `https://hindicomicsbackend.onrender.comcomics/${selectedDatabase}`,
+        `/comics/${selectedDatabase}`,
         newComicData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -193,10 +186,13 @@ const Comics = ({role,userId}) => {
   const handleEdit = (id) => {
     const comicToEdit = comics.find((comic) => comic.id === id); // Find the comic by id
     if (comicToEdit) {
+      const validDate = comicToEdit.Date ? new Date(comicToEdit.Date) : null;
+      const formattedDate = validDate instanceof Date && !isNaN(validDate) ? validDate : '';
+
       setNewComic({
         id: comicToEdit.id,  // Make sure the ID is included
         name: comicToEdit.name || "",
-        Date: comicToEdit.Date || "",
+        Date: formattedDate,
         Discription: comicToEdit.Discription || "",
         Premium: comicToEdit.Premium || false,
         Tag: comicToEdit.Tag || "",
@@ -245,12 +241,12 @@ const Comics = ({role,userId}) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }  
       // Perform the PUT request with database and filename in the URL
       const response = await api.put(
-        `https://hindicomicsbackend.onrender.comcomics/${selectedDatabase}/${newComic.filename}`, // Use filename instead of id
+        `/comics/${selectedDatabase}/${newComic.filename}`, // Use filename instead of id
         updatedComicData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -290,44 +286,110 @@ const Comics = ({role,userId}) => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
-
+  const handleViewPdf = (fileurl) => {
+    if (fileurl) {
+      const newfileurl = `https://drive.google.com/file/d/${fileurl}`; // Create the full URL
+      window.open(newfileurl, "_blank"); // Open in a new tab
+    }
+  };
+  
+  const handleViewImage = (imgurl) => {
+    if (imgurl) {
+      window.open(imgurl, "_blank"); // Open in a new tab
+    }
+  };
+  
   const columns = [
-    { field: "name", headerName: "Name", width: 200 },    
-    { field: "filename", headerName: "Filename", width: 200 },
-    { field: "Date", headerName: "Date", width: 150 },
-    { field: "Discription", headerName: "Description", width: 250 },
-    { field: "Premium", headerName: "Premium", width: 150 },
-    { field: "Tag", headerName: "Tag", width: 200 },
-    { field: "category", headerName: "Category", width: 200 },
-    { field: "fileurl", headerName: "File URL", width: 250 },
-    { field: "imageurl", headerName: "Image URL", width: 250 },
-    { field: "imgurl", headerName: "Image URL (Img)", width: 250 },
-    { field: "nov", headerName: "Views", width: 150 },
+    { field: "name", headerName: "Name", width: 250, align: "left" },
+    { field: "filename", headerName: "Filename", width: 200, align: "left" },
+    { field: "Date", headerName: "Date", width: 150, align: "center" },
+    { field: "Discription", headerName: "Description", width: 300, align: "left" },
+    { field: "Premium", headerName: "Premium", width: 150, align: "center" },
+    { field: "Tag", headerName: "Tag", width: 200, align: "center" },
+    { field: "category", headerName: "Category", width: 200, align: "center" },
+    { field: "fileurl", headerName: "File URL", width: 250, align: "left" },
+    { field: "imageurl", headerName: "Image URL", width: 250, align: "left" },
+    { field: "imgurl", headerName: "Image URL (Img)", width: 250, align: "left" },
+    { field: "nov", headerName: "Views", width: 150, align: "center" },
     {
       field: "actions",
       headerName: "Actions",
-      width: 200,
+      width: 250,
+      align: "center",
       renderCell: (params) => {
         return (
           <Box>
-            <Button onClick={() => handleEdit(params.id)} variant="outlined" color="primary">
-              Edit
-            </Button>
-            <Button
-                      onClick={() => handleDelete(params.row.id, params.row.filename)} // Pass both comicId and filename
-                      variant="outlined"
-                      color="secondary"
-                      sx={{ ml: 1 }}
-                    >
-                      Delete
-                    </Button>
-
+            <Tooltip title="Edit">
+              <Button
+                onClick={() => handleEdit(params.id)}
+                variant="outlined"
+                color="primary"
+                startIcon={<EditIcon />}
+                sx={{ mr: 1 }}
+              >
+                Edit
+              </Button>
+            </Tooltip>
+  
+            <Tooltip title="Delete">
+              <Button
+                onClick={() => handleDelete(params.row.id, params.row.filename)} // Pass both comicId and filename
+                variant="outlined"
+                color="secondary"
+                startIcon={<DeleteIcon />}
+              >
+                Delete
+              </Button>
+            </Tooltip>
           </Box>
         );
       },
     },
+    {
+      field: "viewImages",
+      headerName: "View Image",
+      width: 200,
+      align: "center",
+      renderCell: (params) => (
+        <Tooltip title="View Image">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => handleViewImage(params.row.imgurl)}
+            startIcon={<VisibilityIcon />}
+          >
+            View Image
+          </Button>
+        </Tooltip>
+      ),
+    },
+    {
+      field: "viewComics",
+      headerName: "View Comics",
+      width: 200,
+      align: "center",
+      renderCell: (params) => (
+        <Tooltip title="View PDF">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => handleViewPdf(params.row.fileurl)}
+            startIcon={<VisibilityIcon />}
+          >
+            View PDF
+          </Button>
+        </Tooltip>
+      ),
+    },
   ];
-
+  
+  const filteredComics = comics.filter((comic) => {
+    return (
+      comic.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      comic.filename.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      comic.Discription.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
   return (
     <Container>
 
@@ -369,7 +431,7 @@ const Comics = ({role,userId}) => {
           value={selectedDatabase}
           onChange={handleDatabaseChange}
         >
-          {databases.map((database, index) => (
+          {defaultDatabases.map((database, index) => (
             <MenuItem key={index} value={database}>
               {database}
             </MenuItem>
@@ -386,7 +448,7 @@ const Comics = ({role,userId}) => {
       <DialogTitle>{isEditing ? "Edit Comic" : "Add New Comic"}</DialogTitle>
       <DialogContent>
           <TextField
-            label="Name"
+            label="Category Name"
             name="name"
             value={newComic.name}
             onChange={handleFormChange}
@@ -452,14 +514,14 @@ const Comics = ({role,userId}) => {
           <FormControl fullWidth sx={{ mb: 2 }}>
   <InputLabel>Database</InputLabel>
   <Select
-    label="Database"
+    label="Select Database Table"
     name="database"
     value={selectedDatabase} // Bind selected database
     onChange={handleDatabaseChange} // Update selected database
     disabled={isEditing} // Disable when editing
 
   >
-    {databases.map((database, index) => (
+    {defaultDatabases.map((database, index) => (
       <MenuItem key={index} value={database}>
         {database}
       </MenuItem>
@@ -468,7 +530,7 @@ const Comics = ({role,userId}) => {
 </FormControl>
 
           <TextField
-            label="Filename"
+            label="Comics name"
             name="filename"
             value={newComic.filename}
             onChange={handleFormChange}

@@ -26,10 +26,10 @@ const AdminAssignmentPage = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
-        const response = await api.get('https://hindicomicsbackend.onrender.comassignments/createdassignments', {
+        const response = await api.get('/assignments/createdassignments', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -82,12 +82,12 @@ switch (assignment.status) {
 const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
       }
     try {
       await api.post(
-        `https://hindicomicsbackend.onrender.comassignments/assign-task`,
+        `/assignments/assign-task`,
         {
           taskName,
           role,

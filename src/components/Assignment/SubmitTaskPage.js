@@ -8,7 +8,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { red } from '@mui/material/colors';
 
-
 const SubmitTaskPage = () => {
   const [assignedTasks, setAssignedTasks] = useState([]);
   const [taskDetails, setTaskDetails] = useState(null);
@@ -18,6 +17,7 @@ const SubmitTaskPage = () => {
   const [loading, setLoading] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
   const [toggle, setToggle] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState(null); // New state to track selected task
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(1); // Track current page
@@ -29,10 +29,11 @@ const SubmitTaskPage = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('Token not found.');
-        navigate('/');  // Redirect to login if no token exists
+        navigate('/login');  // Redirect to login if no token exists
         return;
-      }      try {
-        const response = await api.get('https://hindicomicsbackend.onrender.comassignments/assignedtasks', {
+      }
+      try {
+        const response = await api.get('/assignments/assignedtasks', {
           headers: {
             Authorization: `Bearer ${token}`,
           }
@@ -55,23 +56,23 @@ const SubmitTaskPage = () => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('Token not found.');
-      navigate('/');  // Redirect to login if no token exists
+      navigate('/login');  // Redirect to login if no token exists
       return;
     }
-        const task = assignedTasks.find((task) => task.taskId === taskId); // Find the task object based on taskId
-    if(task.internStatus === 'closed'){
+    const task = assignedTasks.find((task) => task.taskId === taskId); // Find the task object based on taskId
+    if (task.internStatus === 'closed') {
       setStatusMessage('Task already submitted');
       setLoading(false);
       return;
     }
     try {
       await api.post(
-        'https://hindicomicsbackend.onrender.comassignments/submittask',
+        '/assignments/submittask',
         {
           taskId,
-          assignmentLink: task.internStatus === 'closed' ? '' : assignmentLink, 
-          justification: task.internStatus === 'expired' ? justification : '', 
-          internStatus: justification !== '' ? 'expired' : assignmentLink !== '' ? 'closed' : 'open' 
+          assignmentLink: task.internStatus === 'closed' ? '' : assignmentLink,
+          justification: task.internStatus === 'expired' ? justification : '',
+          internStatus: justification !== '' ? 'expired' : assignmentLink !== '' ? 'closed' : 'open'
         },
         {
           headers: {
@@ -80,6 +81,14 @@ const SubmitTaskPage = () => {
         }
       );
       setStatusMessage('Task submitted successfully. Your status is now closed.');
+
+      // Re-fetch assigned tasks to update status
+      const response = await api.get('/assignments/assignedtasks', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      setAssignedTasks(response.data);
 
     } catch (error) {
       setStatusMessage('Error submitting task: ' + error.response?.data?.message || error.message);
@@ -103,164 +112,197 @@ const SubmitTaskPage = () => {
     setCurrentPage(value);
   };
 
-
+  // Columns for DataGrid (Submission History)
   const columns = [
     { field: 'taskName', headerName: 'Task Name', width: 200 },
     { field: 'submissionDate', headerName: 'Submission Date', width: 200 },
     { field: 'assignmentLink', headerName: 'Assignment Link', width: 250 },
     { field: 'justification', headerName: 'Justification', width: 250 },
     { field: 'internStatus', headerName: 'Status', width: 150 },
-    { field: 'managerStatus', headerName: 'Manager Aproval', width: 150 },
-    { field: 'adminStatus', headerName: 'Admin Aproval', width: 150 },
-
+    { field: 'managerStatus', headerName: 'Manager Approval', width: 150 },
+    { field: 'adminStatus', headerName: 'Admin Approval', width: 150 },
   ];
+
+  // Transform assigned tasks into rows for DataGrid
   const rows = assignedTasks.map((task) => ({
     id: task.taskId,
     taskName: task.taskName,
     submissionDate: task.submissionDate
-    ? moment(task.submissionDate).format('DD-MMM-YYYY') // Using moment.js to format
-    : 'N/A', // Placeholder if there's no submissionDate    assignmentLink: task.assignmentLink,
-   'assignmentLink': task.assignmentLink,
-    justification: task.justification == ''? 'Not Available' : task.justification,
-    internStatus: task.internStatus == 'closed' ? 'Submitted' : 'Not Submitted',
-    managerStatus: task.managerStatus == 'Open' ? 'Pending' : 'Not Approved',
-    adminStatus: task.adminStatus == '' ? 'Pending' : 'Not Approved'
-
+      ? moment(task.submissionDate).format('DD-MMM-YYYY') // Using moment.js to format
+      : 'N/A', // Placeholder if there's no submissionDate
+    assignmentLink: task.assignmentLink,
+    justification: task.justification === '' ? 'Not Available' : task.justification,
+    internStatus: task.internStatus === 'closed' ? 'Submitted' : 'Not Submitted',
+    managerStatus: task.managerStatus === 'Open' ? 'Pending' : 'Not Approved',
+    adminStatus: task.adminStatus === '' ? 'Pending' : 'Not Approved',
   }));
+
   return (
     <>
-    <div className='neumorphcard'>
-
+      <div className='neumorphcard' style={{ background: 'linear-gradient(135deg, #f3f4f6,rgb(243, 246, 255))', minHeight: '100vh' }}>
         <Container maxWidth="lg" sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           {/* Left Side (Assigned Tasks List) */}
           <Box sx={{ width: '50%' }}>
-        
             {dataLoading ? (
               <CircularProgress />
             ) : (
               <div>
                 {currentAssignments.map((assignment) => (
-                
-             <div className='submitcard'>
-             <div
-          id="header"
-          class="header"
-          onClick={() => {
-            setToggle(prev => {
-              return !prev;
-            });
-          }}
-        >
-                      <Typography variant="h5" gutterBottom>{assignment.taskName}</Typography>
-                      <Typography variant="h6" color="textSecondary">Role : {assignment.role}</Typography>
-                      </div>         <div
-          class="content"
-          style={{
-            height: toggle ? "50vh" : "0px", marginBottom: '20px'
-          }}
-        >
-                      <Typography variant="h6" color="textSecondary">Expiry Date : {new Date(assignment.deadline).toLocaleString()}</Typography>
-                      <Typography variant="h6" color="textSecondary">Status : {assignment.status}</Typography>
+                  <Card
+                    key={assignment.taskId}
+                    sx={{
+                      marginBottom: 2,
+                      borderRadius: 1,
+                      padding: 2,
+                      boxShadow: 'none', // No shadow for card
+                      transition: 'all 0.3s ease', // Smooth transition for hover effects
+                      '&:hover': {
+                        backgroundColor: '#e9e9e9', // Light hover effect for the card
+                      },
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => setSelectedTaskId(assignment.taskId)}
+                      disabled={isTaskExpired(assignment.deadline) || assignment.internStatus === 'closed'}
+                      sx={{
+                        boxShadow: 2,
+                        marginBottom: 2,
+                        '&:hover': { boxShadow: 6 },
+                      }}
+                    >
+                      {isTaskExpired(assignment.deadline) || assignment.internStatus === 'closed' ? "Expired/Submitted" : "Select Task"}
+                    </Button>
+
+                    <div
+                      style={{ margin: '10px 0', position: 'static' }}
+                      id="header"
+                      className="header"
+                      onClick={() => setToggle(prev => !prev)}
+                    >
+                      <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', color: '#3c3c3c' }}>
+                        {assignment.taskName}
+                      </Typography>
+                      <Typography variant="h6" color="textSecondary">Role: {assignment.role}</Typography>
+                    </div>
+
+                    <div
+                      className="content"
+                      style={{
+                        height: toggle ? "50vh" : "0px", // Expand height when toggled
+                        marginBottom: '20px',
+                        overflowY: 'auto', // Enable vertical scrolling
+                        maxHeight: '300px', // Set a max height for scrolling content
+                      }}
+                    >
+                      <Typography variant="h6" color="textSecondary">Expiry Date: {new Date(assignment.deadline).toLocaleString()}</Typography>
+                      <Typography variant="h6" color="textSecondary">Status: {assignment.status}</Typography>
                       <Box sx={{ marginTop: '20px' }}>
                         <Typography variant="body1" component="div" dangerouslySetInnerHTML={{ __html: assignment.assignmentDescription }} />
                       </Box>
-                   </div>
-                   </div>
+                    </div>
+                  </Card>
                 ))}
                 <Pagination
                   count={Math.ceil(assignedTasks.length / assignmentsPerPage)}
                   page={currentPage}
                   onChange={handlePageChange}
                   color="primary"
-                  sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px',marginBottom:'20px' }}
+                  sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}
                 />
               </div>
             )}
           </Box>
 
           {/* Right Side (Task Submission) */}
-          {assignedTasks.length > 0 && (
+          {selectedTaskId && (
             <Box sx={{ width: '50%', paddingLeft: '2rem' }}>
-              
-
               <Grid container spacing={2}>
-                {/* Conditionally render Assignment Link or Justification Input */}
-                {isTaskExpired(assignedTasks[0].deadline) ? (
-                  
-                  <Grid item xs={12}>
-                  <Typography variant="h6" gutterBottom>
-                Your assignment submission date has been expired!!
-              </Typography>
-                    <TextField
-                      fullWidth
-                      label="Justification"
-                      variant="outlined"
-                      value={justification}
-                      onChange={(e) => setJustification(e.target.value)}
-                      multiline
-                      rows={4}
-                    />
-                  </Grid>
-                ) : (
-                  
-                  <Grid item xs={12}>
-                  <Typography variant="h6" gutterBottom>
-                Upload your assignment at google drive / github and paste that project link here !!
-              </Typography>
-                    <TextField
-                      fullWidth
-                      label="Assignment Link"
-                      variant="outlined"
-                      value={assignmentLink}
-                      onChange={(e) => setAssignmentLink(e.target.value)}
-                    />
-                  </Grid>
-                )}
+                {/* Find the selected task */}
+                {assignedTasks.find(task => task.taskId === selectedTaskId) && (
+                  <>
+                    {isTaskExpired(assignedTasks.find(task => task.taskId === selectedTaskId).deadline) ? (
+                      <Grid item xs={12}>
+                        <Typography variant="h6" gutterBottom color="error">Your assignment submission date has expired!!</Typography>
+                        <TextField
+                          fullWidth
+                          label="Justification"
+                          variant="outlined"
+                          value={justification}
+                          onChange={(e) => setJustification(e.target.value)}
+                          multiline
+                          rows={4}
+                          sx={{ boxShadow: 2 }}
+                        />
+                      </Grid>
+                    ) : (
+                      <Grid item xs={12}>
+                        <Typography variant="h6" gutterBottom>Upload your assignment at Google Drive / GitHub and paste the link here!</Typography>
+                        <TextField
+                          fullWidth
+                          label="Assignment Link"
+                          variant="outlined"
+                          value={assignmentLink}
+                          onChange={(e) => setAssignmentLink(e.target.value)}
+                          sx={{ boxShadow: 2 }}
+                        />
+                      </Grid>
+                    )}
 
-                {/* Submit Task Button */}
-                <Grid item xs={12}>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleSubmitTask(assignedTasks[0].taskId)}
-                    disabled={loading}
-                  >
-                    {loading ? <CircularProgress size={24} /> : 'Submit'}
-                  </Button>
-                </Grid>
+                    {/* Submit Task Button */}
+                    <Grid item xs={12}>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleSubmitTask(selectedTaskId)}
+                        disabled={loading || assignedTasks.find(task => task.taskId === selectedTaskId).internStatus === 'closed'}
+                        sx={{
+                          boxShadow: 3,
+                          '&:hover': { boxShadow: 6 },
+                        }}
+                      >
+                        {loading ? <CircularProgress size={24} /> : 'Submit'}
+                      </Button>
+                    </Grid>
 
-                {/* Status Message */}
-                {statusMessage && (
-                  <Grid item xs={12}>
-                    <Typography color="primary" variant="body1" align="center">
-                      {statusMessage}
-                    </Typography>
-                  </Grid>
+                    {/* Status Message */}
+                    {statusMessage && (
+                      <Grid item xs={12}>
+                        <Typography color="primary" variant="body1" align="center">
+                          {statusMessage}
+                        </Typography>
+                      </Grid>
+                    )}
+                  </>
                 )}
               </Grid>
             </Box>
           )}
         </Container>
-      
-  </div>
 
-
-  <div className='neumorphcard'>
-    <Typography variant="h6" gutterBottom>
-      Submission History
-    </Typography>
- 
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        checkboxSelection
-      />
-   
-  </div>
-
+        {/* DataGrid for Submission History */}
+        <Box sx={{ marginTop: '20px', width: '100%' }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>Submission History</Typography>
+          <div style={{ height: 400, width: '100%' }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+              disableSelectionOnClick
+              sx={{
+                boxShadow: 3,
+                borderRadius: 2,
+                '& .MuiDataGrid-cell:hover': {
+                  backgroundColor: '#f5f5f5',
+                }
+              }}
+            />
+          </div>
+        </Box>
+      </div>
     </>
   );
 };
