@@ -5,15 +5,15 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@material-ui/core": "^4.12.3",               // Keep @material-ui/core (older version)
-    "@material-ui/icons": "^4.11.3",               // Keep @material-ui/icons (older version)
-    "@mui/icons-material": "^5.16.14",             // MUI v5 icons
-    "@mui/material": "^6.4.7",                     // MUI v5 material
-    "@mui/styles": "^6.4.7",                       // MUI styles
-    "@mui/system": "^6.3.0",                       // MUI system
-    "@mui/x-data-grid": "^7.23.2",                 // MUI Data Grid
-    "@mui/x-date-pickers": "^7.28.2",             // MUI Date pickers
-    "@testing-library/react": "^13.4.0",           // React Testing Library
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.3",
+    "@mui/icons-material": "^5.16.14",
+    "@mui/material": "^6.4.7",
+    "@mui/styles": "^6.4.7",
+    "@mui/system": "^6.3.0",
+    "@mui/x-data-grid": "^7.23.2",
+    "@mui/x-date-pickers": "^7.28.2",
+    "@testing-library/react": "^13.4.0",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.4",
     "crypto-js": "^4.2.0",
@@ -25,7 +25,7 @@
     "lottie-web": "^5.12.2",
     "moment": "^2.30.1",
     "mui-daterange-picker": "^1.0.5",
-    "react": "^18.3.1",                          // React v18
+    "react": "^18.3.1",
     "react-big-calendar": "^1.18.0",
     "react-bootstrap": "^2.10.9",
     "react-date-range": "^1.4.0",
