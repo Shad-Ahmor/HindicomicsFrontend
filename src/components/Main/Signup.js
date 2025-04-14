@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Button, Box, Typography, Container, Snackbar, Alert, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
-import { Grid } from '@mui/system';
+import { TextField, Grid,Button, Box, Typography, Container, Snackbar, Alert, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
