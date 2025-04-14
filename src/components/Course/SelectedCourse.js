@@ -35,6 +35,10 @@ const SelectedCourse = () => {
             course.lessons.map(() => false)  // Initially, no lessons are completed
           );
           setLessonCompletion(initialCompletion);
+
+          // Fetch user progress for the course
+          const userId = 1; // Replace this with the actual userId (could come from the auth context)
+          fetchProgress(userId, courseId); // Fetch progress
         } else {
           console.error('courseSelected is not available');
         }
@@ -46,6 +50,45 @@ const SelectedCourse = () => {
     fetchCourseData();
   }, [courseId]);
 
+  // Fetch user progress
+  const fetchProgress = async (userId, courseId) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(`https://hindicomicsbackend.onrender.com/courses/${userId}/progress/${courseId}`,{
+        headers: {
+          Authorization: `Bearer ${token}`, // Only token in the Authorization header
+        }});
+      const { completedLessons, progress } = response.data;
+      setLessonCompletion(completedLessons);  // Update the state with lesson completion data
+      setProgress(progress);  // Update the progress
+    } catch (error) {
+      console.error('Error fetching progress:', error);
+    }
+  };
+  
+  // Save progress
+  const saveProgress = async (userId, courseId, completedLessons, progress) => {
+    const token = localStorage.getItem("token");
+  
+    try {
+      await axios.put(
+        `https://hindicomicsbackend.onrender.com/courses/${userId}/progress/${courseId}`,
+        {
+          completedLessons,  // This is the body of the request
+          progress           // This is also part of the body of the request
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,  // Correctly setting the token in the Authorization header
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error saving progress:', error);
+    }
+  };
+  
+  
   // Toggle section visibility
   const toggleSection = (index) => {
     setExpandedSection(expandedSection === index ? null : index);
@@ -64,6 +107,11 @@ const SelectedCourse = () => {
     newLessonCompletion[currentSection][currentLesson] = true;
     setLessonCompletion(newLessonCompletion);
     setVideoCompleted(true);
+
+    // Save progress after video completion
+    const userId = 1; // Replace with the actual userId
+    const updatedProgress = calculateProgress();
+    saveProgress(userId, courseId, newLessonCompletion, updatedProgress);
   };
 
   // Calculate course completion progress
@@ -151,31 +199,29 @@ const SelectedCourse = () => {
         <div className="header">
           <div className="videoContainer">
             {currentLesson !== null ? (
-                <ReactPlayer
-  url={courseSelected[Object.keys(courseSelected)[currentSection]]?.lessons[currentLesson]?.videoUrl}
-  className="customVideoPlayer"
-  playing={true}
-  controls={true}
-  onEnded={handleVideoEnded}
-  config={{
-    youtube: {
-      playerVars: {
-        modestbranding: 1,  // Removes YouTube logo
-        rel: 0,  // Prevents showing related videos at the end
-        showinfo: 0,  // Hides video info (like title) before the video starts
-        controls: 1,  // Keeps controls visible
-        iv_load_policy: 3,  // Hides annotations
-        fs: 0,  // Disables fullscreen button (optional)
-        cc_load_policy: 0,  // Disables closed captions (optional)
-        disablekb: 1,  // Disables keyboard controls (optional)
-        enablejsapi: 1,  // Allows for API interactions (optional)
-        modestbranding: 1,  // Additional check for branding removal
-      },
-    },
-  }}
-/>
-
-
+              <ReactPlayer
+                url={courseSelected[Object.keys(courseSelected)[currentSection]]?.lessons[currentLesson]?.videoUrl}
+                className="customVideoPlayer"
+                playing={true}
+                controls={true}
+                onEnded={handleVideoEnded}
+                config={{
+                  youtube: {
+                    playerVars: {
+                      modestbranding: 1,  // Removes YouTube logo
+                      rel: 0,  // Prevents showing related videos at the end
+                      showinfo: 0,  // Hides video info (like title) before the video starts
+                      controls: 1,  // Keeps controls visible
+                      iv_load_policy: 3,  // Hides annotations
+                      fs: 0,  // Disables fullscreen button (optional)
+                      cc_load_policy: 0,  // Disables closed captions (optional)
+                      disablekb: 1,  // Disables keyboard controls (optional)
+                      enablejsapi: 1,  // Allows for API interactions (optional)
+                      modestbranding: 1,  // Additional check for branding removal
+                    },
+                  },
+                }}
+              />
             ) : (
               <div className="courseImageFallback">No video available</div>
             )}

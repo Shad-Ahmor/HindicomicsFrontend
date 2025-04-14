@@ -15,10 +15,10 @@ const Login = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
 
   const [comicImages, setComicImages] = useState({
-    closed: "https://firebasestorage.googleapis.com/v0/b/comics-230dd.appspot.com/o/comicimg%2F2b4e815d-ef55-4345-913b-f32d35911375.jpeg?alt=media&token=e957c5e5-9986-4416-83c4-4d6bd8cafdf1",
-    halfOpen: "https://firebasestorage.googleapis.com/v0/b/comics-230dd.appspot.com/o/comicimg%2Fhalf%20open%20image.jpeg?alt=media&token=129512fd-f96a-44c5-85ef-7d2937c960d8",
-    fullyOpen: "https://firebasestorage.googleapis.com/v0/b/comics-230dd.appspot.com/o/comicimg%2Ffully%20open%20image.jpeg?alt=media&token=e42b46ab-ed40-46fa-acbb-65c93dced7ec",
-    explosion: "https://firebasestorage.googleapis.com/v0/b/comics-230dd.appspot.com/o/comicimg%2Fexplosion%20image.jpeg?alt=media&token=4baf7d07-e465-419a-8ea1-b328f080fafc",
+    closed: '../images/closed.jpeg',
+    halfOpen: "../images/halfOpen.jpeg",
+    fullyOpen: "../images/fullyOpen.jpeg",
+    explosion: "../images/explosion.jpeg",
   });
   const [imageState, setImageState] = useState("closed");
   const [backgroundImage, setBackgroundImage] = useState(comicImages.closed);
