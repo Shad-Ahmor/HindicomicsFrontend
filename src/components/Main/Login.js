@@ -1,72 +1,63 @@
+import "./Login.css";
 import React, { useState, useEffect } from "react";
-import { TextField, Button, Box, Snackbar, Alert, CircularProgress } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Snackbar,
+  Alert,
+  CircularProgress,
+  IconButton
+} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { motion } from "framer-motion";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { encryptData } from '../Security/cryptoUtils.js';
+import { encryptData } from "../Security/cryptoUtils.js";
 import { useNavigate } from "react-router-dom";
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = ({ setShowLogin, setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(""); 
-  const [openSnackbar, setOpenSnackbar] = useState(false); 
+  const [message, setMessage] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const navigate = useNavigate();
 
-  const [comicImages, setComicImages] = useState({
-    closed: '../images/closed.jpeg',
-    halfOpen: "../images/halfOpen.jpeg",
-    fullyOpen: "../images/fullyOpen.jpeg",
-    explosion: "../images/explosion.jpeg",
-  });
   const [imageState, setImageState] = useState("closed");
-  const [backgroundImage, setBackgroundImage] = useState(comicImages.closed);
-  const [formClass, setFormClass] = useState("threeDbutton"); // Add formClass state
+  const [formClass, setFormClass] = useState("threeDbutton");
 
   useEffect(() => {
-    if (imageState === "halfOpen") {
-      setBackgroundImage(comicImages.halfOpen);
-    } else if (imageState === "fullyOpen") {
-      setBackgroundImage(comicImages.fullyOpen);
-    } else if (imageState === "explosion") {
-      setBackgroundImage(comicImages.explosion);
-    } else {
-      setBackgroundImage(comicImages.closed);
-    }
-  }, [imageState]);
+    setTimeout(() => {
+      if (window.$ && window.$(".flipbook").turn) {
+        window.$(".flipbook").turn({
+          width: 950,
+          height:600,
+          autoCenter: true,
+        });
+      } else {
+        console.error("Turn.js did not load properly.");
+      }
+    }, 500);
+  }, []);
 
   const handlePasswordChange = (e) => {
-    setFormClass(imageState === "closed" ? "threeDbutton" : "");
-
     setPassword(e.target.value);
-    if (e.target.value) {
-      setImageState("halfOpen");
-    } else {
-      setImageState("closed");
-    }
-    if (validateEmail(email) && e.target.value.length >= 5) {
-      setImageState("fullyOpen");
-    }
-    
-    // Update formClass based on imageState
+    setFormClass(imageState === "closed" ? "threeDbutton" : "");
   };
 
   const handleEmailChange = (e) => {
-    setFormClass(imageState === "closed" ? "threeDbutton" : "");
-
     setEmail(e.target.value);
     if (validateEmail(e.target.value) && password.length >= 5) {
       setImageState("fullyOpen");
     } else {
       setImageState("halfOpen");
     }
-
-    // Update formClass based on imageState
+    setFormClass(imageState === "closed" ? "threeDbutton" : "");
   };
 
   const validateEmail = (email) => {
-    const re = /^[a-zA-Z0-9._%+-]+@[a-zAZ0-9.-]+\.[a-zA-Z]{2,}$/;
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(email);
   };
 
@@ -78,14 +69,11 @@ const Login = ({ setIsLoggedIn }) => {
     try {
       const response = await fetch("https://hindicomicsbackend.onrender.com/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
-
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -98,7 +86,6 @@ const Login = ({ setIsLoggedIn }) => {
         const encryptedimg = encryptData(data.user.image);
         const encryptedSubRole = encryptData(data.user.subrole);
         const encryptedCourses = encryptData(data.user.courses);
-
         const encryptedUserId = encryptData(data.user.uid);
         const namePart = email.split('@')[0];
         const firstName = namePart.split('.')[0];
@@ -132,159 +119,134 @@ const Login = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "120vh",
-        width: "100%",
-        backgroundColor: "#f4f4f9",
-        overflow: "hidden",
-      }}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        style={{ zIndex: 1 }}
-      ></motion.div>
+    <div className="login-gradient" style={{paddingLeft:'15%'}}>
+      <div className="flipbook">
+        <div className="hard">
+          Hindi Comics
+          <br />
+          <small>~ GDLSoftware</small>
+        </div>
+        <div className="hard"></div>
 
-      <motion.div
-        key={backgroundImage}
-        style={{ zIndex: 0 }}
-        animate={{
-          transition: { duration: 1, ease: "easeInOut" },
-        }}
-        initial={{ rotateY: 0 }}
-      >
-        <Box
-          sx={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: "100% 100%",
-            width: "100%",
-            height: "100vh",
-            position: "fixed",
-            top: 0,
-            left: 0,
-            transition: "background-image 1s ease-in-out",
-          }}
-        />
-      </motion.div>
+        <div className="page">
+          <form className={formClass} onSubmit={handleSubmit} style={{ width: "300px" }}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.6, type: "spring", bounce: 0.3 }}
+            >
+              <TextField
+                fullWidth
+                label="Email"
+                variant="outlined"
+                value={email}
+                onChange={handleEmailChange}
+                margin="normal"
+                InputLabelProps={{ style: { fontFamily: "'Comic Sans MS', cursive", fontWeight: "bold" } }}
+                sx={{
+                  backgroundColor: "#fff8dc",
+                  borderRadius: "12px",
+                  fontFamily: "'Comic Sans MS', cursive",
+                  boxShadow: "4px 4px 0px #000",
+                  "& .MuiOutlinedInput-root": {
+                    fontWeight: "bold",
+                    "& fieldset": { borderColor: "#000", borderWidth: "3px" },
+                    "&:hover fieldset": { borderColor: "#ffcb00" },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#ff9900",
+                      boxShadow: "0px 0px 10px #ffcb00",
+                    },
+                  },
+                }}
+              />
+            </motion.div>
 
-      <form className={formClass} onSubmit={handleSubmit} style={{ width: "300px", zIndex: 1 }}>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
-        >
-          <TextField
-            fullWidth
-            className="loginemail"
-            label="Email"
-            variant="outlined"
-            value={email}
-            onChange={handleEmailChange}
-            margin="normal"
-            sx={{
-              backgroundColor: "rgba(255, 255, 255, 0.8)",
-              borderRadius: "10px",
-              boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)", 
-              transition: "all 0.3s ease-in-out",
-              "& .MuiInputLabel-root": {
-                color: "#e60000",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#e60000",
-                  borderWidth: "2px",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#ffcb00",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#ffcb00",
-                  boxShadow: "0px 0px 15px rgba(255, 203, 0, 0.5)",
-                },
-              },
-              "&:hover": {
-                transform: "translateY(-5px)",
-                boxShadow: "0px 15px 30px rgba(0, 0, 0, 0.4)",
-              },
-            }}
-          />
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.7, duration: 0.6, type: "spring", bounce: 0.3 }}
+            >
+              <TextField
+                fullWidth
+                label="Password"
+                type="password"
+                variant="outlined"
+                value={password}
+                onChange={handlePasswordChange}
+                margin="normal"
+                InputLabelProps={{ style: { fontFamily: "'Comic Sans MS', cursive", fontWeight: "bold" } }}
+                sx={{
+                  backgroundColor: "#fff8dc",
+                  borderRadius: "12px",
+                  fontFamily: "'Comic Sans MS', cursive",
+                  boxShadow: "4px 4px 0px #000",
+                  "& .MuiOutlinedInput-root": {
+                    fontWeight: "bold",
+                    "& fieldset": { borderColor: "#000", borderWidth: "3px" },
+                    "&:hover fieldset": { borderColor: "#ffcb00" },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#ff9900",
+                      boxShadow: "0px 0px 10px #ffcb00",
+                    },
+                  },
+                }}
+              />
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 1 }}
-        >
-          <TextField
-            fullWidth
-            label="Password"
-            className="loginpassword"
-            type="password"
-            variant="outlined"
-            value={password}
-            onChange={handlePasswordChange}
-            margin="normal"
-            sx={{
-              backgroundColor: "rgba(255, 255, 255, 0.8)",
-              borderRadius: "10px",
-              boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)", 
-              transition: "all 0.3s ease-in-out",
-              "& .MuiInputLabel-root": {
-                color: "#e60000",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#e60000",
-                  borderWidth: "2px",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#ffcb00",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#ffcb00",
-                  boxShadow: "0px 0px 15px rgba(255, 203, 0, 0.5)",
-                },
-              },
-              "&:hover": {
-                transform: "translateY(-5px)",
-                boxShadow: "0px 15px 30px rgba(0, 0, 0, 0.4)",
-              },
-            }}
-          />
-        </motion.div>
+            <motion.button
+              type="submit"
+              disabled={loading}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                marginTop: "24px",
+                backgroundColor: "#ffcb00",
+                fontFamily: "'Comic Sans MS', cursive",
+                textTransform: "uppercase",
+                color: "#000",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                transition: "background-color 0.3s ease",
+                animation: "pulse 1s infinite alternate",
+                opacity: loading ? 0.7 : 1,
+              }}
+            >
+              {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
+            </motion.button>
 
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          sx={{
-            marginTop: 3,
-            backgroundColor: "#ffcb00",
-            fontFamily: "'Comic Sans MS', cursive",
-            textTransform: "uppercase",
-            "&:hover": {
-              backgroundColor: "#ff9900",
-            },
-            animation: "pulse 1s infinite alternate",
-          }}
-          disabled={loading}
-        >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
-        </Button>
-      </form>
+            <IconButton color="primary" onClick={() => setShowLogin(false)} aria-label="back">
+              <ArrowBackIcon />
+            </IconButton>
+          </form>
+        </div>
+
+        {/* Comic Pages */}
+        {/* {[1, 2, 3, 4, 5].map((num) => (
+          <div className="page" key={num}>
+            <img src={`/images/img-${num}.png`} alt={`Page ${num}`} />
+            <small>{`Page ${num}`}</small>
+          </div>
+        ))} */}
+
+        <div className="hard"></div>
+        <div className="hard">
+          Thank You
+          <br />
+          <small>~ GDLSoftware</small>
+        </div>
+      </div>
 
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-        <Alert onClose={() => setOpenSnackbar(false)} severity={error ? 'error' : 'success'} sx={{ width: '100%' }}>
+        <Alert onClose={() => setOpenSnackbar(false)} severity={error ? "error" : "success"} sx={{ width: "100%" }}>
           {error || message}
         </Alert>
       </Snackbar>
-    </Box>
+    </div>
   );
 };
 

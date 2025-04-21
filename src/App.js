@@ -5,11 +5,13 @@ import HindiComics from './components/SubComponents/HindiComics';  // Import Hin
 import {  decryptData } from './components/Security/cryptoUtils.js';  // Import the library functions
 import { initializeApp } from "firebase/app";
 import './styles/css/App.css';
+import HeroSection from './3DAnimation/HeroSection.jsx';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);  // Track login state
   const [firebaseConfig, setFirebaseConfig] = useState(null); // Store the fetched Firebase config
   const [error, setError] = useState(""); // To store error messages
+  const [showLogin, setShowLogin] = useState(false); // Add this
 
   // Check if the user is already logged in (e.g., via localStorage or cookies)
   useEffect(() => {
@@ -65,12 +67,18 @@ function App() {
     }
   }, [firebaseConfig]);
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box
+    //  sx={{ display: 'flex' }}
+     >
       {!isLoggedIn ? (
-        <Login setIsLoggedIn={setIsLoggedIn} />
-      ) : (
-        <HindiComics setIsLoggedIn={setIsLoggedIn} />
-      )}
+    showLogin ? (
+      <Login  setShowLogin={setShowLogin}  setIsLoggedIn={setIsLoggedIn} />
+    ) : (
+      <HeroSection setShowLogin={setShowLogin} />
+    )
+  ) : (
+    <HindiComics setIsLoggedIn={setIsLoggedIn} />
+  )}
     </Box>
   );
 }

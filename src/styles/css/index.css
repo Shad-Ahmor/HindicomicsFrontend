@@ -1,18 +1,31 @@
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+
+  font-family:"'Bangers', 'cursive', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen'",
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.03);
+  }
+}
+
 /* main{
   max-width: 99vw;
 } */
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+
 /* Add this style in your CSS file or as a style in your JSX */
 .css-8epspg-MuiPaper-root-MuiCard-root {
   max-height: 30vh;  /* Set the max height to 50% of the viewport height */

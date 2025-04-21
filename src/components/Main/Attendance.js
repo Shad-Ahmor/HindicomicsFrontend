@@ -59,7 +59,30 @@ const Attendance = () => {
         setAlertSeverity(severity);
         setOpenSnackbar(true);
       };
-
+      const markUserAbsent = async () => {
+        if (!userId || !token) return;
+    
+        try {
+            const response = await api.post(
+                `/auth/mark-absents/${userId}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            console.log("Absent status updated:", response.data);
+        } catch (error) {
+            console.error("Error marking user absent:", error);
+        }
+    };
+    useEffect(() => {
+        handleAttendance();
+        markUserAbsent();
+    }, []);
+    
+    
     const fetchAttendance = async () => {
         if (!userId) return; // Ensure userId is not null
         const response = await api.get(`/auth/${userId}`, {
@@ -225,8 +248,27 @@ const Attendance = () => {
         setLeaveType('single');
     };
     const Event = ({ event }) => {
+        let backgroundColor = '';
+        let textColor = 'white';
+    
+        if (event.title === 'Absent') {
+            backgroundColor = 'red';
+        } else if (event.title === 'Leave') {
+            backgroundColor = 'orange';
+        } else {
+            backgroundColor = event.color || 'gray';
+        }
+    
         return (
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '5px', color: 'white' }}>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                padding: '5px',
+                color: textColor,
+                backgroundColor,
+                borderRadius: '5px',
+            }}>
                 <div style={{ flexGrow: 1, fontWeight: 'bold' }}>{event.title}</div>
                 {event.total_working_time && (
                     <div style={{
@@ -240,30 +282,44 @@ const Attendance = () => {
             </div>
         );
     };
-
     const events = attendance.map(entry => {
         let title = 'N/A';
+    
         if (entry.leave_applied === 'N' && entry.status === 'Present' && entry.break_type === 'Available') {
             title = 'Available';
         } else if (entry.leave_applied === 'N' && entry.status === 'Present' && entry.break_type === 'lunch') {
             title = 'Lunch Break';
         } else if (entry.leave_applied === 'N' && entry.status === 'Present' && entry.break_type === 'short') {
             title = 'Break';
-        } else if (entry.leave_applied === 'Y' && entry.status === 'Absent') {
+        } else if (entry.status === 'Leave') {
             title = 'Leave';
+        } else if (entry.leave_applied === 'N' && entry.status === 'Absent') {
+            title = 'Absent';
         }
-        const color = entry.leave_applied === 'Y'
-        ? entry.approval_status === 'approved' ? 'orange' : 'skyblue'
-        : entry.break_type === 'Available' ? 'green' : 'red';
-
-        const startDate = parse(entry.date, 'yyyy-MM-dd', new Date());
-        const endDate = parse(entry.date, 'yyyy-MM-dd', new Date());
+        else{
+            title='N/A';
+        }
+    
+        // Set color for background and white text
+        let color = '';
+        if (entry.status === 'Leave') {
+            color = 'orange'; // Leave
+        } else if (entry.leave_applied === 'N' && entry.status === 'Absent') {
+            color = 'red'; // Absent
+        } else if (entry.break_type === 'Available') {
+            color = 'green'; // Present
+        } else {
+            color = 'skyblue'; // Other
+        }
+    
+        const parsedDate = parse(entry.date, 'yyyy-MM-dd', new Date());
+        const validDate = isNaN(parsedDate) ? new Date() : parsedDate;
+    
         return {
             title,
-            break_type: entry.break_type, // Include break_type here
-            start: isNaN(startDate) ? new Date() : startDate,
-            end: isNaN(endDate) ? new Date() : endDate,
-
+            break_type: entry.break_type,
+            start: validDate,
+            end: validDate,
             allDay: true,
             login_time: entry.loginTime || 'N/A',
             logout_time: entry.logoutTime || 'N/A',
@@ -278,7 +334,6 @@ const Attendance = () => {
         };
     });
     
-
     const openManagerApprovalModal = async () => {
         // Fetch leave requests (pending approval)
         const token = localStorage.getItem('token');

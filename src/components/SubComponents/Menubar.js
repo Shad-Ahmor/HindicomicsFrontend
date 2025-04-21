@@ -9,7 +9,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { Add, Assignment, AssignmentInd, AssignmentReturn, AssignmentTurnedIn, CalendarViewDayRounded, Create, ExpandLess, ExpandMore, LocalLibrary, Password, PasswordOutlined, PersonOffOutlined, StarBorder, WorkspacePremium } from '@mui/icons-material';
+import { Add, Assignment, AssignmentInd, AssignmentReturn, AssignmentTurnedIn, CalendarViewDayRounded, Create, ExpandLess, ExpandMore, InterestsSharp, LocalLibrary, Password, PasswordOutlined, PersonOffOutlined, StarBorder, WorkspacePremium } from '@mui/icons-material';
 import {
   Dashboard as DashboardIcon,
   Logout as LogoutIcon,
@@ -122,6 +122,15 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
       
       <Collapse in={openAssignment} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
+
+
+        {hasPermission('/assignments', '/assignmentapproval', 'GET') && (
+              <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/plans')}>
+              <InterestsSharp sx={{ color: 'gray' }} />
+                <ListItemText sx={{ pl: 2 }} primary="Manager Review" />
+              </ListItemButton>
+            )}
+
         {hasPermission('/assignments', '/createdassignments', 'GET') && (
 
         <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/assign-task')}>
@@ -174,6 +183,8 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
       )}
     </>
 
+   {/* Course  */}
+
     {viewcourse && ( 
           <ListItem>
             <ListItemButton onClick={handleCourcesClick}>
@@ -218,6 +229,10 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
 
         </List>
       </Collapse>
+
+
+
+
 {hasPermission('/coupons', '/', 'GET') && (
   <ListItem>
   <ListItemButton onClick={() => handleNavigate('/coupons')}>
@@ -346,7 +361,7 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
   </ListItem>
 
   )}
-    
+
   {isLoggedIn ? (
     <ListItem>
       <ListItemButton onClick={handleLogoutButtonClick}>
