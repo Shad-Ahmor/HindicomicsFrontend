@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Chart from 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
 import '../css/ShineBorder.css';
@@ -38,7 +37,7 @@ const Dashboard = () => {
   const [courses, setCourses] = useState(0);
   const [completedAssignments, setCompletedAssignments] = useState(0);
   const [totalAssignments, setTotalAssignments] = useState(0);
-  
+
   useEffect(() => {
     const userId = decryptData(localStorage.getItem('uid'));
     const fetchAttendance = async () => {
@@ -54,7 +53,6 @@ const Dashboard = () => {
         setCourses(data.courses);
         setCompletedAssignments(data.completedAssignments);
         setTotalAssignments(data.totalAssignments);
-
       } catch (error) {
         console.error('Failed to fetch attendance summary:', error);
       }
@@ -175,7 +173,7 @@ const Dashboard = () => {
       title: 'Condition',
       subtitle: 'Based on your efforts',
       icon: <EmojiEventsIcon sx={{ fontSize: 28, color: '#FFD700' }} />,
-      value: getProgressCategory(),
+      value: internProgressPercent ? getProgressCategory() : 'Loading...',
       color: '#FFD700',
     },
   ];
@@ -196,14 +194,14 @@ const Dashboard = () => {
             WebkitTextFillColor: 'transparent',
           }}
         >
-          Attendance Dashboard
+        Intern Dashboard
         </Typography>
       </div>
 
-      {/* Grid of Cards: 2 Rows of 4 Cards */}
-      <Grid container spacing={3} justifyContent="center" className="mb-8 mt-8"  sx={{mb:4,mt:4}}>
-        {cards.slice(0, 4).map((card, idx) => (
-          <Grid item xs={12} sm={6} md={3} key={idx}>
+      {/* Grid of Cards: 3 Rows, 3 Cards in Each Row */}
+      <Grid container spacing={3} justifyContent="center" className="mb-8 mt-8" sx={{ mb: 1, mt: 1 }} >
+        {cards.slice(0, 3).map((card, idx) => (
+          <Grid item xs={12} sm={6} md={4} key={idx}>
             <ShineBorder>
               <Card
                 className="transition-all duration-300 hover:scale-105"
@@ -244,9 +242,9 @@ const Dashboard = () => {
         ))}
       </Grid>
 
-      <Grid container spacing={3} justifyContent="center" className="mb-16">
-        {cards.slice(4, 8).map((card, idx) => (
-          <Grid item xs={12} sm={6} md={3} key={idx}>
+      <Grid container spacing={3} justifyContent="center" sx={{ mb: 1, mt: 1 }} className="mb-8 mt-8">
+        {cards.slice(3, 6).map((card, idx) => (
+          <Grid item xs={12} sm={6} md={4} key={idx}>
             <ShineBorder>
               <Card
                 className="transition-all duration-300 hover:scale-105"
@@ -287,13 +285,60 @@ const Dashboard = () => {
         ))}
       </Grid>
 
-      {/* Attendance Chart */}
-      <div className="bg-white rounded-3xl p-6 max-w-4xl mx-auto shadow-2xl">
-        <Typography variant="h5" align="center" sx={{ fontWeight: 600, mb: 4, mt: 4, color: '#111' }}>
-          📊 Attendance Overview (Bar Chart)
-        </Typography>
-        <Bar data={chartData} options={chartOptions} />
-      </div>
+      <Grid container spacing={3} justifyContent="center" sx={{ mb: 1, mt: 1 }}  className="mb-8 mt-8">
+        {cards.slice(6, 9).map((card, idx) => (
+          <Grid item xs={12} sm={6} md={4} key={idx}>
+            <ShineBorder>
+              <Card
+                className="transition-all duration-300 hover:scale-105"
+                sx={{
+                  background: 'rgba(255,255,255,0.95)',
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+                }}
+              >
+                <CardHeader
+                  avatar={card.icon}
+                  title={<Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>{card.title}</Typography>}
+                  subheader={<Typography variant="caption" sx={{ color: '#555' }}>{card.subtitle}</Typography>}
+                  sx={{
+                    background: '#f3f4f6',
+                    borderTopLeftRadius: '12px',
+                    borderTopRightRadius: '12px',
+                  }}
+                />
+                <Divider />
+                <CardContent sx={{ paddingBottom: '12px' }}>
+                  <Typography
+                    variant="h6"
+                    align="center"
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: '1.2rem',
+                      color: card.color,
+                    }}
+                  >
+                    {typeof card.value === 'string' || typeof card.value === 'number' ? card.value : null}
+                  </Typography>
+                  {typeof card.value === 'object' ? card.value : null}
+                </CardContent>
+              </Card>
+            </ShineBorder>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Graph / Chart Row */}
+      <Grid container justifyContent="center" sx={{ mt: 8 }}>
+        <Grid item xs={12} md={8}>
+          <div className="bg-white rounded-3xl p-6 shadow-2xl">
+            <Typography variant="h5" align="center" sx={{ fontWeight: 600, mb: 4, mt: 4, color: '#111' }}>
+              📊 Attendance Overview (Bar Chart)
+            </Typography>
+            <Bar data={chartData} options={chartOptions} />
+          </div>
+        </Grid>
+      </Grid>
     </div>
   );
 };
