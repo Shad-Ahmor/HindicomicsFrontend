@@ -9,7 +9,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { Add, Assignment, AssignmentInd, AssignmentReturn, AssignmentTurnedIn, CalendarViewDayRounded, Create, ExpandLess, ExpandMore, InterestsSharp, LocalLibrary, Password, PasswordOutlined, PersonOffOutlined, StarBorder, WorkspacePremium } from '@mui/icons-material';
+import { Add, Assignment, AssignmentInd, AssignmentReturn, AssignmentTurnedIn, ExpandLess, ExpandMore, InterestsSharp, LocalLibrary, Password, PasswordOutlined, PersonOffOutlined, StarBorder, WorkspacePremium } from '@mui/icons-material';
 import {
   Dashboard as DashboardIcon,
   Logout as LogoutIcon,
@@ -21,7 +21,7 @@ import {
 import { List, ListItem, ListItemText, ListItemIcon, Collapse,ListItemButton  } from '@mui/material'; // Import Drawer components
 
 import {  History } from '@mui/icons-material'; // Import History icon
-import { FaCertificate } from 'react-icons/fa';
+import TableViewIcon from '@mui/icons-material/TableView';
 import { decryptData } from '../Security/cryptoUtils';
 
 export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,handleNavigate, hasPermission, isLoggedIn,handleLoginButtonClick, handleLogoutButtonClick}) {
@@ -76,15 +76,23 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
 
    
 
-  <ListItem>
-    <ListItemButton onClick={() => handleNavigate('/')}>
-       <ListItemIcon
-                  ><DashboardIcon sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-               
-                 primary="Dashboard" />
-    </ListItemButton>
-  </ListItem>
+      {Array.isArray(decryptroles)
+  ? decryptroles.includes('intern')
+  : typeof decryptroles === 'string' && decryptroles.split(',').includes('intern') ? (
+    <ListItem>
+      <ListItemButton onClick={() => handleNavigate('/interndashboard')}>
+        <ListItemIcon><DashboardIcon sx={{ color: 'gray' }} /></ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItemButton>
+    </ListItem>
+  ) : (
+    <ListItem>
+      <ListItemButton onClick={() => handleNavigate('/')}>
+        <ListItemIcon><DashboardIcon sx={{ color: 'gray' }} /></ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItemButton>
+    </ListItem>
+)}
 
   <ListItem>
     <ListItemButton onClick={() => handleNavigate('/attendance')}>
@@ -123,11 +131,10 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
       <Collapse in={openAssignment} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
 
-
-        {hasPermission('/assignments', '/assignmentapproval', 'GET') && (
+        {hasPermission('/assignments', '/results', 'GET') && (
               <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/plans')}>
-              <InterestsSharp sx={{ color: 'gray' }} />
-                <ListItemText sx={{ pl: 2 }} primary="Manager Review" />
+              <TableViewIcon sx={{ color: 'gray' }} />
+                <ListItemText sx={{ pl: 2 }} primary="Upgrade/Choose Plan" />
               </ListItemButton>
             )}
 

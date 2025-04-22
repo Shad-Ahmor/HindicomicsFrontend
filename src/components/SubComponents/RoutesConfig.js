@@ -29,7 +29,7 @@ import ChangePassword from '../Main/ChangePassword';
 import Attendance from '../Main/Attendance';
 import PermissionManagement from '../Main/PermissionManagement';
 import PricingTable from '../Assignment/PricingTable'
-
+import InternDashboard from '../Intern/InternDashboard'
 const RoutesConfig = ({  setIsLoggedIn, isLoggedIn, history,token, settoken,setRole,role,setUserId,userId, element, ...rest}) => {
 
   const isAuthenticated = () => {
@@ -42,89 +42,94 @@ const RoutesConfig = ({  setIsLoggedIn, isLoggedIn, history,token, settoken,setR
     <Routes>
                 <Route component={NotFound} /> {/* Catch-all route for 404 */}
 
-            <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/login" element={!isAuthenticated() ? <Login settoken={settoken} setIsLoggedIn={setIsLoggedIn} setRole={setRole} setUserId={setUserId} /> : <Navigate to="/login" />}  />
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="/" element={<Navigate to="/attendance" />} />
+            <Route path="/login" element={!isAuthenticated() ? <Login settoken={settoken} setIsLoggedIn={setIsLoggedIn} setRole={setRole} setUserId={setUserId} /> : <Navigate to="/attendance" />}  />
+            <Route path="*" element={<Navigate to="/attendance" />} />
 
           <Route
               path="/profile"
               element={isAuthenticated() ? <CompanyHierarchy  />
-              : <Navigate to="/login" />}
+              : <Navigate to="/attendance" />}
             />
   <Route
               path="/plans"
               element={isAuthenticated() ? <PricingTable userId={userId}  />
-              : <Navigate to="/login" />}
+              : <Navigate to="/attendance" />}
             />
         <Route
               path="/attendance"
               element={isAuthenticated() ? <Attendance  />
-              : <Navigate to="/login" />}
+              : <Navigate to="/attendance" />}
             />
           <Route
               path="/referal"
               element={isAuthenticated() ? <Referal  />
-              : <Navigate to="/login" />}
+              : <Navigate to="/attendance" />}
             />
             <Route
               path="/"
-              element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <Dashboard /> : <Navigate to="/attendance" />}
             />
-              <Route path="/category/:category" element={isAuthenticated() ? <CategoryDetail  />: <Navigate to="/login" />} />
+
+            <Route
+            path='/interndashboard'
+            element={isAuthenticated() ? <InternDashboard /> : <Navigate to="/attendance" />}
+            />
+              <Route path="/category/:category" element={isAuthenticated() ? <CategoryDetail  />: <Navigate to="/attendance" />} />
 
               <Route
               path="/createuser"
-              element={isAuthenticated() ? <Signup /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <Signup /> : <Navigate to="/attendance" />}
             />
                 <Route
               path="/permission"
-              element={isAuthenticated() ? <PermissionManagement /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <PermissionManagement /> : <Navigate to="/attendance" />}
             />
                  <Route
               path="/passwordchange"
-              element={isAuthenticated() ? <ChangePassword /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <ChangePassword /> : <Navigate to="/attendance" />}
             />
         
             <Route
   path="/userlogs"
-  element={isAuthenticated() ? <UserLogs /> : <Navigate to="/login" />}
+  element={isAuthenticated() ? <UserLogs /> : <Navigate to="/attendance" />}
 />
             <Route
               path="/coupons"
-              element={isAuthenticated() ? <CouponPage /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <CouponPage /> : <Navigate to="/attendance" />}
             />
               <Route
               path="/activitytrack"
-              element={isAuthenticated() ? <ActivityTracker /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <ActivityTracker /> : <Navigate to="/attendance" />}
             />
             <Route
               path="/jokes"
-              element={isAuthenticated() ? <JokeList /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <JokeList /> : <Navigate to="/attendance" />}
             />
               <Route
               path="/comic"
-              element={isAuthenticated() ? <Comics role={role} userId={userId} /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <Comics role={role} userId={userId} /> : <Navigate to="/attendance" />}
             />
                 <Route
               path="/admob"
-              element={isAuthenticated() ? <AdmobPage role={role} userId={userId} /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <AdmobPage role={role} userId={userId} /> : <Navigate to="/attendance" />}
             />
                    <Route
               path="/help"
-              element={isAuthenticated() ? <Help role={role} userId={userId} /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <Help role={role} userId={userId} /> : <Navigate to="/attendance" />}
             />
             <Route
             path="/suggestions"
-            element={isAuthenticated() ? <SuggestionsPage /> : <Navigate to="/login" />}
+            element={isAuthenticated() ? <SuggestionsPage /> : <Navigate to="/attendance" />}
           />
              <Route
               path="/user"
-              element={isAuthenticated() ? <Users role={role} userId={userId} /> : <Navigate to="/login" />}
+              element={isAuthenticated() ? <Users role={role} userId={userId} /> : <Navigate to="/attendance" />}
             />
    {/* Add Course Selection Route */}
-   <Route path="/course-selection" element={isAuthenticated() ? <CourseSelectionPage /> : <Navigate to="/login" />} />
-   <Route path="/course/:courseId" element={isAuthenticated() ? <SelectedCourse /> : <Navigate to="/login" />} />
-   <Route path="/addcourse" element={isAuthenticated() ? <AddCourse /> : <Navigate to="/login" />} />
+   <Route path="/course-selection" element={isAuthenticated() ? <CourseSelectionPage /> : <Navigate to="/attendance" />} />
+   <Route path="/course/:courseId" element={isAuthenticated() ? <SelectedCourse /> : <Navigate to="/attendance" />} />
+   <Route path="/addcourse" element={isAuthenticated() ? <AddCourse /> : <Navigate to="/attendance" />} />
 
    <Route
           path="/assign-task"
@@ -153,11 +158,11 @@ const RoutesConfig = ({  setIsLoggedIn, isLoggedIn, history,token, settoken,setR
         />
             {/* <Route
               path="/create-user"
-              element={isAuthenticated()? <CreateUser /> : <Navigate to="/login" />}
+              element={isAuthenticated()? <CreateUser /> : <Navigate to="/attendance" />}
             /> */}
 
        
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="*" element={<Navigate to="/attendance" />} />
           </Routes>
   );
 };
