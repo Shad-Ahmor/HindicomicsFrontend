@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'; // For navigation
 
 // Google Charts imports
 import { Chart } from 'react-google-charts';
+import ShineBorder from './ShineBorder';
 
 // Neomorphism Effect Style
 const NeomorphicCard = styled(Card)(({ theme }) => ({
@@ -15,11 +16,11 @@ const NeomorphicCard = styled(Card)(({ theme }) => ({
   borderRadius: '12px',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minWidth: 180,
-  height: '300px', // Set a fixed height
-  overflow: 'hidden', // Prevent the graph from overflowing
+  alignItems: 'center',  // Horizontally center the children
+  justifyContent: 'center',  // Vertically center the children
+  minWidth: 200,
+  height: 150, // Set a fixed height
+  textAlign: 'center',  // Ensure text is also centered
 }));
 
 const Dashboard = () => {
@@ -126,132 +127,231 @@ const Dashboard = () => {
   };
 
   return (
-    <Box sx={{ padding: 3 }}>
+    <Box >
       {/* 3D Pie Chart Section */}
-      <Grid container spacing={3} sx={{ marginBottom: 5 }}>
-        <Grid item xs={12} md={8} lg={6}>
-          <NeomorphicCard>
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Role Distribution (3D Pie Chart)
-            </Typography>
-            <Chart
-              chartType="PieChart"
-              data={chartData}
-              options={options}
-              width={'100%'}
-              height={'400px'}
-            />
-          </NeomorphicCard>
-        </Grid>
-        <Grid item xs={12} md={8} lg={6}>
-          <NeomorphicCard>
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Category
-            </Typography>
-            <Chart
-              chartType="PieChart"
-              data={catchartData}
-              options={catoptions}
-              width={'100%'}
-              height={'400px'}
-            />
-          </NeomorphicCard>
-        </Grid>
-      </Grid>
+          
+      <Grid container spacing={3} sx={{ marginBottom: 1 }}>
+  <Grid item xs={12} md={6}>
+    <ShineBorder>
+      <Card
+        className="transition-all duration-300 hover:scale-105"
+        sx={{
+          mt: 2,
+          pr: 1,
+          pl: 1,
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+      >
+        <Chart
+          chartType="PieChart"
+          data={chartData}
+          options={options}
+          width={'100%'}
+          height={'40vh'}
+        />
+      </Card>
+    </ShineBorder>
+  </Grid>
+
+  <Grid item xs={12} md={6}>
+    <ShineBorder>
+      <Card
+        className="transition-all duration-300 hover:scale-105"
+        sx={{
+          mt: 2,
+          pr: 1,
+          pl: 1,
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+      >
+        <Chart
+          chartType="PieChart"
+          data={catchartData}
+          options={catoptions}
+          width={'100%'}
+          height={'40vh'}
+        />
+      </Card>
+    </ShineBorder>
+  </Grid>
+</Grid>
 
       {/* Category Cards Section */}
-      <Grid container spacing={3}>
-        {/* Hindi Comics Card */}
-        <Grid item xs={12} sm={3}>
-          <NeomorphicCard sx={{ aspectRatio: '1', height: 'auto' }} onClick={() => handleCategoryClick('HindiComics')}>
-            <FaRegFileAlt size={40} color="#4caf50" />
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Hindi Comics
-            </Typography>
-            <Typography variant="h4" color="primary">
-              {categoryCounts.HindiComics}
-            </Typography>
-          </NeomorphicCard>
-        </Grid>
+     {/* Category Cards Section */}
+<Grid container spacing={1} >
+  {/* Hindi Comics Card */}
+  <Grid item xs={12} sm={6} md={1.7}>
+    <ShineBorder>
+      <NeomorphicCard
+        className="transition-all duration-300 hover:scale-105"
+        sx={{
+          aspectRatio: '1',
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+        onClick={() => handleCategoryClick('HindiComics')}
+      >
+        <FaRegFileAlt size={30} color="#4caf50" />
+        <Typography variant="h6" color="text.primary" gutterBottom>
+          Hindi Comics
+        </Typography>
+        <Typography variant="h5"color="primary">
+          {categoryCounts.HindiComics}
+        </Typography>
+      </NeomorphicCard>
+    </ShineBorder>
+  </Grid>
 
-        {/* Hindi Books Card */}
-        <Grid item xs={12} sm={3}>
-          <NeomorphicCard sx={{ aspectRatio: '1', height: 'auto' }} onClick={() => handleCategoryClick('HindiBooks')}>
-            <FaBook size={40} color="#ff9800" />
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Hindi Books
-            </Typography>
-            <Typography variant="h4" color="primary">
-              {categoryCounts.HindiBooks}
-            </Typography>
-          </NeomorphicCard>
-        </Grid>
+  {/* Hindi Books Card */}
+  <Grid item xs={12} sm={6} md={1.7}>
+    <ShineBorder>
+      <NeomorphicCard
+        sx={{
+          aspectRatio: '1',
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+        onClick={() => handleCategoryClick('HindiBooks')}
+      >
+        <FaBook size={30} color="#ff9800" />
+        <Typography variant="h6" color="text.primary" gutterBottom>
+          Hindi Books
+        </Typography>
+        <Typography variant="h5"color="primary">
+          {categoryCounts.HindiBooks}
+        </Typography>
+      </NeomorphicCard>
+    </ShineBorder>
+  </Grid>
 
-        {/* Hindi Dubbed Card */}
-        <Grid item xs={12} sm={3}>
-          <NeomorphicCard sx={{ aspectRatio: '1', height: 'auto' }} onClick={() => handleCategoryClick('HindiDubbed')}>
-            <FaClipboardList size={40} color="#2196f3" />
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Hindi Dubbed
-            </Typography>
-            <Typography variant="h4" color="primary">
-              {categoryCounts.HindiDubbed}
-            </Typography>
-          </NeomorphicCard>
-        </Grid>
+  {/* Hindi Dubbed Card */}
+  <Grid item xs={12} sm={6} md={1.7}>
+    <ShineBorder>
+      <NeomorphicCard
+        sx={{
+          aspectRatio: '1',
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+        onClick={() => handleCategoryClick('HindiDubbed')}
+      >
+        <FaClipboardList size={30} color="#2196f3" />
+        <Typography variant="h6" color="text.primary" gutterBottom>
+          Hindi Dubbed
+        </Typography>
+        <Typography variant="h5"color="primary">
+          {categoryCounts.HindiDubbed}
+        </Typography>
+      </NeomorphicCard>
+    </ShineBorder>
+  </Grid>
 
-        {/* Hindu Books Card */}
-        <Grid item xs={12} sm={3}>
-          <NeomorphicCard sx={{ aspectRatio: '1', height: 'auto' }} onClick={() => handleCategoryClick('HinduBooks')}>
-            <FaBook size={40} color="#4caf50" />
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Hindu Books
-            </Typography>
-            <Typography variant="h4" color="primary">
-              {categoryCounts.HinduBooks}
-            </Typography>
-          </NeomorphicCard>
-        </Grid>
+  {/* Hindu Books Card */}
+  <Grid item xs={12} sm={6} md={1.7}>
+    <ShineBorder>
+      <NeomorphicCard
+        sx={{
+          aspectRatio: '1',
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+        onClick={() => handleCategoryClick('HinduBooks')}
+      >
+        <FaBook size={30} color="#4caf50" />
+        <Typography variant="h6" color="text.primary" gutterBottom>
+          Hindu Books
+        </Typography>
+        <Typography variant="h5"color="primary">
+          {categoryCounts.HinduBooks}
+        </Typography>
+      </NeomorphicCard>
+    </ShineBorder>
+  </Grid>
 
-        {/* Users Count Card */}
-        <Grid item xs={12} sm={3}>
-          <NeomorphicCard sx={{ aspectRatio: '1', height: 'auto' }}>
-            <FaUsers size={40} color="#9c27b0" />
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Users
-            </Typography>
-            <Typography variant="h4" color="primary">
-              {roleCounts.user}
-            </Typography>
-          </NeomorphicCard>
-        </Grid>
+  {/* Users Count Card */}
+  <Grid item xs={12} sm={6} md={1.7}>
+    <ShineBorder>
+      <NeomorphicCard
+        sx={{
+          aspectRatio: '1',
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+      >
+        <FaUsers size={30} color="#9c27b0" />
+        <Typography variant="h6" color="text.primary" gutterBottom>
+          Users
+        </Typography>
+        <Typography variant="h5"color="primary">
+          {roleCounts.user}
+        </Typography>
+      </NeomorphicCard>
+    </ShineBorder>
+  </Grid>
 
-        {/* Admins Count Card */}
-        <Grid item xs={12} sm={3}>
-          <NeomorphicCard sx={{ aspectRatio: '1', height: 'auto' }}>
-            <FaUserCog size={40} color="#ff5722" />
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Admins
-            </Typography>
-            <Typography variant="h4" color="primary">
-              {roleCounts.admin}
-            </Typography>
-          </NeomorphicCard>
-        </Grid>
+  {/* Admins Count Card */}
+  <Grid item xs={12} sm={6} md={1.7}>
+    <ShineBorder>
+      <NeomorphicCard
+        sx={{
+          aspectRatio: '1',
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+      >
+        <FaUserCog size={30} color="#ff5722" />
+        <Typography variant="h6" color="text.primary" gutterBottom>
+          Admins
+        </Typography>
+        <Typography variant="h5"color="primary">
+          {roleCounts.admin}
+        </Typography>
+      </NeomorphicCard>
+    </ShineBorder>
+  </Grid>
 
-        {/* Editors Count Card */}
-        <Grid item xs={12} sm={3}>
-          <NeomorphicCard sx={{ aspectRatio: '1', height: 'auto' }}>
-            <FaUserAlt size={40} color="#00bcd4" />
-            <Typography variant="h6" color="text.primary" gutterBottom>
-              Editors
-            </Typography>
-            <Typography variant="h4" color="primary">
-              {roleCounts.editor}
-            </Typography>
-          </NeomorphicCard>
-        </Grid>
-      </Grid>
+  {/* Editors Count Card */}
+  <Grid item xs={12} sm={6} md={1.7}>
+    <ShineBorder>
+      <NeomorphicCard
+        sx={{
+          aspectRatio: '1',
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+      >
+        <FaUserAlt size={30} color="#00bcd4" />
+        <Typography variant="h6" color="text.primary" gutterBottom>
+          Editors
+        </Typography>
+        <Typography variant="h5"color="primary">
+          {roleCounts.editor}
+        </Typography>
+      </NeomorphicCard>
+    </ShineBorder>
+  </Grid>
+</Grid>
+
     </Box>
   );
 };

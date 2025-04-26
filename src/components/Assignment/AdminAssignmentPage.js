@@ -8,6 +8,8 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Import styles for the editor
 import './styles.css'; // Import the custom CSS file
 
+import ShineBorder from '../Main/ShineBorder';
+
 const AdminAssignmentPage = () => {
   const [taskName, setTaskName] = useState('');
   const [role, setRole] = useState('');
@@ -124,18 +126,36 @@ const token = localStorage.getItem('token');
   };
 
   return (
-    <>
+       <>
       <Typography variant="h4" align="center" gutterBottom>
         Assign Task
       </Typography>
       
-      <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', padding: '2rem'}}>
         <Container maxWidth="lg" sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           {/* Left Side (Form) */}
-          <Box sx={{ width: '50%' }}>
+          <div style={{height:'75vh', width:'50vw'}}>
+
+        
+          <ShineBorder >
+      <Card
+        className="transition-all duration-300 hover:scale-105"
+        sx={{
+      
+         
+          pr:2,
+          pl:2,
+          pt:2,
+        
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+      >
+       
             <Grid container spacing={2}>
               {/* Task Name */}
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{mt:1,mb:1}}>
                 <TextField
                   fullWidth
                   label="Task Name"
@@ -146,7 +166,7 @@ const token = localStorage.getItem('token');
               </Grid>
               
               {/* Role Selector */}
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{mt:1,mb:1}}>
                 <FormControl fullWidth variant="outlined">
                   <InputLabel>Role</InputLabel>
                   <Select
@@ -168,7 +188,7 @@ const token = localStorage.getItem('token');
               </Grid>
 
               {/* Deadline Picker */}
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{mt:1,mb:1}}>
                 <TextField
                   fullWidth
                   label="Deadline"
@@ -181,7 +201,7 @@ const token = localStorage.getItem('token');
               </Grid>
 
               {/* Rich Text Editor for Assignment Description */}
-              <Grid item xs={12}>
+              <Grid item xs={12}  sx={{mt:1,mb:4}}>
                 <ReactQuill
                   value={assignmentDescription}
                   onChange={setAssignmentDescription}
@@ -205,7 +225,7 @@ const token = localStorage.getItem('token');
               </Grid>
 
               {/* Submit Button */}
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{mt:4,mb:4}}>
                 <Button
                   fullWidth
                   variant="contained"
@@ -226,17 +246,34 @@ const token = localStorage.getItem('token');
                 </Grid>
               )}
             </Grid>
-          </Box>
+       
+          </Card>
+          </ShineBorder>
+          </div>
+
+          <div style={{height:'75vh', width:'50vw'}}>
+          <ShineBorder >
+      <Card
+        className="transition-all duration-300 hover:scale-105"
+        sx={{
+ 
+          pr:2,
+          pl:2,
+          pt:2,
+          border: '2px solid transparent',
+          background: 'rgba(255,255,255,0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+        }}
+      >
 
           {/* Right Side (Pagination Card Grid) */}
-          <Box sx={{ width: '50%', paddingLeft: '2rem' }}>
             {dataLoading ? (
               <CircularProgress />
             ) : (
               <div>
                 {currentAssignments.map((assignment) => (
-                  <Card key={assignment._id} sx={{ marginBottom: '20px', padding: '20px' }}>
-                    <CardContent>
+                  <div key={assignment._id}>
                       <Typography variant="h5" gutterBottom>{assignment.taskName}</Typography>
                       <Typography variant="h6" color="textSecondary">Role : {assignment.role}</Typography>
                       <Typography variant="body1" gutterBottom>Deadline : {new Date(assignment.deadline).toLocaleString()}</Typography>
@@ -244,8 +281,8 @@ const token = localStorage.getItem('token');
                       <Box sx={{ marginTop: '20px' }}>
                         <Typography variant="body1" component="div" dangerouslySetInnerHTML={{ __html: assignment.assignmentDescription }} />
                       </Box>
-                    </CardContent>
-                  </Card>
+                      </div>
+                
                 ))}
                 <Pagination
                   count={Math.ceil(assignments.length / assignmentsPerPage)}
@@ -256,10 +293,13 @@ const token = localStorage.getItem('token');
                 />
               </div>
             )}
-          </Box>
+        
+      </Card>
+      </ShineBorder>
+          </div>
+
         </Container>
-      </Box>
-    </>
+     </>
   );
 };
 

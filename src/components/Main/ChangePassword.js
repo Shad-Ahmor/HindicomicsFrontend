@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Box, InputAdornment } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, InputAdornment, Card } from '@mui/material';
 import { Lock, LockOpen } from '@mui/icons-material';
 import { styled } from '@mui/system';
+import ShineBorder from './ShineBorder';
 
 const AnimatedTextField = styled(TextField)({
   '& .MuiInputBase-root': {
@@ -43,28 +44,36 @@ const ChangePassword = () => {
   };
 
   return (
-    <Container
-      maxWidth="sm"
-      sx={{
-        maxWidth:'100vw',
+  
+     <Container
+           maxWidth="sm"
+
+            sx={{
+          
+              maxWidth:'100vw',
         width:'100vw',
-        height: '100vh', // Make sure the container takes the full viewport height
+        height: '80vh', // Make sure the container takes the full viewport height
         display: 'flex',
         justifyContent: 'center', // Center horizontally
         alignItems: 'center', // Center vertically
-        backgroundColor: '#f0f2f5', // Background color of the page
-      }}
-    >
+              
+            }}
+          >
+   <ShineBorder>
       <Box
         sx={{
       
+              pr: 1,
+              pl: 1,
+              border: '2px solid transparent',
+              background: 'rgba(255,255,255,0.95)',
+              borderRadius: '20px',
+              boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: '#ffffff',
           padding: '30px',
-          borderRadius: '12px',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)', // 3D shadow effect
           transform: 'translateZ(0)', // Apply to enhance the 3D effect
           transition: 'all 0.3s ease-in-out',
           '&:hover': {
@@ -130,7 +139,9 @@ const ChangePassword = () => {
           </Button>
         </form>
       </Box>
+      </ShineBorder>
     </Container>
+    
   );
 };
 

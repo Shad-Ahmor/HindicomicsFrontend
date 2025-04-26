@@ -7,6 +7,7 @@ import moment from 'moment'; // Optional if you want to format dates
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { red } from '@mui/material/colors';
+import ShineBorder from '../Main/ShineBorder';
 
 const SubmitTaskPage = () => {
   const [assignedTasks, setAssignedTasks] = useState([]);
@@ -139,10 +140,26 @@ const SubmitTaskPage = () => {
 
   return (
     <>
-      <div className='neumorphcard' style={{ background: 'linear-gradient(135deg, #f3f4f6,rgb(243, 246, 255))', minHeight: '100vh' }}>
-        <Container maxWidth="lg" sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+    
+      <div  style={{ background: 'linear-gradient(135deg, #f3f4f6,rgb(243, 246, 255))', minHeight: '100vh' }}>
           {/* Left Side (Assigned Tasks List) */}
-          <Box sx={{ width: '50%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between'}}>
+          <div style={{  width: '50%'}}>
+            <ShineBorder>
+                 <Card 
+                      className="transition-all duration-300 hover:scale-105"
+                      sx={{
+                       
+                      
+                        pr:2,
+                        pl:2,
+                        pt:2,
+                        border: '2px solid transparent',
+                        background: 'rgba(255,255,255,0.95)',
+                        borderRadius: '20px',
+                        boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+                      }}
+                    >
             {dataLoading ? (
               <CircularProgress />
             ) : (
@@ -154,11 +171,8 @@ const SubmitTaskPage = () => {
                       marginBottom: 2,
                       borderRadius: 1,
                       padding: 2,
-                      boxShadow: 'none', // No shadow for card
-                      transition: 'all 0.3s ease', // Smooth transition for hover effects
-                      '&:hover': {
-                        backgroundColor: '#e9e9e9', // Light hover effect for the card
-                      },
+                     
+                    
                     }}
                   >
                     <Button
@@ -213,12 +227,28 @@ const SubmitTaskPage = () => {
                 />
               </div>
             )}
-          </Box>
-
+            </Card>
+         </ShineBorder>
+</div>
           {/* Right Side (Task Submission) */}
           {selectedTaskId && (
-            <Box sx={{ width: '50%', paddingLeft: '2rem' }}>
-              <Grid container spacing={2}>
+            <div sx={{ width: '50%', paddingLeft: '2rem' }}>
+            <ShineBorder>
+                 <Card 
+                      className="transition-all duration-300 hover:scale-105"
+                      sx={{
+                       
+                      
+                        pr:2,
+                        pl:2,
+                        pt:2,
+                        border: '2px solid transparent',
+                        background: 'rgba(255,255,255,0.95)',
+                        borderRadius: '20px',
+                        boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+                      }}
+                    >
+              
                 {/* Find the selected task */}
                 {assignedTasks.find(task => task.taskId === selectedTaskId) && (
                   <>
@@ -251,7 +281,7 @@ const SubmitTaskPage = () => {
                     )}
 
                     {/* Submit Task Button */}
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sx={{mt:4,mb:4}}>
                       <Button
                         fullWidth
                         variant="contained"
@@ -277,13 +307,31 @@ const SubmitTaskPage = () => {
                     )}
                   </>
                 )}
-              </Grid>
-            </Box>
+             
+              </Card>
+              </ShineBorder>
+            </div>
           )}
-        </Container>
-
+       
+</div>
         {/* DataGrid for Submission History */}
-        <Box sx={{ marginTop: '20px', width: '100%' }}>
+        <div style={{marginTop:'10px'}}>
+        <ShineBorder>
+                 <Card 
+                      className="transition-all duration-300 hover:scale-105"
+                      sx={{
+                       
+                      
+                        pr:2,
+                        pl:2,
+                        pt:2,
+                        border: '2px solid transparent',
+                        background: 'rgba(255,255,255,0.95)',
+                        borderRadius: '20px',
+                        boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+                      }}
+                    >
+      
           <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>Submission History</Typography>
           <div style={{ height: 400, width: '100%' }}>
             <DataGrid
@@ -292,16 +340,13 @@ const SubmitTaskPage = () => {
               pageSize={5}
               rowsPerPageOptions={[5]}
               disableSelectionOnClick
-              sx={{
-                boxShadow: 3,
-                borderRadius: 2,
-                '& .MuiDataGrid-cell:hover': {
-                  backgroundColor: '#f5f5f5',
-                }
-              }}
+           
             />
           </div>
-        </Box>
+     
+        </Card>
+        </ShineBorder>
+        </div>
       </div>
     </>
   );

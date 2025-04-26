@@ -15,16 +15,10 @@ import '../css/ShineBorder.css';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import { decryptData } from '../Security/cryptoUtils';
+import ShineBorder from '../Main/ShineBorder';
 
 // ✨ ShineBorder wrapper
-const ShineBorder = ({ children }) => {
-  return (
-    <div className="shine-border-wrapper">
-      <div className="shine-border-glow" />
-      <div className="shine-border-content">{children}</div>
-    </div>
-  );
-};
+
 
 const plans = [
   {

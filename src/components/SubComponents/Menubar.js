@@ -50,6 +50,7 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
   ? decryptsubrole.includes('webops') ||  decryptroles.includes('admin')  // Case when it's already an array
   : (typeof decryptsubrole === 'string' && decryptsubrole.split(',').includes('webops')  || typeof decryptroles === 'string' && decryptroles.split(',').includes('admin'));  // Case when it's a string
 
+  const showOnlyIntern = true ?  decryptroles.includes('intern') : false;
   const viewcourse = Array.isArray(decryptroles)
   ? decryptroles.includes('intern') || decryptroles.includes('manager') || decryptroles.includes('admin')  // Case when it's already an array
   : (typeof decryptroles === 'string' && decryptroles.split(',').some(role => ['intern', 'manager', 'admin'].includes(role)));  // Case when it's a string
@@ -87,7 +88,7 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
     </ListItem>
   ) : (
     <ListItem>
-      <ListItemButton onClick={() => handleNavigate('/')}>
+      <ListItemButton onClick={() => handleNavigate('/dashboard')}>
         <ListItemIcon><DashboardIcon sx={{ color: 'gray' }} /></ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
@@ -132,10 +133,14 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
         <List component="div" disablePadding>
 
         {hasPermission('/assignments', '/results', 'GET') && (
+<>
+          {showOnlyIntern && (
               <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/plans')}>
               <TableViewIcon sx={{ color: 'gray' }} />
                 <ListItemText sx={{ pl: 2 }} primary="Upgrade/Choose Plan" />
               </ListItemButton>
+        )}
+          </>
             )}
 
         {hasPermission('/assignments', '/createdassignments', 'GET') && (

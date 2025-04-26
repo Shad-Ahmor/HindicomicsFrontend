@@ -30,6 +30,7 @@ import Attendance from '../Main/Attendance';
 import PermissionManagement from '../Main/PermissionManagement';
 import PricingTable from '../Assignment/PricingTable'
 import InternDashboard from '../Intern/InternDashboard'
+import ManagerReview from '../Assignment/ManagerReview';
 const RoutesConfig = ({  setIsLoggedIn, isLoggedIn, history,token, settoken,setRole,role,setUserId,userId, element, ...rest}) => {
 
   const isAuthenticated = () => {
@@ -67,7 +68,7 @@ const RoutesConfig = ({  setIsLoggedIn, isLoggedIn, history,token, settoken,setR
               : <Navigate to="/attendance" />}
             />
             <Route
-              path="/"
+              path="/dashboard"
               element={isAuthenticated() ? <Dashboard /> : <Navigate to="/attendance" />}
             />
 
@@ -141,7 +142,7 @@ const RoutesConfig = ({  setIsLoggedIn, isLoggedIn, history,token, settoken,setR
         />
         <Route
           path="/review-submission"
-          element={isAuthenticated() ?  <ReviewSubmissionPage /> : <Navigate to="/not-authorized" />}
+          element={isAuthenticated() ?  <ManagerReview /> : <Navigate to="/not-authorized" />}
         />
         <Route
           path="/final-review"

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, Card } from '@mui/material';
 import { CheckCircle, Warning, Cancel, HourglassEmpty, Pending } from '@mui/icons-material'; // Icons for status
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
+import ShineBorder from '../Main/ShineBorder';
 
 const AssignmentResults = () => {
   const [assignments, setAssignments] = useState([]);
@@ -87,6 +88,21 @@ const AssignmentResults = () => {
   }
 
   return (
+
+    <ShineBorder>
+       <Card
+            className="transition-all duration-300 hover:scale-105"
+            sx={{
+           
+              pr:2,
+              pl:2,
+              pt:2,
+              border: '2px solid transparent',
+              background: 'rgba(255,255,255,0.95)',
+              borderRadius: '20px',
+              boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+            }}
+          >
     <Box sx={{ padding: 4 }}>
       <Typography variant="h4" gutterBottom align="center" color="primary">
         Intern Assignment Results
@@ -127,6 +143,8 @@ const AssignmentResults = () => {
         </Table>
       </TableContainer>
     </Box>
+    </Card>
+    </ShineBorder>
   );
 };
 

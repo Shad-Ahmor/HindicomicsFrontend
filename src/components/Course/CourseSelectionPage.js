@@ -4,6 +4,7 @@ import { Card, CardContent, CardMedia, Typography, Button, Grid, Box, Rating, Te
 import { useNavigate } from "react-router-dom";
 import { encryptData, decryptData } from "../Security/cryptoUtils.js"; // Import the library functions
 import { LockPerson } from "@mui/icons-material";
+import ShineBorder from "../Main/ShineBorder.js";
 
 const CourseSelectionPage = () => {
   const [courses, setCourses] = useState([]);
@@ -133,7 +134,24 @@ const CourseSelectionPage = () => {
   return (
     <div>
       {/* Search Bar */}
-      <Box sx={{ margin: "2rem 0rem", display: "flex", justifyContent:"flex-start" }}>
+      <ShineBorder>
+       <Card 
+            className="transition-all duration-300 hover:scale-105"
+            sx={{
+             pt:2,
+             pb:0,
+                        pr:2,
+                        pl:2,
+                        height:'100px',
+
+              border: '1px solid transparent',
+              background: 'rgba(255,255,255,0.95)',
+              borderRadius: '5px',
+              boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+              '&:hover': { boxShadow: 2 }
+            }}
+          >
+      <Box sx={{  display: "flex", justifyContent:"flex-start" }}>
         <TextField
           label="Search Courses"
           variant="outlined"
@@ -195,12 +213,26 @@ const CourseSelectionPage = () => {
           Reset
         </Button>
       </Box>
+      </Card>
+      </ShineBorder>
 
-      <Grid container spacing={4} sx={{display: "flex", justifyContent:"flex-start"}}>
+      <Grid container spacing={1} sx={{display: "flex", justifyContent:"flex-start"}}>
         {Array.isArray(filteredCourses) && filteredCourses.length > 0 ? (
           filteredCourses.map((course, index) => (
             <Grid item xs={12} sm={4} md={3} key={index}>
-              <Card sx={{ boxShadow: 3, borderRadius: 2, '&:hover': { boxShadow: 6 } }}>
+            <ShineBorder>
+       <Card
+            className="transition-all duration-300 hover:scale-105"
+            sx={{
+       
+              border: '1px solid transparent',
+              background: 'rgba(255,255,255,0.95)',
+              borderRadius: '10px',
+              boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)',
+              '&:hover': { boxShadow: 2 }
+            }}
+          >
+             
                 <CardMedia
                   component="img"
                   alt={course.name}
@@ -209,7 +241,7 @@ const CourseSelectionPage = () => {
                   sx={{ objectFit: "cover" }}
                 />
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6" sx={{fontSize:'1rem'}} gutterBottom>
                     {course.name}
                   </Typography>
                   <Typography variant="body2" color="textSecondary" noWrap>
@@ -273,6 +305,7 @@ const CourseSelectionPage = () => {
 </Box>
 </Box>
               </Card>
+              </ShineBorder>
             </Grid>
           ))
         ) : (
@@ -281,6 +314,7 @@ const CourseSelectionPage = () => {
           </Typography>
         )}
       </Grid>
+     
     </div>
   );
 };

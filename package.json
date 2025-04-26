@@ -6,7 +6,9 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@gsap/react": "^2.1.1",
-    "@mui/icons-material": "^5.15.14",
+    "@heroicons/react": "^2.2.0",
+    "@material-tailwind/react": "^2.1.10",
+    "@mui/icons-material": "^5.17.1",
     "@mui/material": "^5.15.14",
     "@mui/styles": "^5.15.14",
     "@mui/system": "^5.15.14",
@@ -23,6 +25,7 @@
     "crypto-js": "^4.2.0",
     "customize-cra": "^1.0.0",
     "date-fns": "^2.29.3",
+    "file-saver": "^2.0.5",
     "firebase": "^11.1.0",
     "framer-motion": "^12.6.3",
     "gsap": "^3.12.7",
@@ -50,7 +53,8 @@
     "recharts": "^2.15.2",
     "three": "^0.163.0",
     "turn.js": "^1.0.5",
-    "universal-cookie": "^7.2.2"
+    "universal-cookie": "^7.2.2",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-app-rewired start",

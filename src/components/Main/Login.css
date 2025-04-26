@@ -106,3 +106,8 @@
       width: 90%;
     }
   }
+
+
+  .css-1jix9vo-MuiPaper-root-MuiCard-root{
+    min-width: 100px;
+  }

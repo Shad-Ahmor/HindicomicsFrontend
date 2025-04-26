@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import ManagerApprovalModal from './ManagerApprovalModal';
+import ShineBorder from '../Main/ShineBorder';
+import '../css/ShineBorder.css';
 
 import {
     Snackbar,
     Alert,
+    Card,
 } from '@mui/material';
 import format from 'date-fns/format'
 import parse from 'date-fns/parse'
@@ -25,6 +28,8 @@ import FastfoodIcon from '@mui/icons-material/Fastfood';
 import Stack from '@mui/material/Stack';
 import { decryptData } from '../Security/cryptoUtils';
 import { error } from 'ajv/dist/vocabularies/applicator/dependencies';
+import AttendanceTable from './AttendanceTable';
+import ManagerReporteesAttendance from './ManagerReporteesAttendance';
   const localizer = dateFnsLocalizer({
     format,
     parse,
@@ -377,6 +382,19 @@ const Attendance = () => {
         
     return (
         <div>
+             <ShineBorder>
+           <Card
+                      className="transition-all duration-300 hover:scale-105"
+                      sx={{
+                        mt:2,
+                        pr:2,
+                        pl:2,
+                        border:'2px solid transparent',
+                        background: 'rgba(255,255,255,0.95)',
+                        borderRadius: '20px',
+                        boxShadow: '0 12px 28px rgba(0, 0, 0, 0.25)', // 💥 Box shadow added
+                      }}
+                    >
             <h1>Attendance</h1>
             <Stack direction="row" spacing={1}>
                 <Button color="secondary" onClick={handleLunchBreak} variant="contained" startIcon={<FastfoodIcon />}>
@@ -474,7 +492,7 @@ const Attendance = () => {
       </Snackbar>
            
 
-
+ 
             <Calendar
                   localizer={localizer}
                 events={events}
@@ -533,6 +551,10 @@ const Attendance = () => {
         </Box>
     )}
 </Modal>
+</Card>
+            </ShineBorder>
+<AttendanceTable/>
+<ManagerReporteesAttendance/>
         </div>
     );
 };

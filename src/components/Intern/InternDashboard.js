@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
 import axios from 'axios';
 import '../css/ShineBorder.css';
 import { decryptData } from '../Security/cryptoUtils';
@@ -20,6 +29,9 @@ import SchoolIcon from '@mui/icons-material/School';
 import WorkIcon from '@mui/icons-material/Work';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
+// Register necessary Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
 const ShineBorder = ({ children }) => (
   <div className="shine-border-wrapper">
     <div className="shine-border-glow" />
@@ -37,6 +49,7 @@ const Dashboard = () => {
   const [courses, setCourses] = useState(0);
   const [completedAssignments, setCompletedAssignments] = useState(0);
   const [totalAssignments, setTotalAssignments] = useState(0);
+  const [internshipType, setInternshipType] = useState('basic'); // default to basic
 
   useEffect(() => {
     const userId = decryptData(localStorage.getItem('uid'));
@@ -85,12 +98,27 @@ const Dashboard = () => {
   };
 
   const getProgressCategory = () => {
-    if (internProgressPercent <= 20) return 'Worst';
-    if (internProgressPercent <= 40) return 'Poor';
-    if (internProgressPercent <= 60) return 'Bad';
-    if (internProgressPercent <= 80) return 'Good';
-    if (internProgressPercent <= 90) return 'Better';
-    return 'Best';
+    if (!internshipStart || !completedAssignments) return 'Loading...';
+
+    const startDate = new Date(internshipStart);
+    const today = new Date();
+    const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+
+    let totalDuration = 60; // default for 'basic'
+
+    if (internshipType === 'plus') totalDuration = 90;
+    else if (internshipType === 'pro') totalDuration = 120;
+
+    const expectedAssignments = Math.floor(daysPassed / 6); // 1 assignment per 6 days
+    const performanceRatio = completedAssignments / (expectedAssignments || 1); // avoid 0 div
+
+    if (performanceRatio >= 1.1) return 'Outstanding';
+    if (performanceRatio >= 1.0) return 'Best';
+    if (performanceRatio >= 0.8) return 'Better';
+    if (performanceRatio >= 0.6) return 'Good';
+    if (performanceRatio >= 0.4) return 'Bad';
+    if (performanceRatio >= 0.15) return 'Poor';
+    return 'Worst';
   };
 
   const cards = [
@@ -180,7 +208,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen py-12 px-4 bg-gradient-to-tr from-gray-900 via-purple-900 to-black text-white">
-      {/* Header */}
       <div className="text-center mb-8" style={{ justifyContent: 'center', display: 'flex', marginTop: 10, marginBottom: 10 }}>
         <span style={{ fontSize: '2rem' }}>🧾</span>
         <Typography
@@ -194,141 +221,55 @@ const Dashboard = () => {
             WebkitTextFillColor: 'transparent',
           }}
         >
-        Intern Dashboard
+          Intern Dashboard
         </Typography>
       </div>
 
-      {/* Grid of Cards: 3 Rows, 3 Cards in Each Row */}
-      <Grid container spacing={3} justifyContent="center" className="mb-8 mt-8" sx={{ mb: 1, mt: 1 }} >
-        {cards.slice(0, 3).map((card, idx) => (
-          <Grid item xs={12} sm={6} md={4} key={idx}>
-            <ShineBorder>
-              <Card
-                className="transition-all duration-300 hover:scale-105"
-                sx={{
-                  background: 'rgba(255,255,255,0.95)',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-                }}
-              >
-                <CardHeader
-                  avatar={card.icon}
-                  title={<Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>{card.title}</Typography>}
-                  subheader={<Typography variant="caption" sx={{ color: '#555' }}>{card.subtitle}</Typography>}
+      {[0, 3, 6].map((startIdx) => (
+        <Grid container spacing={3} justifyContent="center" sx={{ mb: 1, mt: 1 }} className="mb-8 mt-8" key={startIdx}>
+          {cards.slice(startIdx, startIdx + 3).map((card, idx) => (
+            <Grid item xs={12} sm={6} md={4} key={idx}>
+              <ShineBorder>
+                <Card
+                  className="transition-all duration-300 hover:scale-105"
                   sx={{
-                    background: '#f3f4f6',
-                    borderTopLeftRadius: '12px',
-                    borderTopRightRadius: '12px',
+                    background: 'rgba(255,255,255,0.95)',
+                    borderRadius: '12px',
+                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
                   }}
-                />
-                <Divider />
-                <CardContent sx={{ paddingBottom: '12px' }}>
-                  <Typography
-                    variant="h6"
-                    align="center"
+                >
+                  <CardHeader
+                    avatar={card.icon}
+                    title={<Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>{card.title}</Typography>}
+                    subheader={<Typography variant="caption" sx={{ color: '#555' }}>{card.subtitle}</Typography>}
                     sx={{
-                      fontWeight: 700,
-                      fontSize: '1.2rem',
-                      color: card.color,
+                      background: '#f3f4f6',
+                      borderTopLeftRadius: '12px',
+                      borderTopRightRadius: '12px',
                     }}
-                  >
-                    {typeof card.value === 'string' || typeof card.value === 'number' ? card.value : null}
-                  </Typography>
-                  {typeof card.value === 'object' ? card.value : null}
-                </CardContent>
-              </Card>
-            </ShineBorder>
-          </Grid>
-        ))}
-      </Grid>
+                  />
+                  <Divider />
+                  <CardContent sx={{ paddingBottom: '12px' }}>
+                    <Typography
+                      variant="h6"
+                      align="center"
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: '1.2rem',
+                        color: card.color,
+                      }}
+                    >
+                      {typeof card.value === 'string' || typeof card.value === 'number' ? card.value : null}
+                    </Typography>
+                    {typeof card.value === 'object' ? card.value : null}
+                  </CardContent>
+                </Card>
+              </ShineBorder>
+            </Grid>
+          ))}
+        </Grid>
+      ))}
 
-      <Grid container spacing={3} justifyContent="center" sx={{ mb: 1, mt: 1 }} className="mb-8 mt-8">
-        {cards.slice(3, 6).map((card, idx) => (
-          <Grid item xs={12} sm={6} md={4} key={idx}>
-            <ShineBorder>
-              <Card
-                className="transition-all duration-300 hover:scale-105"
-                sx={{
-                  background: 'rgba(255,255,255,0.95)',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-                }}
-              >
-                <CardHeader
-                  avatar={card.icon}
-                  title={<Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>{card.title}</Typography>}
-                  subheader={<Typography variant="caption" sx={{ color: '#555' }}>{card.subtitle}</Typography>}
-                  sx={{
-                    background: '#f3f4f6',
-                    borderTopLeftRadius: '12px',
-                    borderTopRightRadius: '12px',
-                  }}
-                />
-                <Divider />
-                <CardContent sx={{ paddingBottom: '12px' }}>
-                  <Typography
-                    variant="h6"
-                    align="center"
-                    sx={{
-                      fontWeight: 700,
-                      fontSize: '1.2rem',
-                      color: card.color,
-                    }}
-                  >
-                    {typeof card.value === 'string' || typeof card.value === 'number' ? card.value : null}
-                  </Typography>
-                  {typeof card.value === 'object' ? card.value : null}
-                </CardContent>
-              </Card>
-            </ShineBorder>
-          </Grid>
-        ))}
-      </Grid>
-
-      <Grid container spacing={3} justifyContent="center" sx={{ mb: 1, mt: 1 }}  className="mb-8 mt-8">
-        {cards.slice(6, 9).map((card, idx) => (
-          <Grid item xs={12} sm={6} md={4} key={idx}>
-            <ShineBorder>
-              <Card
-                className="transition-all duration-300 hover:scale-105"
-                sx={{
-                  background: 'rgba(255,255,255,0.95)',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-                }}
-              >
-                <CardHeader
-                  avatar={card.icon}
-                  title={<Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>{card.title}</Typography>}
-                  subheader={<Typography variant="caption" sx={{ color: '#555' }}>{card.subtitle}</Typography>}
-                  sx={{
-                    background: '#f3f4f6',
-                    borderTopLeftRadius: '12px',
-                    borderTopRightRadius: '12px',
-                  }}
-                />
-                <Divider />
-                <CardContent sx={{ paddingBottom: '12px' }}>
-                  <Typography
-                    variant="h6"
-                    align="center"
-                    sx={{
-                      fontWeight: 700,
-                      fontSize: '1.2rem',
-                      color: card.color,
-                    }}
-                  >
-                    {typeof card.value === 'string' || typeof card.value === 'number' ? card.value : null}
-                  </Typography>
-                  {typeof card.value === 'object' ? card.value : null}
-                </CardContent>
-              </Card>
-            </ShineBorder>
-          </Grid>
-        ))}
-      </Grid>
-
-      {/* Graph / Chart Row */}
       <Grid container justifyContent="center" sx={{ mt: 8 }}>
         <Grid item xs={12} md={8}>
           <div className="bg-white rounded-3xl p-6 shadow-2xl">
