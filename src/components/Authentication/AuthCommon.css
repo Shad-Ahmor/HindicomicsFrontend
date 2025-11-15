@@ -1,0 +1,332 @@
+/* === GENERAL LAYOUT & WRAPPER STYLING === */
+.login-gradient-wrapper,
+.register-gradient-wrapper {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === DYNAMIC GRADIENT PANEL === */
+.gradient-custom-2 {
+  background: linear-gradient(
+    45deg,
+    #FF6B6B,
+    #FFA07A,
+    #79D9C3,
+    #FF66B2,
+    #FFD166,
+    #FF6B6B
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 25s ease infinite;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+
+
+/* === PROFESSIONAL LEFT PANEL (Login Gradient / Info Side) === */
+.professional-panel-left {
+  position: relative;
+  z-index: 4;
+  box-shadow: inset 15px 0 30px -10px rgba(0, 0, 0, 0.7); /* right side dark */
+  transform-origin: left;
+  transition: transform 0.5s ease;
+  margin-right: -10px;
+  border-radius: 0 20px 20px 0;
+  pointer-events: auto;
+}
+
+
+
+
+/* === RIGHT PANEL (Shadow on Left Side) === */
+.professional-panel-right {
+  position: relative;
+  z-index: 4;
+  box-shadow: inset -15px 0 30px -10px rgba(0, 0, 0, 0.7); /* shadow on left */
+  transform-origin: right;
+  transition: transform 0.5s ease;
+  margin-left: -10px;
+  border-radius: 20px 0 0 20px;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+/* Inner shadow layer */
+.professional-panel-right::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset -15px 0 30px -10px rgba(0, 0, 0, 0.7); /* left inner shadow */
+  border-radius: 20px 0 0 20px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Decorative bubble layer */
+.professional-panel-right::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.6) 2px, transparent 2px),
+    radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.5) 2px, transparent 2px),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.7) 2px, transparent 2px);
+  background-size: 500px 500px;
+  animation: moveBubbles 60s linear infinite;
+  z-index: 0;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+
+
+.css-npaez7-MuiPaper-root {
+  border-radius: 30px;
+}
+
+
+/* === PROFESSIONAL LEFT PANEL (Login Gradient / Info Side) === */
+.professional-panel-left {
+  position: relative;
+  z-index: 4;
+  box-shadow: inset 15px 0 30px -10px rgba(0, 0, 0, 0.7); /* right side dark */
+  transform-origin: left;
+  transition: transform 0.5s ease;
+  margin-right: -10px;
+  border-radius: 0 20px 20px 0;
+  pointer-events: auto;
+}
+
+.professional-panel-left::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 15px 0 30px -10px rgba(0, 0, 0, 0.7);
+  border-radius: 0 20px 20px 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* === BUBBLE BACKGROUND ANIMATION (for Gradient Side) === */
+.professional-panel-left::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.6) 2px, transparent 2px),
+    radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.5) 2px, transparent 2px),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.7) 2px, transparent 2px);
+  background-size: 500px 500px;
+  animation: moveBubbles 60s linear infinite;
+  z-index: 0;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* === LOGIN FORM PANEL (White Page with Sparkles) === */
+.login-form-panel {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #FFF0F5, #F0FFF0);
+  box-shadow: inset -15px 0 30px 10px rgba(0, 0, 0, 0.7);
+  transform: rotateY(10deg);
+  transform-origin: right;
+  transition: transform 0.5s ease;
+  margin: -15px !important;
+  border-radius: 20px 0 0 20px;
+  z-index: 4;
+  pointer-events: auto;
+}
+
+/* Sparkling Layer */
+.login-form-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: -15px !important;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(255, 240, 180, 0.9) 4px, transparent 4px),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.7) 3px, transparent 3px),
+    radial-gradient(circle at 50% 50%, rgba(255, 240, 180, 0.8) 4px, transparent 4px);
+  background-size: 350px 350px;
+  animation: fireflyMove 40s linear infinite, fireflyPulse 5s ease-in-out infinite alternate;
+  opacity: 1;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* === ACCOUNT CREATION FORM PANEL (Stepper Side) === */
+.account-create-form-panel {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #FFF0F5, #F0FFF0);
+  transform: rotateY(10deg);
+  transform-origin: right;
+  transition: transform 0.5s ease;
+  margin: -15px !important;
+  border-radius: 20px 0 0 20px;
+  z-index: 4;
+  pointer-events: auto;
+}
+
+/* Fireflies inside Stepper Panel */
+.account-create-form-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: -15px !important;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(255, 240, 180, 0.9) 4px, transparent 4px),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.7) 3px, transparent 3px),
+    radial-gradient(circle at 50% 50%, rgba(255, 240, 180, 0.8) 4px, transparent 4px);
+  background-size: 350px 350px;
+  animation: fireflyMove 40s linear infinite, fireflyPulse 5s ease-in-out infinite alternate;
+  opacity: 1;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* === LIFTED EFFECTS === */
+.lifted-text {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 3;
+}
+
+.dynamic-text-shadow {
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+.dynamic-text-shadow[style*="color: black"] {
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.lifted-input .MuiOutlinedInput-root {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  border-radius: 10px;
+}
+.lifted-input .MuiOutlinedInput-root:hover {
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Lifted Button with Wave */
+.MuiButton-root.lifted-button {
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(90deg, #EC7824, #FFD166, #EC7824);
+  background-size: 200% 100%;
+  animation: buttonWave 8s linear infinite;
+  border-radius: 10px;
+  position: relative;
+  z-index: 3;
+}
+.MuiButton-root.lifted-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 87, 51, 0.6) !important;
+  animation-duration: 4s;
+}
+
+/* === MAIN FORM CONTAINER (BOOK EFFECT) === */
+.gradient-form {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  position: relative;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+/* === FIX INTERACTION ISSUES === */
+.account-create-form-panel,
+.professional-panel-left,
+.login-form-panel {
+  position: relative !important;
+  z-index: 5 !important;
+  pointer-events: auto !important;
+}
+.account-create-form-panel .MuiPaper-root {
+  position: relative;
+  z-index: 6;
+}
+.account-create-form-panel::before,
+.professional-panel-left::before {
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* === MAIN AUTH WRAPPER FIX === */
+.auth-wrapper {
+  display: flex;
+  flex-direction: row; /* <-- Panels side-by-side */
+  width: 100%;
+  height: 100%;
+}
+
+/* Ensure both panels share equal width and stretch properly */
+.auth-panel-left,
+.auth-panel-right {
+  flex: 1; /* Equal width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+/* Optional: responsive stacking for mobile view */
+@media (max-width: 900px) {
+  .auth-wrapper {
+    flex-direction: column; /* Stack for mobile */
+  }
+
+  .auth-panel-left,
+  .auth-panel-right {
+    width: 100%;
+    transform: none !important; /* Disable 3D tilt on small screens */
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+
+/* === ANIMATIONS === */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+@keyframes moveBubbles {
+  0% { background-position: 0 0; }
+  100% { background-position: 5000px -5000px; }
+}
+
+@keyframes fireflyMove {
+  0% { background-position: 0 0, 50px 50px, 100px 100px; }
+  50% { background-position: 200px 150px, 250px 100px, 150px 200px; }
+  100% { background-position: 0 0, 50px 50px, 100px 100px; }
+}
+
+@keyframes fireflyPulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes buttonWave {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

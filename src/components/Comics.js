@@ -20,9 +20,13 @@ const Comics = ({role,userId}) => {
   
   const navigate = useNavigate();
   const rolelocal = decryptData(localStorage.getItem('role'));
-  const [selectedDatabase, setSelectedDatabase] = useState(rolelocal === "intern" ? "ComicsDemo" : "Comics"); // Default database
+  const demoDatabases = ["ComicsDemo", "EducationDemo", "ReligiousDemo"];
+  const liveDatabases = ["Comics", "Education", "Religious"];
+  const defaultDatabases = rolelocal === "admin" ? [...demoDatabases, ...liveDatabases] : demoDatabases;
 
-  const defaultDatabases = rolelocal === "intern" ? ["ComicsDemo", "EducationDemo", "ReligiousDemo"] : ["Comics", "Education", "Religious"];
+
+  const [selectedDatabase, setSelectedDatabase] = useState(defaultDatabases[0]);
+
   
   const [newComic, setNewComic] = useState({
     name: "",
@@ -39,13 +43,23 @@ const Comics = ({role,userId}) => {
     database: "", // New field for database
   });
   
-  const [categories, setCategories] = useState([  "Btech",
+  const [categories, setCategories] = useState([ 
     "HindiBooks",
     "HindiComics",
     "HindiDubbed",
     "HinduBooks",
-    "IslamicBooks"]); // Sample categories
-
+    "IslamicBooks",
+    "Btech",
+"BA",
+"BCom",
+"Bsc",
+"HigherSecondary",
+"Intermediate",
+"MangaComics",
+"Medical",
+"PrimaryEducation",
+"SecondaryEducation"
+  ]); 
 
   const fetchComics = async () => {
     setLoading(true);
@@ -298,7 +312,33 @@ const Comics = ({role,userId}) => {
       window.open(imgurl, "_blank"); // Open in a new tab
     }
   };
+  const approveComicApi = async (sourceDb, filename) => {
+    const token = localStorage.getItem('token');
+    await api.post(`/comics/approve/${sourceDb}/${filename}`, {}, {
+      headers:{ Authorization:`Bearer ${token}` }
+    });
+  };
   
+  const disapproveComicApi = async (sourceDb, filename) => {
+    const token = localStorage.getItem('token');
+    await api.delete(`/comics/disapprove/${sourceDb}/${filename}`, {
+      headers:{ Authorization:`Bearer ${token}` }
+    });
+  };
+  const handleApprove = async (row) => {
+    try {
+      await approveComicApi(selectedDatabase, row.filename);
+      fetchComics();
+    } catch(err){ console.error(err); }
+  };
+  
+  const handleDisapprove = async (row) => {
+    try {
+      await disapproveComicApi(selectedDatabase, row.filename);
+      fetchComics();
+    } catch(err){ console.error(err); }
+  };
+    
   const columns = [
     { field: "name", headerName: "Name", width: 250, align: "left" },
     { field: "filename", headerName: "Filename", width: 200, align: "left" },
@@ -316,34 +356,32 @@ const Comics = ({role,userId}) => {
       headerName: "Actions",
       width: 250,
       align: "center",
-      renderCell: (params) => {
-        return (
-          <Box>
-            <Tooltip title="Edit">
-              <Button
-                onClick={() => handleEdit(params.id)}
-                variant="outlined"
-                color="primary"
-                startIcon={<EditIcon />}
-                sx={{ mr: 1 }}
-              >
-                Edit
-              </Button>
-            </Tooltip>
+      renderCell: (params) => (
+        <Box>
+          <Tooltip title="Edit">
+            <Button
+              onClick={() => handleEdit(params.id)}
+              variant="outlined"
+              color="primary"
+              startIcon={<EditIcon />}
+              sx={{ mr: 1 }}
+            >
+              Edit
+            </Button>
+          </Tooltip>
   
-            <Tooltip title="Delete">
-              <Button
-                onClick={() => handleDelete(params.row.id, params.row.filename)} // Pass both comicId and filename
-                variant="outlined"
-                color="secondary"
-                startIcon={<DeleteIcon />}
-              >
-                Delete
-              </Button>
-            </Tooltip>
-          </Box>
-        );
-      },
+          <Tooltip title="Delete">
+            <Button
+              onClick={() => handleDelete(params.row.id, params.row.filename)}
+              variant="outlined"
+              color="secondary"
+              startIcon={<DeleteIcon />}
+            >
+              Delete
+            </Button>
+          </Tooltip>
+        </Box>
+      ),
     },
     {
       field: "viewImages",
@@ -381,6 +419,46 @@ const Comics = ({role,userId}) => {
         </Tooltip>
       ),
     },
+  
+    // ✅ Approve button (admin only, Demo tables only)
+    ...(rolelocal === 'admin'
+      ? [
+          {
+            field: "approve",
+            headerName: "Approve",
+            width: 150,
+            align: "center",
+            renderCell: (params) => (
+              <Button
+                variant="contained"
+                color="success"
+                size="small"
+                onClick={() => handleApprove(params.row)}
+                disabled={!selectedDatabase.endsWith("Demo")}
+              >
+                Approve
+              </Button>
+            ),
+          },
+          {
+            field: "disapprove",
+            headerName: "Disapprove",
+            width: 150,
+            align: "center",
+            renderCell: (params) => (
+              <Button
+                variant="contained"
+                color="error"
+                size="small"
+                onClick={() => handleDisapprove(params.row)}
+                disabled={selectedDatabase.endsWith("Demo")}
+              >
+                Disapprove
+              </Button>
+            ),
+          },
+        ]
+      : []),
   ];
   
   const filteredComics = comics.filter((comic) => {
@@ -500,7 +578,7 @@ const Comics = ({role,userId}) => {
               name="category"
               value={newComic.category}
               onChange={handleFormChange}
-              disabled={isEditing} // Disable when editing
+              // disabled={isEditing} // Disable when editing
 
             >
               {categories.map((category, index) => (

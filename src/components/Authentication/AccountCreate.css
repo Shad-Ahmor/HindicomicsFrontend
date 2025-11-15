@@ -1,0 +1,217 @@
+/* === GENERAL LAYOUT & WRAPPER STYLING === */
+.register-gradient-wrapper {
+  /* Updated: Two-color gradient for the page background (Made even lighter) */
+  background: linear-gradient(
+    135deg,
+    #F5FFFF, /* Extremely Light Sky Blue */
+    #FFFFF5  /* Extremely Light Yellow */
+  );
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === OUTER CARD CONTAINER (Book Cover) === */
+.gradient-form {
+  overflow: hidden;
+  /* External shadow added for 3D lifted effect */
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  position: relative;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  display: flex;
+  width: 100%;
+  max-width: 1200px; /* Matched Login max-width */
+  height: calc(100vh - 100px); /* Matched Login height */
+}
+
+/* === LEFT FORM PANEL (Left Book Page) === */
+.register-form-panel {
+  position: relative;
+  /* flex: 1.2; (Removed flex to let Grid handle 6/12 sizing) */
+  background: linear-gradient(
+    135deg,
+    #FFF0F5, /* Lightest Baby Pink */
+    #F0FFF0  /* Lightest Olive Green */
+  );
+  /* Inner spine shadow (on the right edge) for open book effect */
+  box-shadow: inset -15px 0 30px -10px rgba(0, 0, 0, 0.7);
+  padding: 10vh !important;
+  /* 3D BOOK PAGE CURL (Left Page) */
+  transform: rotateY(10deg);
+  transform-origin: right;
+  transition: transform 0.5s ease;
+  overflow: hidden;
+  z-index: 4;
+}
+
+/* Sparkles overlay */
+.register-form-panel::before {
+  content: '';
+  inset: 0;
+  /* Fireflies effect matching Login.css */
+
+  animation: fireflyMove 40s linear infinite, fireflyPulse 5s ease-in-out infinite alternate;
+  z-index: -1;
+  opacity: 1;
+}
+
+/* === RIGHT GRADIENT PANEL (Right Book Page) === */
+.professional-panel {
+
+  animation: gradientAnimation 25s ease infinite;
+  /* Inner spine shadow (on the left edge) for open book effect */
+  box-shadow: inset 15px 0 30px -10px rgba(0, 0, 0, 0.7);
+  border-radius: 0 20px 20px 0;
+  /* 3D BOOK PAGE CURL (Right Page) */
+  transform-origin: left;
+  transition: transform 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Bubble overlay */
+.professional-panel::after {
+
+  background-size: 500px 500px;
+  animation: moveBubbles 60s linear infinite;
+  opacity: 0.5;
+  z-index: 2;
+}
+
+/* * === SHARED ANIMATIONS (Copied from Login.css) === */
+
+/* @keyframes for the slow, smooth color cycle (Wave Animation) */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* @keyframes for the Bubble Movement Animation (Floating effect) */
+@keyframes moveBubbles {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 5000px -5000px;
+  }
+}
+
+/* @keyframes for the Firefly Movement (Slow, floating drift) */
+@keyframes fireflyMove {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: -1000px 1000px;
+    }
+}
+
+/* @keyframes for the Firefly Pulse (Blinking/Glowing effect) */
+@keyframes fireflyPulse {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* @keyframes for the Button Wave Animation */
+@keyframes buttonWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+/* * === SHARED 3D/LIFTED EFFECTS (Copied from Login.css) === */
+
+/* Custom button gradient for AccountCreate button */
+.gradient-custom-2 {
+  /* New Wave Gradient for the Create Account button */
+  background: linear-gradient(
+    90deg,
+    #4C9AFF, /* Blue */
+    #FFD166, /* Bright Yellow */
+    #4C9AFF /* Blue */
+  );
+  background-size: 200% 100%;
+  animation: buttonWave 8s linear infinite;
+}
+
+
+/* 1. Lifted Text Effect */
+.lifted-text {
+    /* Subtle shadow for depth on any background */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    z-index: 3;
+    position: relative;
+}
+
+/* Dynamic Contrast Shadow (Used on the white text on the gradient panel) */
+.dynamic-text-shadow {
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+.dynamic-text-shadow[style*="color: white"] {
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+
+/* 2. Lifted Input Effect */
+/* Targets the main container of the input for the custom shadow/curve */
+.lifted-input .MuiOutlinedInput-root,
+.lifted-input .MuiOutlinedInput-root fieldset,
+.lifted-input .MuiSelect-root {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    border-radius: 10px; /* Increased curve for input */
+}
+/* Specifically target FormControl's root (for Select component) */
+.lifted-input.MuiFormControl-root {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    border-radius: 10px;
+    /* Ensure the content itself respects the shadow */
+    overflow: hidden;
+}
+
+.lifted-input .MuiOutlinedInput-root:hover {
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+.lifted-input.MuiFormControl-root:hover {
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+
+
+/* 3. Lifted Button Effect (APPLIED TO MuiButton-root) */
+.MuiButton-root.lifted-button {
+    transition: all 0.3s ease-in-out;
+    z-index: 3;
+    position: relative;
+    border-radius: 10px; /* Increased curve for button */
+    /* Wave gradient is applied via the gradient-custom-2 class defined above */
+}
+.MuiButton-root.lifted-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(76, 154, 255, 0.6) !important; /* Adjusted shadow color for Blue button */
+    animation-duration: 4s; /* Faster wave on hover */
+}

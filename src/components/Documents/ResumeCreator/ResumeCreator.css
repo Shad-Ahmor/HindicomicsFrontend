@@ -1,0 +1,202 @@
+/* ResumeCreator.css - Professional and Light Design */
+
+/* ---------------------------------------------------- */
+/* 1. Global & Background Styles */
+/* ---------------------------------------------------- */
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Professional sans-serif font */
+}
+
+.creator-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    /* Soft, professional light blue gradient */
+    background: linear-gradient(135deg, #f0f4f8, #e7edf3, #dce3eb); 
+    position: relative;
+    overflow: hidden; 
+}
+
+/* Subtle 3D Background Elements (Soft, light colors) */
+.creator-container::before,
+.creator-container::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5; /* Reduced opacity */
+    filter: blur(100px); /* More blur for a softer glow */
+}
+
+.creator-container::before {
+    width: 350px;
+    height: 350px;
+    background-color: #bbdefb; /* Light Sky Blue */
+    top: -80px;
+    left: -80px;
+    animation: moveCircles 18s infinite alternate ease-in-out;
+}
+
+.creator-container::after {
+    width: 450px;
+    height: 450px;
+    background-color: #c8e6c9; /* Light Mint Green */
+    bottom: -100px;
+    right: -100px;
+    animation: moveCircles 22s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes moveCircles {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(60px, -60px) scale(1.05); }
+}
+
+/* ---------------------------------------------------- */
+/* 2. Main Card Styling (Sharp & Clean) */
+/* ---------------------------------------------------- */
+.main-card {
+    background: #ffffff; 
+    border-radius: 16px; /* Slightly less rounded */
+    padding: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Lighter, professional shadow */
+    text-align: center;
+    max-width: 650px;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+    border: 1px solid #e0e0e0; /* Clean border */
+}
+
+.main-title {
+    font-size: 2.8em;
+    font-weight: 700;
+    color: #1a202c; /* Darker text for professionalism */
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+}
+
+.main-subtitle {
+    font-size: 1.1em;
+    color: #4a5568;
+    margin-bottom: 40px;
+}
+
+/* ---------------------------------------------------- */
+/* 3. Button Group Styling */
+/* ---------------------------------------------------- */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px; 
+    justify-content: center;
+}
+
+.action-button {
+    font-size: 1.1em;
+    font-weight: 600;
+    padding: 16px 30px; 
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); 
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden; 
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Create Button Specific Styles (Professional Blue) */
+.create-button {
+    background: linear-gradient(90deg, #3b82f6, #2563eb); /* Tailwind Blue Shades */
+}
+.create-button:hover {
+    transform: translateY(-3px); 
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4); /* Blue shadow on hover */
+    background: linear-gradient(90deg, #2563eb, #3b82f6); 
+}
+.create-button::before {
+    content: '✨';
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+.create-button span {
+    padding-left: 20px; 
+}
+
+/* Preview Button Specific Styles (Professional Green/Teal) */
+.preview-button {
+    background: linear-gradient(90deg, #10b981, #059669); /* Tailwind Green/Teal Shades */
+}
+.preview-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.4); /* Green shadow on hover */
+    background: linear-gradient(90deg, #059669, #10b981); 
+}
+.preview-button::before {
+    content: '👁️'; /* Eye icon */
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+.preview-button span {
+    padding-left: 20px;
+}
+
+/* Back Button for internal views */
+.back-button-common {
+    display: block;
+    margin-bottom: 25px;
+    padding: 10px 20px;
+    background-color: #f7fafc;
+    color: #4a5568;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.back-button-common:hover {
+    background-color: #edf2f7;
+    transform: translateY(-1px);
+}
+
+/* Responsive Adjustments (Same as before, ensuring mobile usability) */
+@media (max-width: 768px) {
+    .main-card {
+        padding: 30px;
+    }
+    .main-title {
+        font-size: 2em;
+    }
+    .action-button {
+        width: 100%;
+        padding: 15px 20px;
+    }
+    .create-button span, .preview-button span {
+        padding-left: 20px;
+    }
+}
+.content-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 900px; /* Adjust as needed */
+    margin-top: 40px;
+    position: relative;
+    z-index: 10;
+}

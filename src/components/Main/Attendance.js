@@ -3,7 +3,7 @@ import api from '../api';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import ManagerApprovalModal from './ManagerApprovalModal';
 import ShineBorder from '../Main/ShineBorder';
-import '../css/ShineBorder.css';
+import '../../styles/css/ShineBorder.css';
 
 import {
     Snackbar,

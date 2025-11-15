@@ -1,0 +1,411 @@
+/* Import Google Fonts - Updated for more modern and artistic choices */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=Playfair+Display:wght@700&family=Lora:wght@400;700&display=swap');
+
+/* --- General Page & Container Styling --- */
+.certificate-page-container {
+    max-width: 1100px; /* Slightly wider for grandeur */
+    margin: 50px auto 100px; /* More vertical spacing */
+    padding: 25px;
+    background-color: #eef5f9; /* Very light, cool gray */
+    border-radius: 20px; /* Softer corners */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18); /* Deeper, softer shadow */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Download button container top right */
+
+
+.btn-sm {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 12px 25px; /* Larger button */
+    border-radius: 30px; /* Pill-like shape */
+    background: linear-gradient(135deg, #007bff, #00c6ff); /* Fresh blue gradient */
+    border: none;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.btn-sm:hover {
+    background: linear-gradient(135deg, #00c6ff, #007bff);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.6);
+}
+
+/* --- Certificate Container --- */
+.certificate-border {
+    border: 0; /* No explicit border, rely on shadows and waves */
+    background-color: #ffffff; /* Crisp white background for content */
+    border-radius: 18px; /* Slightly more rounded */
+    padding: 0; /* Remove overall padding to allow inner-content padding */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.1); /* Subtle main shadow */
+    position: relative;
+    overflow: hidden;
+    min-height: 700px; /* Ensure sufficient height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #2c3e50; /* Dark, professional text color */
+}
+
+/* --- Attractive Waving Backgrounds --- */
+/* Top Wave */
+.certificate-border::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 180px; /* Increased height for more prominence */
+    background: linear-gradient(to right, #007bff, #00c6ff, #0056b3); /* Vibrant blue gradient */
+    clip-path: polygon(0 0, 100% 0, 100% 65%, 85% 75%, 70% 70%, 50% 80%, 30% 70%, 15% 75%, 0 65%);
+    z-index: 1;
+    opacity: 0.98; /* Almost opaque */
+}
+
+/* Bottom Wave */
+.certificate-border::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px; /* Increased height for more prominence */
+    background: linear-gradient(to left, #28a745, #20c997, #196f3d); /* Fresh green gradient */
+    clip-path: polygon(0 35%, 15% 25%, 30% 30%, 50% 20%, 70% 30%, 85% 25%, 100% 35%, 100% 100%, 0 100%);
+    z-index: 1;
+    opacity: 0.98; /* Almost opaque */
+}
+
+/* Inner content container to sit above waves and provide padding */
+.certificate-inner-content {
+    position: relative;
+    z-index: 2; /* Ensures all content is above the waves */
+    background-color: transparent; /* Allows waves to show */
+    /* *** KEY CHANGE FOR GAP *** */
+    padding: 70px 90px; /* Matches previous .certificate-border padding for left/right,
+                           but provides top/bottom gap from waves */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distributes content vertically */
+}
+
+/* --- Certificate Header (Logos) --- */
+.logos-header {
+    margin-bottom: 10px; /* More space below logos */
+    margin-top: 100px;
+    position: relative;
+    z-index: 3; /* Ensure logos are on top */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+  margin-top: 20px;
+    max-height: 125px; /* Slightly larger logos */
+    width: auto;
+    object-fit: contain;
+}
+
+/* --- Certificate Title --- */
+.certificate-title {
+    font-family: 'Playfair Display', serif; /* Elegant serif for title */
+    font-size: 2rem; /* Larger, more impactful title */
+    color: #1a237e; /* Deep, rich blue */
+    margin-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px; /* Wider letter spacing for grander look */
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* More prominent shadow */
+}
+
+/* --- Main Text Content --- */
+.certificate-text-intro {
+    font-family: 'Lora', serif; /* Gentle, readable serif */
+    font-size: 1.5rem;
+    color: #4a4a4a;
+    margin-bottom: 20px;
+    font-weight: 400;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.certificate-text {
+    font-family: 'IBM Plex Sans', sans-serif; /* Clean sans-serif for main text */
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 12px;
+    line-height: 1.7; /* Increased line-height for readability */
+}
+
+.certificate-text strong {
+    color: #0056b3; /* Blue for strong emphasis */
+    font-weight: 600;
+}
+
+/* Name styling */
+.certificate-name {
+    font-family: 'Playfair Display', serif; /* Same elegant font as title for name */
+    font-size: 2.2rem;
+    color: #0d47a1; /* Even deeper blue for name */
+    font-weight: 700;
+    margin-bottom: 40px; /* More space below name */
+    text-align: center;
+    text-shadow: 1.5px 1.5px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Performance Evaluation Section --- */
+.performance-evaluation-section {
+    background-color: rgba(240, 248, 255, 0.95); /* Very light blue background */
+    border-radius: 12px; /* Softer corners */
+    padding: 30px 40px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(0, 123, 255, 0.1); /* Subtle blue border */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Softer shadow */
+}
+
+.evaluation-title {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1.8rem;
+    color: #1a237e;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 3px solid #20c997; /* Teal underline */
+    padding-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.evaluation-ratings p {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1.15rem;
+    color: #333;
+    margin-bottom: 10px;
+    padding-left: 20px; /* More space for star */
+    position: relative;
+}
+
+.evaluation-ratings p::before {
+    content: '🌟'; /* More modern star emoji */
+    position: absolute;
+    left: 0;
+    color: #ffd700; /* Gold color */
+    font-size: 1.2em; /* Larger star */
+    line-height: 1;
+    top: 2px; /* Adjust vertical alignment */
+}
+
+.overall-ranking {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0056b3; /* Deep blue for ranking */
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 18px;
+    border-top: 2px dashed rgba(0, 123, 255, 0.2); /* Blue dashed line */
+}
+
+/* --- Signature and Seal Section --- */
+.signature-and-seal-section {
+    margin-top: auto; /* Pushes to bottom */
+    border-top: 1px solid rgba(0, 0, 0, 0.08); /* Lighter border */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 150px;
+}
+
+.company-seal-area {
+    text-align: center;
+    flex-basis: 30%;
+}
+
+.company-seal {
+    max-width: 100px; /* Slightly larger seal */
+    height: auto;
+    filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.25)); /* More pronounced shadow */
+    margin-bottom: 15px;
+}
+
+.seal-text {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1rem;
+    color: #555;
+    margin-top: 8px;
+}
+
+.authorized-signature-area {
+    flex-basis: 55%; /* More space for signature */
+    text-align: center;
+    padding-left: 20px;
+}
+
+.authorized-signature-img {
+    max-width: 180px; /* Larger signature image */
+    height: auto;
+    margin-bottom: -15px; /* Pull signature closer to line */
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.signature-line {
+    font-family: 'Lora', serif; /* Elegant serif for line */
+    font-size: 1.2rem;
+    color: #555;
+    margin: 8px 0 0;
+    border-bottom: 1.5px solid #555; /* Thicker line */
+    padding-bottom: 5px; /* More space below line */
+    width: 80%; /* Wider line */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.signature-name {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a237e; /* Deep blue for name */
+    margin-top: 8px;
+}
+
+.signature-title,
+.issue-date {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1rem;
+    color: #666;
+    margin: 5px 0;
+}
+
+/* --- Certificate Footer --- */
+.certificate-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 20px;
+    margin-top: 20px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.95rem;
+    color: #666;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px; /* More spacing */
+}
+
+.footer-link {
+    margin: 0;
+    color: #0056b3; /* Deep blue for links */
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: #20c997; /* Teal on hover */
+}
+
+.qr-code {
+    max-width: 70px; /* Slightly larger QR code */
+    height: auto;
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.15));
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) { /* Adjust for larger tablets */
+    .certificate-inner-content {
+        padding: 60px 70px; /* Adjusted inner padding */
+    }
+    .certificate-title {
+        font-size: 3.5rem;
+    }
+    .certificate-name {
+        font-size: 2.8rem;
+    }
+    .certificate-text {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .certificate-inner-content {
+        padding: 50px 50px; /* Adjusted inner padding */
+    }
+    .certificate-title {
+        font-size: 2.8rem;
+    }
+    .certificate-name {
+        font-size: 2.2rem;
+    }
+    .certificate-text {
+        font-size: 1rem;
+    }
+    .logos-header {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .signature-and-seal-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+    .authorized-signature-area,
+    .company-seal-area {
+        flex-basis: auto;
+        width: 100%;
+    }
+    .certificate-footer {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .certificate-inner-content {
+        padding: 40px 30px; /* Adjusted inner padding */
+    }
+    .certificate-title {
+        font-size: 2.2rem;
+        letter-spacing: 1.5px;
+    }
+    .certificate-name {
+        font-size: 1.8rem;
+    }
+    .certificate-text-intro {
+        font-size: 1.2rem;
+    }
+    .certificate-text {
+        font-size: 0.95rem;
+    }
+    .btn-sm {
+        font-size: 0.8rem;
+        padding: 10px 20px;
+    }
+    .evaluation-title {
+        font-size: 1.4rem;
+    }
+    .evaluation-ratings p, .overall-ranking {
+        font-size: 1rem;
+    }
+    .signature-name {
+        font-size: 1rem;
+    }
+    .signature-title, .issue-date, .seal-text, .footer-link {
+        font-size: 0.85rem;
+    }
+    .qr-code {
+        max-width: 50px;
+    }
+}
+
+/* Prevent download button from being included in the PDF */
+.download-btn-container {
+  margin: 20px 0;
+}

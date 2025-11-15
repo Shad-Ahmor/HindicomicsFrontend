@@ -234,9 +234,9 @@ body {
 
 /* Child Nodes (horizontal arrangement) */
 .childNodes {
-  display: flex;
+  display: flex !important;
   justify-content: space-between;
-  margin-top: 20px;
+  margin: 5px;
 }
 
 /* Adjust the margin for the nested child nodes */

@@ -1,0 +1,239 @@
+
+
+/* 🧼 Card Container - Pure White & Elevated */
+.resume-card {
+  width: 100%;
+  max-width: 900px;
+  /* Pure white background */
+  border-radius: 16px; /* Soft rounding */
+
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.resume-card:hover {
+  transform: translateY(-2px);
+  
+}
+
+/* --- STEPPER --- */
+
+/* ✨ Stepper - Clean Professional Path */
+.stepper-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3.5rem;
+  position: relative;
+}
+
+.stepper-container::before {
+  content: "";
+  position: absolute;
+  top: 25px; /* Adjust line position to center */
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  /* Light gray path line */
+  background: #d4d4d4;
+  filter: none;
+  z-index: 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+/* Step Number - Clean Circles */
+.step-number {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: #ffffff;
+  /* Subtle ring shadow */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  text-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+  /* Active Soft Blue */
+  background: #1a73e8; /* Professional Blue */
+  border-color: #1a73e8;
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(26, 115, 232, 0.4); 
+}
+
+.step.completed .step-number {
+  /* Completed Soft Green */
+  background: #00bfa5; /* Teal/Mint Green */
+  border-color: #00bfa5;
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 191, 165, 0.4);
+}
+
+.step-text {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  color: #333; /* Dark text for readability */
+  text-align: center;
+  font-weight: 500;
+  text-shadow: none;
+}
+
+/* --- INPUTS --- */
+
+/* 🧠 Input Group Layout - Clean, Elevated Field */
+.input-group {
+  display: flex;
+  align-items: center;
+  /* Clean white input field */
+  background: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  padding: 0.8rem 1.2rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  /* Depth ke liye halka inner shadow */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04); 
+}
+
+.input-group:focus-within {
+  transform: translateY(-1px);
+  background: #ffffff;
+  /* Professional blue focus ring */
+  border-color: #1a73e8;
+  box-shadow: 
+    0 0 0 3px rgba(26, 115, 232, 0.2), /* Soft glow effect */
+    0 4px 10px rgba(0, 0, 0, 0.08); /* Lifted shadow */
+}
+
+/* 🎨 Icons - Professional Accent Color */
+.input-group svg {
+  font-size: 1.6rem;
+  margin-right: 1rem;
+  color: #1a73e8; /* Professional Blue accent */
+  transition: all 0.3s ease;
+}
+
+.input-group:focus-within svg {
+  color: #0d47a1; /* Focus hone par thoda aur gehra */
+}
+
+/* MUI TextField native input and textarea styling override */
+.input-group .MuiInputBase-input,
+.input-group .MuiInputBase-root textarea {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: #1f2937 !important; /* Gehra text color */
+  flex: 1;
+  font-size: 1rem !important;
+  padding: 0 !important;
+}
+
+/* Fix for MUI label shrinking position in standard variant */
+.input-group .MuiInputLabel-root {
+    position: static;
+    transform: none;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    color: #4b5563 !important; /* Label color for clarity */
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: #999;
+}
+
+/* 🪄 Section Headings */
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1f2937; /* Strong contrast ke liye bahut gehra gray */
+  margin-bottom: 0.4rem;
+  text-shadow: none;
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: #6b7280; /* Medium gehra gray */
+  margin-bottom: 2rem;
+  text-shadow: none;
+}
+
+/* --- BUTTONS --- */
+
+/* 🔘 Buttons - Professional and Lifted */
+.btn {
+  padding: 0.9rem 2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  /* Professional Blue */
+  background: #1a73e8;
+  color: white;
+  box-shadow: 0 6px 15px rgba(26, 115, 232, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background: #0d47a1;
+  box-shadow: 0 8px 20px rgba(26, 115, 232, 0.5);
+}
+
+.btn-secondary {
+  /* Halka outline look */
+  background: #ffffff;
+  color: #555;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary:hover {
+  background: #f1f5f9;
+  color: #1f2937;
+  border-color: #aaa;
+}
+
+.btn-success {
+  /* Professional Green Finish Button */
+  background: #00bfa5;
+  color: white;
+  box-shadow: 0 6px 15px rgba(0, 191, 165, 0.4);
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  background: #00a08e;
+  box-shadow: 0 8px 20px rgba(0, 191, 165, 0.6);
+}
+
+/* 💫 Responsive */
+@media (max-width: 768px) {
+  .resume-card {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+  
+  .input-group {
+    padding: 0.7rem 1rem;
+  }
+}

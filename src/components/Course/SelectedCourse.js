@@ -24,7 +24,7 @@ const SelectedCourse = () => {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const response = await axios.get(`https://hindicomicsbackend.onrender.com/courses/${courseId}`);
+        const response = await axios.get(`http://localhost:5000/courses/${courseId}`);
         const data = response.data;
 
         console.log(data);  // Check the structure of the response
@@ -54,7 +54,7 @@ const SelectedCourse = () => {
   const fetchProgress = async (userId, courseId) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(`https://hindicomicsbackend.onrender.com/courses/${userId}/progress/${courseId}`,{
+      const response = await axios.get(`http://localhost:5000/courses/${userId}/progress/${courseId}`,{
         headers: {
           Authorization: `Bearer ${token}`, // Only token in the Authorization header
         }});
@@ -72,7 +72,7 @@ const SelectedCourse = () => {
   
     try {
       await axios.put(
-        `https://hindicomicsbackend.onrender.com/courses/${userId}/progress/${courseId}`,
+        `http://localhost:5000/courses/${userId}/progress/${courseId}`,
         {
           completedLessons,  // This is the body of the request
           progress           // This is also part of the body of the request

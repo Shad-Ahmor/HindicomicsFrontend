@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Modal.css'; // Import your CSS file for modal styles
+import '../../styles/css/Modal.css'; // Import your CSS file for modal styles
 import { Box, Typography, Divider, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 

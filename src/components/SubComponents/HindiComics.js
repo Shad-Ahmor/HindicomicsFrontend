@@ -2,29 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Box, CssBaseline } from '@mui/material';
 import Sidebar from './Sidebar';
 import RoutesConfig from './RoutesConfig';
-import { useLocation, useNavigate } from 'react-router-dom';  // <-- Import useLocation and useNavigate
+import { useLocation, useNavigate } from 'react-router-dom';  
 import { styled } from '@mui/material/styles';
-import Header from './Header'; // Import the Header component
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
 import MuiAppBar from '@mui/material/AppBar';
-
 const drawerWidth = 240;
-const decryptData = (encimg) => {
-  // Placeholder logic for decrypting the image data
-  return encimg;  // Modify this with actual decryption logic
-};  
-
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -64,18 +52,11 @@ function HindiComics({ setIsLoggedIn }) {
     const [success, setSuccess] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const menuId = 'primary-search-account-menu';
-
     const handleDrawerOpen = () => setOpen(true);
     const handleDrawerClose = () => setOpen(false);
     const handleProfileMenuOpen = (event) => {
       setAnchorEl(event.currentTarget);
     };
-
-
- 
-
-
-    // Ensure state is updated on initial load
     useEffect(() => {
         const usertoken = localStorage.getItem('token');
         if (usertoken) {
@@ -105,67 +86,65 @@ function HindiComics({ setIsLoggedIn }) {
                 history={navigate} 
             />
 
-            {/* Header */}
-               {/* Main content */}
                <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default' }}>
 
         <CssBaseline />
-<AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={[
-              {
-                marginRight: 5,
-              },
-              open && { display: 'none' },
-            ]}
-          >
-            <MenuIcon />
-          </IconButton>
-            {/* Right side header content */}
-            <Box sx={{ flexGrow: 1 }} />
-
-            {/* Notification and Profile Section */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
-              <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="error">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-
-              {/* Profile Icon with Image */}
+          <AppBar position="fixed" open={open}>
+            <Toolbar>
               <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
                 color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={[
+                  {
+                    marginRight: 5,
+                  },
+                  open && { display: 'none' },
+                ]}
               >
-         
-               {userimg ?
-                
-                <div className="imageContainer">
-                  <img src={userimg} className="image" alt="user profile" onClick={() => navigate('/profile')} />
-                  
-                </div>
-                :
-                <AccountCircle />
-               }
+                <MenuIcon />
               </IconButton>
-            </Box>
-          </Toolbar>
-      </AppBar>
+                {/* Right side header content */}
+                <Box sx={{ flexGrow: 1 }} />
+
+                {/* Notification and Profile Section */}
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+                  <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                    <Badge badgeContent={4} color="error">
+                      <MailIcon />
+                    </Badge>
+                  </IconButton>
+                  <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
+                    <Badge badgeContent={17} color="error">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+
+                  {/* Profile Icon with Image */}
+                  <IconButton
+                    size="large"
+                    edge="end"
+                    aria-label="account of current user"
+                    aria-controls={menuId}
+                    aria-haspopup="true"
+                    onClick={handleProfileMenuOpen}
+                    color="inherit"
+                  >
+            
+                  {userimg ?
+                    
+                    <div className="imageContainer">
+                      <img src={userimg} className="image" alt="user profile" onClick={() => navigate('/profile')} />
+                      
+                    </div>
+                    :
+                    <AccountCircle />
+                  }
+                  </IconButton>
+                </Box>
+              </Toolbar>
+          </AppBar>
       </Box>
             {/* Styled AppBar */}
             <Box

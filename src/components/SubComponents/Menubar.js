@@ -9,7 +9,17 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { Add, Assignment, AssignmentInd, AssignmentReturn, AssignmentTurnedIn, ExpandLess, ExpandMore, InterestsSharp, LocalLibrary, Password, PasswordOutlined, PersonOffOutlined, StarBorder, WorkspacePremium } from '@mui/icons-material';
+import FunctionsIcon from '@mui/icons-material/Functions';          // Method
+import ExtensionIcon from '@mui/icons-material/Extension';          // Module
+import ApartmentIcon from '@mui/icons-material/Apartment';          // Entity/Project
+import SecurityIcon from '@mui/icons-material/Security';            // RBAC Permission
+import PolicyIcon from '@mui/icons-material/Policy';  
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter'; 
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import CardMembershipIcon from '@mui/icons-material/CardMembership';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
+import Person2Icon from '@mui/icons-material/Person2';
+import { Add, Assignment, AssignmentInd,AssignmentReturn, Work as WorkIcon ,AccountCircle as AccountCircleIcon ,AssignmentTurnedIn, ExpandLess, ExpandMore, LocalLibrary, WorkspacePremium } from '@mui/icons-material';
 import {
   Dashboard as DashboardIcon,
   Logout as LogoutIcon,
@@ -22,363 +32,618 @@ import { List, ListItem, ListItemText, ListItemIcon, Collapse,ListItemButton  } 
 
 import {  History } from '@mui/icons-material'; // Import History icon
 import TableViewIcon from '@mui/icons-material/TableView';
-import { decryptData } from '../Security/cryptoUtils';
+export default function Menubar({
+  coursesdec,
+  decryptroles,
+  decryptsubrole,
+  open,
+  handleNavigate,
+  hasPermission, // unified permission checker
+  isLoggedIn,
+  handleLoginButtonClick,
+  handleLogoutButtonClick,
+  
+  permissions, // unified permissions array
+}) {
 
-export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,handleNavigate, hasPermission, isLoggedIn,handleLoginButtonClick, handleLogoutButtonClick}) {
+
 
   const [openAssignment, setOpenAssignment] = useState(false); // State to control dropdown
+    const [openEntity, setOpenEntity] = useState(false); // State to control dropdown
+
   const [openCourses, setOpenCourses] = useState(false); // State to control dropdown
+  const [openPermission,setOpenPermission]= useState(false); 
+// Universal permission checker (RBAC + UBAC + ABAC)
+
+
+// ✅ Normalize role and subrole into arrays to avoid .includes() errors
+const rolesArray = Array.isArray(decryptroles)
+  ? decryptroles
+  : typeof decryptroles === "string"
+  ? decryptroles.split(",").map(r => r.trim().toLowerCase())
+  : [];
+
+const subrolesArray = Array.isArray(decryptsubrole)
+  ? decryptsubrole
+  : typeof decryptsubrole === "string"
+  ? decryptsubrole.split(",").map(r => r.trim().toLowerCase())
+  : [];
+const checkSuperAccess = (base, url, method) => {
+  const safeBase = typeof base === "string" ? base : "";
+  const safeUrl = typeof url === "string" ? url : "";
+  const safeMethod = typeof method === "string" ? method : "GET";
+
+  const key = `${safeBase}${safeUrl}:${safeMethod.toUpperCase()}`;
+
+  // ✅ Use unified hasPermission or fallback to direct check
+  if (typeof hasPermission === "function") {
+    return hasPermission(safeBase, safeUrl, safeMethod);
+  }
+
+  return Array.isArray(permissions) && permissions.includes(key);
+};
 
   useEffect(() => {
     if (!open) {
       setOpenAssignment(false);
+      setOpenEntity(false);
       setOpenCourses(false) // Close assignment dropdown when the parent menu opens
+      setOpenPermission(false)
     }
 
   }, [open]); 
-  const handleAssignmentClick = () => {
-    setOpenAssignment(!openAssignment); // Toggle dropdown on click
-  };
-  const handleCourcesClick = () => {
-    setOpenCourses(!openCourses); // Toggle dropdown on click
-  };
-  const showReferred = Array.isArray(decryptsubrole)
-  ? decryptsubrole.includes('smm')  // Case when it's already an array
-  : (typeof decryptsubrole === 'string' && decryptsubrole.split(',').includes('smm'));  // Case when it's a string
-  
-  const showWebops = Array.isArray(decryptsubrole)
-  ? decryptsubrole.includes('webops') ||  decryptroles.includes('admin')  // Case when it's already an array
-  : (typeof decryptsubrole === 'string' && decryptsubrole.split(',').includes('webops')  || typeof decryptroles === 'string' && decryptroles.split(',').includes('admin'));  // Case when it's a string
 
-  const showOnlyIntern = true ?  decryptroles.includes('intern') : false;
-  const viewcourse = Array.isArray(decryptroles)
-  ? decryptroles.includes('intern') || decryptroles.includes('manager') || decryptroles.includes('admin')  // Case when it's already an array
-  : (typeof decryptroles === 'string' && decryptroles.split(',').some(role => ['intern', 'manager', 'admin'].includes(role)));  // Case when it's a string
-
-  const decryptname = decryptData(localStorage.getItem('name'))
-  const addcourses = Array.isArray(decryptsubrole)
-  ? decryptsubrole.includes('webops') || 
-    decryptname.trim().toLowerCase() === 'anuragtiwari' || 
-    decryptname.trim().toLowerCase() === 'anjalitiwari' || 
-    decryptname.trim().toLowerCase() === 'snehatripathi' || 
-    decryptsubrole.includes('admin') ||
-    decryptsubrole.includes('manager')
-  : (typeof decryptsubrole === 'string' && decryptsubrole.split(',').some(role => ['webops', 'admin', 'manager'].includes(role))) || 
-    ['anuragtiwari', 'anjalitiwari', 'snehatripathi'].includes(decryptname.trim().toLowerCase());
+    const handleAssignmentClick = () => setOpenAssignment(!openAssignment);
+  const handlEntityClick = () => setOpenEntity(!openEntity);
+  const handleCourcesClick = () => setOpenCourses(!openCourses);
+  const handlePermissionClick = () => setOpenPermission(!openPermission);
 
 
-  const showpermit = Array.isArray(decryptroles)
-  ? decryptroles.includes('admin')  // Case when it's already an array
-  : (typeof decryptroles === 'string' && decryptroles.split(',').includes('admin'));  // Case when it's a string
+
+  const showWebops = subrolesArray.includes("webops") || rolesArray.includes("admin");
+
+
+  const showOnlyIntern = rolesArray.includes("intern");
+
+
+  const hasAnyPermissionAccess = () => {
+  const endpoints = [
+    { base: "/rolemethod", url: "/get-modules" },
+    { base: "/rolemethod", url: "/get-roles" },
+    { base: "/rolemethod", url: "/get-methods" },
+    { base: "/rolemethod", url: "/get-positions" },
+  ];
+
+  return endpoints.some(ep => checkSuperAccess(ep.base, ep.url, "GET"));
+};
+const iconColors = [
+    "#FF6B6B",
+    "#6BCB77",
+    "#4D96FF",
+    "#F7B32B",
+    "#9D4EDD",
+    "#FF914D",
+    "#3CCF4E",
+  ];
+
+  const randomColor = () =>
+    iconColors[Math.floor(Math.random() * iconColors.length)];
+  const iconBox = (IconComponent) => (
+    <IconComponent sx={{ color: randomColor(), fontSize: 24 }} />
+  );
+
+
 
   return (
     <div>
       <List>
 
    
+      {checkSuperAccess("/auth", "/attendance-summary", "GET",   ) && (
 
-      {Array.isArray(decryptroles)
-  ? decryptroles.includes('intern')
-  : typeof decryptroles === 'string' && decryptroles.split(',').includes('intern') ? (
+
+
     <ListItem>
       <ListItemButton onClick={() => handleNavigate('/interndashboard')}>
-        <ListItemIcon><DashboardIcon sx={{ color: 'gray' }} /></ListItemIcon>
+        <ListItemIcon>{iconBox(DashboardIcon )}</ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
     </ListItem>
-  ) : (
-    <ListItem>
-      <ListItemButton onClick={() => handleNavigate('/dashboard')}>
-        <ListItemIcon><DashboardIcon sx={{ color: 'gray' }} /></ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItemButton>
-    </ListItem>
-)}
+      )}
 
-  <ListItem>
-    <ListItemButton onClick={() => handleNavigate('/attendance')}>
-       <ListItemIcon
-                  ><CalendarMonthIcon  sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-               
-                 primary="Attendance" />
-    </ListItemButton>
-  </ListItem>
-  <ListItem>
-    <ListItemButton onClick={() => handleNavigate('/passwordchange')}>
-       <ListItemIcon
-                  ><LockOpenIcon sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-               
-                 primary="Change Password" />
-    </ListItemButton>
-  </ListItem>
+    {checkSuperAccess("/dashboard", "/role-counts", "GET",   ) && (
 
 
+      <ListItem>
+        <ListItemButton onClick={() => handleNavigate('/dashboard')}>
+          <ListItemIcon>{iconBox(DashboardIcon )}</ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItemButton>
+      </ListItem>
+    )}
+
+
+      {checkSuperAccess("/auth", "/attendance", "GET",   ) && (
+          <ListItem>
+            <ListItemButton onClick={() => handleNavigate('/attendance')}>
+              <ListItemIcon>{iconBox(CalendarMonthIcon  )}</ListItemIcon>
+              <ListItemText
+                      
+                        primary="Attendance" />
+            </ListItemButton>
+          </ListItem>
+      )}
+
+      {checkSuperAccess("/auth", "/profile/password", "PUT",   ) && (
+          <ListItem>
+            <ListItemButton onClick={() => handleNavigate('/passwordchange')}>
+              <ListItemIcon>{iconBox(LockOpenIcon )}</ListItemIcon>
+              <ListItemText
+                      
+                        primary="Change Password" />
+            </ListItemButton>
+          </ListItem>
+      )}
+
+      {checkSuperAccess("/rolemethod", "/organisation", "GET",   ) && (
+        <ListItem>
+              <ListItemButton onClick={handlEntityClick}>
+              <ListItemIcon>{iconBox(BusinessCenterIcon)}
+              </ListItemIcon>
+              <ListItemText primary="Organisation" />
+              {openEntity ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+          </ListItem>
+      )}
+
+
+    <Collapse in={openEntity} timeout="auto" unmountOnExit>
+      <List component="div" disablePadding>
+        {/* Hierarchy Menu Item */}
+        {checkSuperAccess("/hierarchy", "/", "GET",   ) && (
+  
+            <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/entity/hierarchy')}>
+              <ListItemIcon>
+                <AccountTreeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Hierarchy" />
+            </ListItemButton>
+            )}
+            {checkSuperAccess("/rolemethod", "/organisation", "GET",   ) && (
+
+           <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/profile')}>
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItemButton>
+            )}
+
+     
+  
+      </List>
+    </Collapse>
 
 
    {/* Assignment  */}
-
+{checkSuperAccess(
+              "/assignments",
+              "/assignedtasks",
+              "GET",
+              ) && (
    <ListItem>
         <ListItemButton onClick={handleAssignmentClick}>
-        <ListItemIcon>
-          <Assignment />
+        <ListItemIcon>{iconBox(Assignment)}
         </ListItemIcon>
         <ListItemText primary="Assignment" />
         {openAssignment ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       </ListItem>
+            )}
       
       <Collapse in={openAssignment} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-
-        {hasPermission('/assignments', '/results', 'GET') && (
-<>
-          {showOnlyIntern && (
-              <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/plans')}>
-              <TableViewIcon sx={{ color: 'gray' }} />
-                <ListItemText sx={{ pl: 2 }} primary="Upgrade/Choose Plan" />
-              </ListItemButton>
-        )}
-          </>
+          <List component="div" disablePadding>
+            {/* Upgrade Plan - Intern Only */}
+            {checkSuperAccess(
+              "/assignments",
+              "/results",
+              "GET",
+              
+              
+              
+            ) && (
+              <>
+                {showOnlyIntern && (
+                  <ListItemButton sx={{ pt: 2 }} onClick={() => handleNavigate("/plans")}>
+                    <ListItemIcon>{iconBox(TableViewIcon)}</ListItemIcon>
+                    <ListItemText primary="Upgrade/Choose Plan" />
+                  </ListItemButton>
+                )}
+              </>
             )}
 
-        {hasPermission('/assignments', '/createdassignments', 'GET') && (
-
-        <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/assign-task')}>
-        <AssignmentInd sx={{ color: 'gray' }}  />
-                <ListItemText  sx={{ pl: 2 }} primary="Create Assignment" />
-              </ListItemButton>
-            )}
-
-              {hasPermission('/assignments', '/assignedtasks', 'GET') && (
-
-              <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/submit-task')}>
-              <LocalLibrary sx={{ color: 'gray' }} />
-                <ListItemText sx={{ pl: 2 }} primary="Submit Assignment" />
-              </ListItemButton>
-            )}
-
-              {hasPermission('/assignments', '/assignmentapproval', 'GET') && (
-              <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/review-submission')}>
-              <AssignmentReturn sx={{ color: 'gray' }} />
-                <ListItemText sx={{ pl: 2 }} primary="Manager Review" />
-              </ListItemButton>
-            )}
-
-              {hasPermission('/assignments', '/finalsubmission', 'GET') && (
-              <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/final-review')}>
-              <AssignmentTurnedIn sx={{ color: 'gray' }} />
-                <ListItemText sx={{ pl: 2 }} primary="Admin Review" />
-              </ListItemButton>
-              )}
-              {hasPermission('/assignments', '/results', 'GET') && (
-              <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/assignmentresult')}>
-              <WorkspacePremium sx={{ color: 'gray' }} />
-                <ListItemText sx={{ pl: 2 }} primary="Assignment Results" />
+            {/* Create Assignment */}
+            {checkSuperAccess(
+              "/assignments",
+              "/createdassignments",
+              "GET",
+              
+              
+              
+            ) && (
+              <ListItemButton
+                sx={{ pl: 6, pt: 2 }}
+                onClick={() => handleNavigate("/assign-task")}
+              >
+                <ListItemIcon>{iconBox(AssignmentInd)}</ListItemIcon>
+                <ListItemText primary="Create Assignment" />
               </ListItemButton>
             )}
 
-        </List>
-      </Collapse>
+            {/* Submit Assignment */}
+            {checkSuperAccess(
+              "/assignments",
+              "/assignedtasks",
+              "GET",
+              
+              
+              
+            ) && (
+              <ListItemButton
+                sx={{ pl: 6, pt: 2 }}
+                onClick={() => handleNavigate("/submit-task")}
+              >
+                <ListItemIcon>{iconBox(LocalLibrary)}</ListItemIcon>
+                <ListItemText primary="Submit Assignment" />
+              </ListItemButton>
+            )}
+
+            {/* Manager Review */}
+            {checkSuperAccess(
+              "/assignments",
+              "/assignmentapproval",
+              "GET",
+              
+              
+              
+            ) && (
+              <ListItemButton
+                sx={{ pl: 6, pt: 2 }}
+                onClick={() => handleNavigate("/review-submission")}
+              >
+                <ListItemIcon>{iconBox(AssignmentReturn)}</ListItemIcon>
+                <ListItemText primary="Manager Review" />
+              </ListItemButton>
+            )}
+
+            {/* Admin Review */}
+            {checkSuperAccess(
+              "/assignments",
+              "/finalsubmission",
+              "GET",
+              
+              
+              
+            ) && (
+              <ListItemButton
+                sx={{ pl: 6, pt: 2 }}
+                onClick={() => handleNavigate("/final-review")}
+              >
+                <ListItemIcon>{iconBox(AssignmentTurnedIn)}</ListItemIcon>
+                <ListItemText primary="Admin Review" />
+              </ListItemButton>
+            )}
+
+            {/* Assignment Results */}
+            {checkSuperAccess(
+              "/assignments",
+              "/results",
+              "GET",
+              
+              
+              
+            ) && (
+              <ListItemButton
+                sx={{ pl: 6, pt: 2 }}
+                onClick={() => handleNavigate("/assignmentresult")}
+              >
+                <ListItemIcon>{iconBox(WorkspacePremium)}</ListItemIcon>
+                <ListItemText primary="Assignment Results" />
+              </ListItemButton>
+            )}
+      {checkSuperAccess("/users", "/me", "GET",   ) && (
+               <>
+              <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/certificate')}>
+                <ListItemIcon>{iconBox(CardMembershipIcon )}</ListItemIcon>
+                <ListItemText primary="Certificate" />
+              </ListItemButton>
+
+              <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/resume')}>
+                <ListItemIcon>{iconBox(DocumentScannerIcon )}</ListItemIcon>
+                <ListItemText primary="Resume" />
+              </ListItemButton>
+              </>
+      )}
+   
+          </List>
+    </Collapse>
+
      
-      <>
-      {showReferred && (
+
+              {checkSuperAccess("/users", "/referred", "GET") && (
         <ListItem>
           <ListItemButton onClick={() => handleNavigate('/referal')}>
             <ListItemIcon>
-              <ShareIcon sx={{ color: 'gray' }} />
+              <ListItemIcon>{iconBox(ShareIcon )}</ListItemIcon>
             </ListItemIcon>
             <ListItemText primary="Referred" />
           </ListItemButton>
         </ListItem>
       )}
-    </>
 
    {/* Course  */}
-
-    {viewcourse && ( 
+            {hasAnyPermissionAccess()  && (
           <ListItem>
-            <ListItemButton onClick={handleCourcesClick}>
-               <ListItemIcon
-                  >    <AccountBalanceIcon sx={{ color: 'gray' }} />
-              </ListItemIcon>
-               <ListItemText
-                  
-                 primary="Courses" />
-                 {openCourses ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
+                  <ListItemButton onClick={handlePermissionClick}>
+                    <ListItemIcon>{iconBox( AccountBalanceIcon )}</ListItemIcon>
+                    <ListItemText
+                        
+                      primary="Permissions" />
+                      {openPermission ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
           </ListItem>
-
-
-          
-          
-        )}
-        <Collapse in={openCourses} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-
-        {addcourses && ( 
-              <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/addcourse')}>
-              <Add sx={{ color: 'gray' }} />
-                <ListItemText sx={{ pl: 2 }} primary="Add Course" />
-              </ListItemButton>
             )}
+       <Collapse in={openPermission} timeout="auto" unmountOnExit>
+    
+          <List component="div" disablePadding>
+              {checkSuperAccess("/rolemethod", "/get-methods", "GET") && (
+                <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/method')}>
+                  <ListItemIcon>{iconBox(FunctionsIcon)}</ListItemIcon>
+                  <ListItemText primary="Method" />
+                </ListItemButton>
+              )}
 
+              {checkSuperAccess("/rolemethod", "/get-modules", "GET") && (
+                    <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/module')}>
+                      <ListItemIcon>{iconBox(ExtensionIcon)}</ListItemIcon>
+                      <ListItemText primary="Module" />
+                    </ListItemButton>
+                  )}
+              {checkSuperAccess("/rolemethod", "/get-positions", "GET") && (
+                    <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/position')}>
+                      <ListItemIcon>{iconBox(WorkIcon)}</ListItemIcon>
+                      <ListItemText primary="Position" />
+                    </ListItemButton>
+                  )}
+                    <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/entity')}>
+                      <ListItemIcon>{iconBox(ApartmentIcon)}</ListItemIcon>
+                      <ListItemText primary="Entity / Project" />
+                    </ListItemButton>
 
-        {viewcourse && ( 
-          
-        <ListItemButton sx={{ pl: 4, pt:2 }} button onClick={() => handleNavigate('/course-selection')}>
-        <LocalLibrary sx={{ color: 'gray' }}  />
-                <ListItemText  sx={{ pl: 2 }} primary="Select Course" />
-              </ListItemButton>
+                    <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/permission')}>
+                      <ListItemIcon>{iconBox(SecurityIcon )} </ListItemIcon>
+                      <ListItemText primary="RBAC Permission" />
+                    </ListItemButton>
+
+                    <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/abacpermission')}>
+                      <ListItemIcon>{iconBox(PolicyIcon )} </ListItemIcon>
+                      <ListItemText  primary="ABAC Permission" />
+                    </ListItemButton>
+
+                    <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/ubacpermission')}>
+                      <ListItemIcon>{iconBox(Person2Icon )} </ListItemIcon>
+                      <ListItemText  primary="UBAC Permission" />
+                    </ListItemButton>
+            {checkSuperAccess("/auth", "/createuser", "POST") && (
+                <ListItemButton sx={{ pl: 6, pt: 2 }} onClick={() => handleNavigate('/createuser')}>
+                  <ListItemIcon>{iconBox(SignpostOutlined )}</ListItemIcon>
+                  <ListItemText primary="Create User" />
+                </ListItemButton>
             )}
-
-             
-
- 
-
-              
 
         </List>
       </Collapse>
 
 
+                {checkSuperAccess("/courses", "/", "GET") && (
+                    <ListItem>
+                      <ListItemButton  onClick={handleCourcesClick}>
+                        <ListItemIcon>{iconBox( AccountBalanceIcon )}</ListItemIcon>
+                        <ListItemText
+                            
+                          primary="Courses" />
+                          {openCourses ? <ExpandLess /> : <ExpandMore />}
+                      </ListItemButton>
+                    </ListItem>
+                  )}
+              <Collapse in={openCourses} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+
+                            {checkSuperAccess("/courses", "/select", "POST") && (
+                              <ListItemButton sx={{ pl: 6, pt: 2 }}  button onClick={() => handleNavigate('/addcourse')}>
+                              <ListItemIcon>{iconBox(Add )}</ListItemIcon>
+                                <ListItemText  primary="Add Course" />
+                              </ListItemButton>
+                            )}
+                            {checkSuperAccess("/courses", "/", "GET") && (
+                              <ListItemButton sx={{ pl: 6, pt: 2 }}  button onClick={() => handleNavigate('/course-selection')}>
+                              <ListItemIcon>{iconBox(LocalLibrary )}</ListItemIcon>
+                                    <ListItemText   primary="Select Course" />
+                                  </ListItemButton>
+                                )}
+
+                    </List>
+              </Collapse>
 
 
-{hasPermission('/coupons', '/', 'GET') && (
+
+        {/* ✅ Coupons */}
+        {checkSuperAccess(
+          "/coupons",
+          "/",
+          "GET",
+          
+          
+          
+        ) && (
+          <ListItem>
+            <ListItemButton onClick={() => handleNavigate("/coupons")}>
+              <ListItemIcon>{iconBox(RedeemIcon)}</ListItemIcon>
+              <ListItemText primary="Coupons" />
+            </ListItemButton>
+          </ListItem>
+        )}
+
+
+
+
+
+        {checkSuperAccess(
+  "/jokes",
+  "?database=jokes",
+  "GET",
+  
+  
+  
+) && (
   <ListItem>
-  <ListItemButton onClick={() => handleNavigate('/coupons')}>
-     <ListItemIcon
-                  ><RedeemIcon sx={{ color: 'gray' }} /></ListItemIcon>
-     <ListItemText
-                  
-                 primary="Coupons" />
-  </ListItemButton>
-</ListItem>
-    )}
-
-{hasPermission('/jokes', '/', 'POST') && (
-  <ListItem>
-    <ListItemButton onClick={() => handleNavigate('/jokes')}>
-       <ListItemIcon
-                  ><TheaterComedyIcon sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-                  
-                 primary="Jokes" />
-    </ListItemButton>
-  </ListItem> 
-)}
-
-{hasPermission('/help', '/', 'POST') && (
-  <ListItem>
-    <ListItemButton onClick={() => handleNavigate('/help')}>
-       <ListItemIcon
-                  ><QuizIcon  sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-                  
-                 primary="Help" />
-    </ListItemButton>
-  </ListItem> 
-
-)}
-{hasPermission('/suggestions', '/', 'GET') && (
-
-  <ListItem>
-  <ListItemButton onClick={() => handleNavigate('/suggestions')}>
-     <ListItemIcon
-                  ><FeedbackIcon sx={{ color: 'gray' }} /></ListItemIcon>
-     <ListItemText
-                  
-                 primary="Suggestions" />
-  </ListItemButton>
-</ListItem>
-)}
-{hasPermission('/admob', '/', 'POST') && (
-  <ListItem>
-    <ListItemButton onClick={() => handleNavigate('/admob')}>
-       <ListItemIcon
-                  ><AdsClickIcon  sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-                  
-                 primary="Admob" />
-    </ListItemButton>
-  </ListItem> 
-)}
-
-<>
-{showpermit && ( 
-  <ListItem>
-    <ListItemButton onClick={() => handleNavigate('/createuser')}>
-       <ListItemIcon
-                  ><SignpostOutlined sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-                  
-                 primary="Create User" />
+    <ListItemButton onClick={() => handleNavigate("/jokes")}>
+      <ListItemIcon>{iconBox(TheaterComedyIcon)}</ListItemIcon>
+      <ListItemText primary="Jokes" />
     </ListItemButton>
   </ListItem>
 )}
-</>
 
 
-  {hasPermission('/userlogs', '/', 'GET') && (
 
-  <ListItem>
-  <ListItemButton onClick={() => handleNavigate('/userlogs')}>
-     <ListItemIcon
-                  ><TimelineIcon sx={{ color: 'gray' }} /></ListItemIcon>
-     <ListItemText
-                  
-                 primary="User Logs" />
-  </ListItemButton>
-</ListItem>
-  )}
-  {hasPermission('/comics', '/', 'POST') && (
-    <>
+        {/* ✅ Help */}
+        {checkSuperAccess(
+          "/help",
+          "/",
+          "POST",
+          
+          
+          
+        ) && (
+          <ListItem>
+            <ListItemButton onClick={() => handleNavigate("/help")}>
+              <ListItemIcon>{iconBox(QuizIcon)}</ListItemIcon>
+              <ListItemText primary="Help" />
+            </ListItemButton>
+          </ListItem>
+        )}
 
-    
-    {showWebops && (
-    
-  <ListItem>
-    <ListItemButton onClick={() => handleNavigate('/comic')}>
-       <ListItemIcon
-                  ><LibraryBooks sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-                  
-                 primary="Comics/Books" />
-    </ListItemButton>
-  </ListItem>
-)}
-</>
-)}
-{hasPermission('/users', '/', 'GET') && (
-  <ListItem>
-    <ListItemButton onClick={() => handleNavigate('/user')}>
-       <ListItemIcon
-                  ><VerifiedUserSharp sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-                  
-                 primary="Users" />
-    </ListItemButton>
-  </ListItem>
-)}
-{hasPermission('/useractivity', '/', 'POST') && (
-  <ListItem>
-  <ListItemButton onClick={() => handleNavigate('/activitytrack')}>
-       <ListItemIcon
-                  ><History sx={{ color: 'gray' }} /></ListItemIcon>
-       <ListItemText
-                  
-                 primary="Attendance" />
-    </ListItemButton>
-  </ListItem>
+        {/* ✅ Suggestions */}
+        {checkSuperAccess(
+          "/suggestions",
+          "/",
+          "GET",
+          
+          
+          
+        ) && (
+          <ListItem>
+            <ListItemButton onClick={() => handleNavigate("/suggestions")}>
+              <ListItemIcon>{iconBox(FeedbackIcon)}</ListItemIcon>
+              <ListItemText primary="Suggestions" />
+            </ListItemButton>
+          </ListItem>
+        )}
 
-  )}
+        {/* ✅ Admob */}
+        {checkSuperAccess(
+          "/admob",
+          "/",
+          "POST",
+          
+          
+          
+        ) && (
+          <ListItem>
+            <ListItemButton onClick={() => handleNavigate("/admob")}>
+              <ListItemIcon>{iconBox(AdsClickIcon)}</ListItemIcon>
+              <ListItemText primary="Admob" />
+            </ListItemButton>
+          </ListItem>
+        )}
+
+          {/* ✅ User Logs */}
+      {checkSuperAccess(
+        "/userlogs",
+        "/",
+        "GET",
+        
+        
+        
+      ) && (
+        <ListItem>
+          <ListItemButton onClick={() => handleNavigate("/userlogs")}>
+            <ListItemIcon>{iconBox(TimelineIcon)}</ListItemIcon>
+            <ListItemText primary="User Logs" />
+          </ListItemButton>
+        </ListItem>
+      )}
+
+      {/* ✅ Comics / Books */}
+      {checkSuperAccess(
+        "/comics",
+        "/",
+        "POST",
+        
+        
+        
+      ) && (
+        <>
+          {showWebops && (
+            <ListItem>
+              <ListItemButton onClick={() => handleNavigate("/comic")}>
+                <ListItemIcon>{iconBox(LibraryBooks)}</ListItemIcon>
+                <ListItemText primary="Comics/Books" />
+              </ListItemButton>
+            </ListItem>
+          )}
+        </>
+      )}
+
+      {/* ✅ Users */}
+      {checkSuperAccess(
+        "/users",
+        "/",
+        "GET",
+        
+        
+        
+      ) && (
+        <ListItem>
+          <ListItemButton onClick={() => handleNavigate("/user")}>
+            <ListItemIcon>{iconBox(VerifiedUserSharp)}</ListItemIcon>
+            <ListItemText primary="Users" />
+          </ListItemButton>
+        </ListItem>
+      )}
+
+      {/* ✅ Attendance / User Activity */}
+      {checkSuperAccess(
+        "/useractivity",
+        "/",
+        "POST",
+        
+        
+        
+      ) && (
+        <ListItem>
+          <ListItemButton onClick={() => handleNavigate("/activitytrack")}>
+            <ListItemIcon>{iconBox(History)}</ListItemIcon>
+            <ListItemText primary="Attendance" />
+          </ListItemButton>
+        </ListItem>
+      )}
+
 
   {isLoggedIn ? (
     <ListItem>
       <ListItemButton onClick={handleLogoutButtonClick}>
-         <ListItemIcon
-                  ><LogoutIcon sx={{ color: 'gray' }} /></ListItemIcon>
+         <ListItemIcon>{iconBox(LogoutIcon )}</ListItemIcon>
          <ListItemText
                   
                  primary="Logout" />
@@ -387,8 +652,7 @@ export default function Menubar( {coursesdec,decryptroles,decryptsubrole,open,ha
   ) : (
     <ListItem>
     <ListItemButton onClick={() => handleLoginButtonClick}>
-     <ListItemIcon
-                  ><LoginIcon sx={{ color: 'gray' }} /></ListItemIcon>
+     <ListItemIcon>{iconBox(LoginIcon )}</ListItemIcon>
          <ListItemText
                   
                  primary="Login" />

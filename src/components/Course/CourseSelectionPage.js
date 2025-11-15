@@ -21,7 +21,7 @@ const CourseSelectionPage = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("https://hindicomicsbackend.onrender.com/courses");
+        const res = await axios.get("http://localhost:5000/courses");
         console.log(res.data); // Add this line to check the response
 
         // Extract courseId (keys like 'QA', 'Backend', etc.) and combine it with course details
@@ -54,7 +54,7 @@ const CourseSelectionPage = () => {
     if (subrolesArray.includes("admin") || subrolesArray.includes(courseCategory)) {
       try {
       // Send both userId and courseId to the backend
-      const res = await axios.post("https://hindicomicsbackend.onrender.com/courses/select", { userId, courseId });
+      const res = await axios.post("http://localhost:5000/courses/select", { userId, courseId });
       console.log(res.data); // Log success message from backend
       setSelectedCourse(courseId);
       navigate(`/course/${courseId}`); // Navigate to the course page dynamically

@@ -7,10 +7,16 @@ export const encryptData = (data) => {
   const encrypted = CryptoJS.AES.encrypt(data, secretKey).toString();
   return encrypted;
 };
-
 // Decrypt data using AES decryption
-export const decryptData =  (encryptedData) => {
+// Decrypt data using AES decryption
+export const decryptData = (encryptedData) => {
   try {
+    // Step 0: Check if encryptedData is null or empty
+    if (!encryptedData) {
+      console.warn('decryptData called with null or empty value');
+      return ""; // <-- Return empty string instead of null
+    }
+
     // Step 1: Decrypt the data using Caesar Cipher first (reverse the Caesar encryption)
 
     // Step 2: Decrypt the AES-encrypted data
@@ -19,19 +25,18 @@ export const decryptData =  (encryptedData) => {
 
     // Step 3: Parse the decrypted data back to an object (assuming it was a JSON object before encryption)
     try {
-      // If the data is a valid JSON string, parse it
       const originalData = JSON.parse(decryptedData);
       return originalData;
     } catch (jsonError) {
-      // If it's not valid JSON, return the decrypted data as a regular string
-      return decryptedData;
+      return decryptedData || ""; // <-- Ensure it's a string
     }
     
   } catch (error) {
-    console.error('Decryption failed:', error); // Log the error
-    throw new Error('Decryption failed');
+    console.error('Decryption failed:', error);
+    return ""; // <-- Return empty string on failure
   }
 };
+
 
 
 export const encrypturl = (data) => {

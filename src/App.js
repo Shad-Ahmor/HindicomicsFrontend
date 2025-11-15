@@ -1,84 +1,133 @@
-import React, { useState, useEffect } from 'react';
-import { Box, CssBaseline } from '@mui/material';
-import Login from './components/Main/Login.js';
-import HindiComics from './components/SubComponents/HindiComics';  // Import HindiComics
-import {  decryptData } from './components/Security/cryptoUtils.js';  // Import the library functions
+import React, { useState, useEffect } from "react";
+import Login from "./components/Authentication/Login.js";
+import HindiComics from "./components/SubComponents/HindiComics";
+import { decryptData } from "./components/Security/cryptoUtils.js";
 import { initializeApp } from "firebase/app";
-import './styles/css/App.css';
-import HeroSection from './3DAnimation/HeroSection.jsx';
+import "./styles/css/App.css";
+import HeroSection from "./Landing Page/HeroSection.jsx";
+import StorySection from "./Landing Page/StorySection.jsx"; // ✅ NEW
+import { Box, Alert, Snackbar, CircularProgress, Fade } from "@mui/material";
+import UserActivityTracker from "./components/Authentication/UserActivityTracker.jsx";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);  // Track login state
-  const [firebaseConfig, setFirebaseConfig] = useState(null); // Store the fetched Firebase config
-  const [error, setError] = useState(""); // To store error messages
-  const [showLogin, setShowLogin] = useState(false); // Add this
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [firebaseConfig, setFirebaseConfig] = useState(null);
+  const [error, setError] = useState("");
+  const [showLogin, setShowLogin] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Check if the user is already logged in (e.g., via localStorage or cookies)
+  // ✅ Check login status
   useEffect(() => {
-    if (!navigator.userAgent.includes('Chrome') && !navigator.userAgent.includes('Safari')) {
-      const wrapper = document.querySelector('.wrapper');
-      if (wrapper) {
-        wrapper.innerHTML = '<p>Sorry! Non-webkit users. :(</p>';
-      }
-    }
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-    }
+    const token = localStorage.getItem("token");
+    if (token) setIsLoggedIn(true);
   }, []);
-  // Fetch Firebase config from the API
+
+  // ✅ Fetch and decrypt Firebase config
   useEffect(() => {
     const fetchFirebaseConfig = async () => {
       try {
-        const response = await fetch("https://hindicomicsbackend.onrender.com/api/firebase-config");
+        const response = await fetch("http://localhost:5000/api/firebase-config");
         if (response.ok) {
-          const encryptedConfig = await response.json(); // Get encrypted config as JSON
+          const encryptedConfig = await response.json();
           const decryptedConfig = {};
+
           for (const encryptedKey in encryptedConfig) {
             if (encryptedConfig.hasOwnProperty(encryptedKey)) {
-              // Decrypt both the encrypted key and the encrypted value
-              const decryptedKey = decryptData(encryptedKey);  // Decrypt the key
-              const decryptedValue = decryptData(encryptedConfig[encryptedKey]);  // Decrypt the value
-
-              // Add the decrypted key-value pair to the config
+              const decryptedKey = decryptData(encryptedKey);
+              const decryptedValue = decryptData(encryptedConfig[encryptedKey]);
               decryptedConfig[decryptedKey] = decryptedValue;
             }
           }
 
-          // Update the state with the decrypted configuration
           setFirebaseConfig(decryptedConfig);
-
         } else {
           setError("Failed to load Firebase configuration.");
         }
       } catch (error) {
-        setError("Error fetching Firebase configuration.");
         console.error(error);
+        setError("Error fetching Firebase configuration.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchFirebaseConfig();
   }, []);
 
-  // Initialize Firebase only after config is fetched
+  // ✅ Initialize Firebase after config
   useEffect(() => {
     if (firebaseConfig) {
       initializeApp(firebaseConfig);
     }
   }, [firebaseConfig]);
+
+  // ✅ Snackbar trigger
+  useEffect(() => {
+    if (error) setOpenSnackbar(true);
+  }, [error]);
+
+  // ✅ Onboarding (Hero + Story)
+  const handleOnboardPage = () => (
+    <>
+      <Fade in timeout={800}>
+        <div>
+          <HeroSection setShowLogin={setShowLogin} />
+          {/* <StorySection /> 👈 Your new beautiful section */}
+        </div>
+      </Fade>
+    </>
+  );
+
+  // ✅ Show loader while config is loading
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          flexDirection: "column",
+          bgcolor: "#000",
+          color: "#fff",
+        }}
+      >
+        <CircularProgress color="inherit" />
+        <p style={{ marginTop: 16, opacity: 0.8 }}>Loading Hindi Comics...</p>
+      </Box>
+    );
+  }
+
   return (
-    <Box
-    //  sx={{ display: 'flex' }}
-     >
+    <Box sx={{ minHeight: "100vh", bgcolor: "#000", color: "#fff" }}>
+      {/* Conditional render */}
+            <UserActivityTracker />
+
       {!isLoggedIn ? (
-    showLogin ? (
-      <Login  setShowLogin={setShowLogin}  setIsLoggedIn={setIsLoggedIn} />
-    ) : (
-      <HeroSection setShowLogin={setShowLogin} />
-    )
-  ) : (
-    <HindiComics setIsLoggedIn={setIsLoggedIn} />
-  )}
+        showLogin ? (
+          <Login setShowLogin={setShowLogin} setIsLoggedIn={setIsLoggedIn} />
+        ) : (
+          handleOnboardPage()
+        )
+      ) : (
+        <HindiComics setIsLoggedIn={setIsLoggedIn} />
+      )}
+
+      {/* 🔥 Snackbar for errors */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for redire
 
 // Configure axios instance (for example, in a central axios.js file)
 const api = axios.create({
-  baseURL: 'https://hindicomicsbackend.onrender.com', // Your base URL
+  baseURL: 'http://localhost:5000', // Your base URL
 });
 
 // Add response interceptor to handle token expiration (401 Unauthorized)
@@ -23,7 +23,7 @@ api.interceptors.response.use(
       // Call the backend logout API to invalidate the token
       try {
         await axios.post(
-          'https://hindicomicsbackend.onrender.com/auth/logout', 
+          'http://localhost:5000/auth/logout', 
           {}, 
           {
             headers: {

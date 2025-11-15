@@ -15,7 +15,7 @@ const AddSectionToCourse = () => {
   // Fetch courses from the backend when the component mounts
   useEffect(() => {
     axios
-      .get('https://hindicomicsbackend.onrender.com/courses') // Adjust the URL to your API
+      .get('http://localhost:5000/courses') // Adjust the URL to your API
       .then((response) => {
         const fetchedCourses = Object.keys(response.data).map((key) => ({
           id: key, // key is the course name
@@ -48,7 +48,7 @@ const AddSectionToCourse = () => {
       };
 
       // Send the new section to the backend, using the course name as part of the URL
-      await axios.post(`https://hindicomicsbackend.onrender.com/courses/${selectedCourse}/sections`, sectionData);
+      await axios.post(`http://localhost:5000/courses/${selectedCourse}/sections`, sectionData);
       alert('Section added successfully!');
       setNewSection(''); // Reset new section field
       setInstructor(''); // Reset instructor field

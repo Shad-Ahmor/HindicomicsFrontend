@@ -1,196 +1,268 @@
+import React, { useMemo, useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import {
+  Divider,
+  Avatar,
+  Typography,
+  Box,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
+import MuiDrawer from "@mui/material/Drawer";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { handleLogout } from "../AuthHandler.js";
+import MenuBar from "./Menubar.js";
+import { decryptData } from "../Security/cryptoUtils.js";
 
+const drawerWidth = 250;
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Divider, Avatar, Typography, Box } from '@mui/material'; // Import Drawer components
-import { styled, useTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-import { handleLogout } from '../AuthHandler.js';
-import MenuBar from './Menubar.js';
-import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
-import { decryptData ,decrypturl} from '../Security/cryptoUtils.js';
-
-
-import MuiDrawer from '@mui/material/Drawer';
-
-const drawerWidth = 240;
-
+// Drawer styles
 const openedMixin = (theme) => ({
   width: drawerWidth,
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  overflowX: 'hidden',
+  overflowX: "hidden",
+  background: "linear-gradient(145deg, #f7f7f7, #ffffff)",
+  color: "#333",
+  boxShadow:
+    "4px 4px 10px rgba(0,0,0,0.1), -4px -4px 10px rgba(255,255,255,0.7)",
+  borderRight: "1px solid #eee",
 });
 
 const closedMixin = (theme) => ({
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  overflowX: 'hidden',
+  overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(10)} + 1px)`,
+  background: "linear-gradient(145deg, #f8f8f8, #ffffff)",
+  color: "#333",
+  boxShadow:
+    "inset 3px 3px 6px rgba(0,0,0,0.05), inset -3px -3px 6px rgba(255,255,255,0.8)",
+  [theme.breakpoints.up("sm")]: {
+    width: `calc(${theme.spacing(9)} + 1px)`,
   },
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: theme.spacing(1.5, 2),
   ...theme.mixins.toolbar,
 }));
 
-
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    variants: [
-      {
-        props: ({ open }) => open,
-        style: {
-          ...openedMixin(theme),
-          '& .MuiDrawer-paper': openedMixin(theme),
-        },
-      },
-      {
-        props: ({ open }) => !open,
-        style: {
-          ...closedMixin(theme),
-          '& .MuiDrawer-paper': closedMixin(theme),
-        },
-      },
-    ],
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
+}));
 
-
-
-const Sidebar = ({  Setuserimg,open, handleDrawerClose, isLoggedIn, role, setIsLoggedIn, setRole, setError, setSuccess, setLoading, history, firebase }) => {
+// --------------------------------------------------
+// 🧠 SIDEBAR COMPONENT
+// --------------------------------------------------
+const Sidebar = ({
+  Setuserimg,
+  open,
+  handleDrawerClose,
+  isLoggedIn,
+  setIsLoggedIn,
+  setRole,
+  setError,
+  setSuccess,
+  setLoading,
+  history,
+}) => {
   const theme = useTheme();
-  const [finalrole, setFinalRole] = useState([]);
-  const couusesenc=localStorage.getItem("course")
-  const coursesdec = decryptData(couusesenc)
   const navigate = useNavigate();
-  // State to hold user profile data
-  const [userProfile, setUserProfile] = useState({
-    name: '',
-    role: ''
-  });
-   // Fetch user profile data
-   const encimg=localStorage.getItem("profileabc")
-   const userimg = decryptData(encimg)
-   Setuserimg(userimg);
-  const handleNavigate = (route) => {
-    navigate(route);
-    handleDrawerClose(); // Close the drawer after navigation
-  };
 
-  const handleLoginButtonClick = () => {
-    navigate('/login');
-  };
+  const [permissions, setPermissions] = useState([]); // unified permission keys
+  const [userProfile, setUserProfile] = useState({ name: "", role: "" });
 
-  const handleLogoutButtonClick = () => {
-    console.log("logout click");
-    handleLogout(setIsLoggedIn, navigate, setError, setSuccess, setLoading, history);
-  };
+  // ---------------- Token & Decryption ----------------
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-   // Function to check if user has permission for a given route
-   const hasPermission = (baseurl, url, method) => {
-    return finalrole.some(permission => 
-      permission.baseurl === baseurl && 
-      permission.url === url && 
-      permission.method === method
-    );
-  };
+  const headers = useMemo(
+    () => (token ? { Authorization: `Bearer ${token}` } : {}),
+    [token]
+  );
 
-  useEffect(() => {
-    const token = localStorage.getItem('token'); 
-    const userRole = localStorage.getItem('role'); 
-    const userName = localStorage.getItem('name'); // Get the user's name
-    if (token && userRole) {
-      setIsLoggedIn(true);
-      setRole(userRole);
-      setUserProfile({ name: decryptData(userName).toLocaleUpperCase() || 'User', role: String(decryptData(userRole)).toLocaleUpperCase() });
-    }
-  }, [isLoggedIn, role, setIsLoggedIn, setRole]); // Runs when login/logout occurs
-  
-  const fetchpermission = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const userrole = localStorage.getItem('role');
-      const userlocal = localStorage.getItem("uid");
-      const decryptrole = decryptData(userrole);
-
-
-      const response = await axios.post(
-        `https://hindicomicsbackend.onrender.com/api/role-permission`,
-        {
-          role: decryptrole,
-          userId: userlocal,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Only token in the Authorization header
-          },
-        }
-      );
-      setFinalRole(response.data);
-    } catch (error) {
-      console.error('Error fetching help settings:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchpermission();
+  const decryptedUser = useMemo(() => {
+    const uid = decryptData(localStorage.getItem("uid"));
+    const name = decryptData(localStorage.getItem("name"));
+    const role = decryptData(localStorage.getItem("role"));
+    const subrole = decryptData(localStorage.getItem("subrole"));
+    const course = decryptData(localStorage.getItem("course"));
+    const department = decryptData(localStorage.getItem("department"));
+    const team = decryptData(localStorage.getItem("team"));
+    const profileImg = decryptData(localStorage.getItem("profileabc"));
+    return { uid, name, role, subrole, course, department, team, profileImg };
   }, []);
-  const usersubrole = localStorage.getItem('subrole');
-  const userroles = localStorage.getItem('role');
-  const decryptsubrole = decryptData(usersubrole)
-  const decryptroles = decryptData(userroles);
 
+  useEffect(() => {
+    if (Setuserimg && decryptedUser.profileImg) {
+      Setuserimg(decryptedUser.profileImg);
+    }
+  }, [Setuserimg, decryptedUser.profileImg]);
+
+  // ---------------- User Info ----------------
+  useEffect(() => {
+    if (token && decryptedUser.role) {
+      setIsLoggedIn(true);
+      setRole(decryptedUser.role);
+      setUserProfile({
+        name: decryptedUser.name?.toUpperCase() || "USER",
+        role: decryptedUser.role?.toUpperCase() || "ROLE",
+      });
+    }
+  }, [token, decryptedUser, setIsLoggedIn, setRole]);
+
+  // ---------------- Fetch Combined Permissions ----------------
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        if (!token || !decryptedUser.uid || !decryptedUser.role) return;
+
+        const res = await axios.post(
+          "http://localhost:5000/api/permission-summary",
+          {
+            uid: decryptedUser.uid,
+            role: decryptedUser.role,
+            department: decryptedUser.department,
+            team: decryptedUser.team,
+          },
+          { headers }
+        );
+
+        setPermissions(res.data.permissions || []);
+      } catch (error) {
+        console.error("❌ Error fetching combined permissions:", error);
+      }
+    };
+    fetchPermissions();
+  }, [headers, token, decryptedUser]);
+
+  // ---------------- Permission Check ----------------
+  const hasPermission = useCallback(
+    (baseurl, url, method) => {
+      if (!Array.isArray(permissions)) return false;
+      const key = `${baseurl || ""}${url || ""}:${(method || "GET").toUpperCase()}`;
+      return permissions.includes(key);
+    },
+    [permissions]
+  );
+
+  // ---------------- Navigation ----------------
+  const handleNavigate = useCallback(
+    (route) => {
+      navigate(route);
+      handleDrawerClose?.();
+    },
+    [navigate, handleDrawerClose]
+  );
+
+  const handleLoginButtonClick = useCallback(
+    () => navigate("/login"),
+    [navigate]
+  );
+
+  const handleLogoutButtonClick = useCallback(() => {
+    handleLogout(setIsLoggedIn, navigate, setError, setSuccess, setLoading, history);
+  }, [setIsLoggedIn, navigate, setError, setSuccess, setLoading, history]);
+
+  const currentUser = {
+    id: decryptedUser.uid,
+    name: decryptedUser.name,
+    role: decryptedUser.role,
+    subrole: decryptedUser.subrole,
+    course: decryptedUser.course,
+    department: decryptedUser.department,
+    team: decryptedUser.team,
+  };
+
+  // --------------------------------------------------
+  // ✅ RENDER SIDEBAR (PERMANENT)
+  // --------------------------------------------------
   return (
-    <div>
-   <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          
-
-          {open && (
-          <>
-        
-           
-            <Box sx={{ textAlign:'center' }}>
-              <Typography variant="h6" color="black">
-                {userProfile.name || 'User'}
+    <Drawer variant="permanent" open={open}>
+      <DrawerHeader>
+        {open && (
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Avatar
+              src={decryptedUser.profileImg}
+              alt="User"
+              sx={{
+                width: 46,
+                height: 46,
+                boxShadow: "0 4px 8px rgba(0,0,0,0.15)",
+                border: "2px solid #fff",
+              }}
+            />
+            <Box>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, color: "#222", letterSpacing: 0.5 }}
+              >
+                {userProfile.name}
               </Typography>
-              <Typography variant="body2" color="black">
-                {userProfile.role || 'Role'}
+              <Typography variant="body2" sx={{ color: "#777" }}>
+                {userProfile.role}
               </Typography>
             </Box>
-          </>
+          </Box>
         )}
-        <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
 
-        </DrawerHeader>
-        <Divider />
-        
-        <Divider sx={{ backgroundColor: '#fff' }} />
-        <MenuBar coursesdec={coursesdec} decryptroles={decryptroles} decryptsubrole={decryptsubrole} open={open} handleNavigate={handleNavigate} hasPermission={hasPermission} isLoggedIn={isLoggedIn} handleLoginButtonClick={handleLoginButtonClick} handleLogoutButtonClick={handleLogoutButtonClick}/>
-      </Drawer>
-    </div>
+        <Tooltip title="Close Sidebar">
+          <IconButton
+            onClick={handleDrawerClose}
+            sx={{
+              color: "#666",
+              backgroundColor: "#fff",
+              boxShadow:
+                "2px 2px 6px rgba(0,0,0,0.1), -2px -2px 6px rgba(255,255,255,0.6)",
+              "&:hover": { backgroundColor: "#f0f0f0" },
+            }}
+          >
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
+        </Tooltip>
+      </DrawerHeader>
+
+      <Divider sx={{ borderColor: "#eee" }} />
+
+      <MenuBar
+        open={open}
+        handleNavigate={handleNavigate}
+        hasPermission={hasPermission} // single unified check
+        isLoggedIn={isLoggedIn}
+        handleLoginButtonClick={handleLoginButtonClick}
+        handleLogoutButtonClick={handleLogoutButtonClick}
+        currentUser={currentUser}
+        permissions={permissions}
+      />
+    </Drawer>
   );
 };
 

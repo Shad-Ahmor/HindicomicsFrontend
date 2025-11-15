@@ -16,7 +16,7 @@ const AddLesson = () => {
   // Fetch courses from the backend when the component mounts
   useEffect(() => {
     axios
-      .get('https://hindicomicsbackend.onrender.com/courses')
+      .get('http://localhost:5000/courses')
       .then((response) => {
         const fetchedCourses = Object.keys(response.data).map((key) => ({
           id: key, // key is the course name
@@ -34,7 +34,7 @@ const AddLesson = () => {
     if (selectedCourse && selectedCourse !== 'custom') {
       // Fetch sections for the selected course
       axios
-        .get(`https://hindicomicsbackend.onrender.com/courses/${selectedCourse}/sections`)
+        .get(`http://localhost:5000/courses/${selectedCourse}/sections`)
         .then((response) => {
           if (response.data) {
             setSections(response.data); // Store sections data for the selected course
@@ -114,7 +114,7 @@ const AddLesson = () => {
       };
 
       // Send the lessons to the backend
-      await axios.post('https://hindicomicsbackend.onrender.com/courses/addlesson', coursePayload);
+      await axios.post('http://localhost:5000/courses/addlesson', coursePayload);
 
       alert('Lessons added successfully!');
       setFormData([]); // Clear the form after submission

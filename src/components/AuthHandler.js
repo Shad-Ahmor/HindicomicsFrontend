@@ -13,7 +13,7 @@ const handleLogout = async (setIsLoggedIn, setRole, navigate) => {
 
   try {
     // Send a POST request to the /logout route with the token in the Authorization header
-    const response = await fetch('https://hindicomicsbackend.onrender.com/auth/logout', {
+    const response = await fetch('http://localhost:5000/auth/logout', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,  // Send the token as a Bearer token

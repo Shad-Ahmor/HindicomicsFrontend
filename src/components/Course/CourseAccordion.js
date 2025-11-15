@@ -18,7 +18,7 @@ const CourseTable = () => {
 
   // Fetch courses from the backend API
   useEffect(() => {
-    axios.get('https://hindicomicsbackend.onrender.com/courses')  // Replace with your actual API URL
+    axios.get('http://localhost:5000/courses')  // Replace with your actual API URL
       .then((response) => {
         const data = response.data;
         const courseList = Object.keys(data).map(courseKey => {
@@ -86,7 +86,7 @@ const handleEditCourseOpen = (course) => {
   // Handle delete course
   const handleDeleteCourse = (courseName) => {
     // Make an API request to delete the course
-    axios.delete(`https://hindicomicsbackend.onrender.com/courses/${courseName}`)
+    axios.delete(`http://localhost:5000/courses/${courseName}`)
       .then(() => {
         // Remove the deleted course from the local state
         setCourses((prevCourses) => prevCourses.filter(course => course.name !== courseName));
@@ -99,7 +99,7 @@ const handleEditCourseOpen = (course) => {
   // Handle delete section
   const handleDeleteSection = (courseName, sectionName) => {
     // Make an API request to delete the section
-    axios.delete(`https://hindicomicsbackend.onrender.com/courses/${courseName}/sections/${sectionName}`)
+    axios.delete(`http://localhost:5000/courses/${courseName}/sections/${sectionName}`)
       .then(() => {
         // Remove the deleted section from the local state
         setCourses((prevCourses) => prevCourses.map(course =>
@@ -132,7 +132,7 @@ const handleEditCourseOpen = (course) => {
   // Handle course form submit
   const handleSubmitEditCourse = () => {
     // Wrap currentCourse inside courseDetails
-    axios.put(`https://hindicomicsbackend.onrender.com/courses/${oldCourseName}`, {
+    axios.put(`http://localhost:5000/courses/${oldCourseName}`, {
       courseDetails: currentCourse  // Wrapping currentCourse in courseDetails
     })
     .then(() => {
@@ -149,7 +149,7 @@ const handleEditCourseOpen = (course) => {
   
   // Handle section form submit
   const handleSubmitEditSection = () => {
-    axios.put(`https://hindicomicsbackend.onrender.com/courses/${currentCourse.name}/sections/${currentSection}`, currentCourse.courseSelected[currentSection])
+    axios.put(`http://localhost:5000/courses/${currentCourse.name}/sections/${currentSection}`, currentCourse.courseSelected[currentSection])
       .then(() => {
         // Update the section in the state
         setCourses((prevCourses) => prevCourses.map(course =>

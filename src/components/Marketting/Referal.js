@@ -9,50 +9,65 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-import Row from './Rows'
+import Row from './Rows';
 import ReferredUserLogs from './ReferredUserLogs';
 import UserActivityGraph from './UserActivityGraph';
 
-
 export default function CollapsibleTable() {
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [referredUsers, setReferredUsers] = useState([]); // Default as an empty array
+  const [referredUsers, setReferredUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('Token not found.');
-      navigate('/login');  // Redirect to login if no token exists
-      return;
-    }
+    const fetchReferredData = async () => {
+      const token = localStorage.getItem('token');
 
-    api.get('/users/referred', {
-      headers: {
-        Authorization: `Bearer ${token}`, // Only token in the Authorization header
-      },
-    }).then((response) => {
-      const { loggedInUser: user } = response.data;
-      const users = user?.referredUsers || []; // Access referredUsers inside loggedInUser
-      setLoggedInUser(user);  // Set logged-in user's details
-      setReferredUsers(users); // Set referredUsers array
-    }).catch((error) => console.error('Error fetching referred user data:', error));
+      if (!token) {
+        console.error('Token not found.');
+        navigate('/login');
+        return;
+      }
+
+      try {
+        const response = await api.get('/users/referred', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const userData = response.data?.loggedInUser || null;
+        const referred = userData?.referredUsers || [];
+
+        setLoggedInUser(userData);
+        setReferredUsers(referred);
+      } catch (error) {
+        console.error('Error fetching referred user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReferredData();
   }, [navigate]);
 
+  if (loading) {
+    return <div style={{ textAlign: 'center', marginTop: '40px' }}>Loading...</div>;
+  }
+
   if (!loggedInUser) {
-    return <div>Loading...</div>;  // Show loading if loggedInUser is not set yet
+    return (
+      <div style={{ textAlign: 'center', marginTop: '40px', color: 'red' }}>
+        Failed to load user data.
+      </div>
+    );
   }
 
   return (
-    <Box
-      sx={{
-       
-        width: "100%",
-        padding: 2,  // Added padding around the content for better spacing
-      }}
-    >
-    <UserActivityGraph/>
-      <TableContainer component={Paper} sx={{ width: "100%" }}>
+    <Box sx={{ width: '100%', padding: 2 }}>
+      {/* ✅ Optional: User’s activity graph */}
+      <UserActivityGraph />
+
+      {/* ✅ User & referred users table */}
+      <TableContainer component={Paper} sx={{ width: '100%', mt: 3 }}>
         <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
@@ -60,17 +75,24 @@ export default function CollapsibleTable() {
               <TableCell>Email</TableCell>
               <TableCell align="right">Points</TableCell>
               <TableCell align="right">Role</TableCell>
+              <TableCell align="right">Designation</TableCell>
               <TableCell align="right">Referred</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* Render logged-in user as the parent row */}
+            {/* ✅ Parent row: logged-in user */}
             <Row key={loggedInUser.uid} row={loggedInUser} isParent={true} />
-        
+
+            {/* ✅ Child rows: referred users */}
+            {referredUsers.map((refUser) => (
+              <Row key={refUser.uid || refUser.email} row={refUser} isParent={false} />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <ReferredUserLogs/>
+
+      {/* ✅ Referred user activity logs */}
+      <ReferredUserLogs />
     </Box>
   );
 }

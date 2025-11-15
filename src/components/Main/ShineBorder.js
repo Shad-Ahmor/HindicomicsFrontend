@@ -1,5 +1,5 @@
 import React from 'react'
-import '../css/ShineBorder.css';
+import '../../styles/css/ShineBorder.css';
 
 export default function ShineBorder({ children }) {
     return (

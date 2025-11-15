@@ -40,7 +40,7 @@ const AddCourse = () => {
 
     try {
       // Send the course data to the backend
-      const response = await axios.post('https://hindicomicsbackend.onrender.com/courses/addcourse', courseData);
+      const response = await axios.post('http://localhost:5000/courses/addcourse', courseData);
       alert(response.data.message);
     } catch (error) {
       console.error('Error adding course:', error);

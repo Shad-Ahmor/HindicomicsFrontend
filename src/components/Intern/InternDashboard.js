@@ -10,7 +10,7 @@ import {
   Legend
 } from 'chart.js';
 import axios from 'axios';
-import '../css/ShineBorder.css';
+import '../../styles/css/ShineBorder.css';
 import { decryptData } from '../Security/cryptoUtils';
 import {
   Grid,
@@ -55,7 +55,7 @@ const Dashboard = () => {
     const userId = decryptData(localStorage.getItem('uid'));
     const fetchAttendance = async () => {
       try {
-        const response = await axios.get(`https://hindicomicsbackend.onrender.com/auth/attendance-summary/${userId}`);
+        const response = await axios.get(`http://localhost:5000/auth/attendance-summary/${userId}`);
         const data = response.data;
         setAttendance(data.totalAttendance);
         setLeaves(data.totalLeave);

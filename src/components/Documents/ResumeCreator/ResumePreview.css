@@ -1,0 +1,262 @@
+/* ☀️ ResumePreview.css - 100% ATS Friendly, Clean & Modern Design with Vibrant Accents */
+
+/* ---------------------------------------------------- */
+/* 1. Global & Container Styles (ATS Compliance) */
+/* ---------------------------------------------------- */
+.resume-page-wrapper {
+    background-color: #f5fafd; /* Very light, cool background for contrast */
+    min-height: 100vh;
+    padding: 30px 0;
+}
+
+.resume-container {
+    /* ATS Safety: Standard font, size, and margin */
+    font-family: 'Georgia', Times, serif; /* Clean, professional serif font */
+    font-size: 10.5pt; /* Slightly refined font size */
+    max-width: 8.5in; 
+    margin: 30px auto;
+    padding: 0.7in; 
+    
+    /* Visual Presentation: Clean & Modern */
+    background-color: #ffffff;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); /* Stronger shadow for elevation */
+    color: #212121; /* Rich dark text */
+    line-height: 1.55; /* Improved readability */
+    border: 1px solid #e0e0e0; /* Subtle surrounding border */
+}
+
+/* Loading & Error Screens (Better Visuals) */
+.loading-screen, .error-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 18pt;
+    color: #00a896; /* Teal loader text */
+    background-color: #ffffff;
+}
+.error-message {
+    color: #dc3545;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Back Button - VIBRANT ACCENT */
+.print-hide {
+    display: block;
+    margin: 0 auto 30px auto;
+    width: 8.5in;
+    max-width: 90%;
+    padding: 10px 15px;
+    background-color: #00a896; /* Vibrant Teal */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 10.5pt;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.2s;
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(0, 168, 150, 0.3);
+}
+.print-hide:hover {
+    background-color: #007c6f; /* Darker Teal on hover */
+    transform: translateY(-1px);
+}
+
+
+/* ---------------------------------------------------- */
+/* 2. Header and Contact Styling */
+/* ---------------------------------------------------- */
+.resume-header {
+    text-align: center;
+    margin-bottom: 25pt; /* More vertical space */
+}
+
+.resume-name {
+    font-size: 28pt; /* Larger name */
+    font-weight: 900; /* Extra bold */
+    color: #d4d5e4; /* Deep Navy Blue for strong identity */
+    text-transform: uppercase;
+    letter-spacing: 2.5px; /* Prominent spacing */
+    margin-bottom: 5pt;
+}
+
+.resume-title {
+    font-size: 15pt;
+    font-weight: 400;
+    color: #495057; /* Subdued color for title */
+    margin-bottom: 10pt;
+}
+
+.contact-info {
+    font-size: 10pt;
+    color: #6c757d;
+    display: flex;
+    justify-content: center;
+    gap: 15pt; /* Increased gap */
+    flex-wrap: wrap;
+    border-top: 2px solid #e0e0e0; /* Clean light separator line */
+    padding-top: 10pt;
+}
+
+.contact-info a {
+    color: #00a896; /* VIBRANT ACCENT for links */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+.contact-info a:hover {
+    color: #007c6f;
+    text-decoration: underline;
+}
+
+/* ---------------------------------------------------- */
+/* 3. Section Styling (Crucial for ATS) */
+/* ---------------------------------------------------- */
+.resume-section {
+    margin-top: 25pt; /* Increased space before section */
+    margin-bottom: 20pt;
+}
+
+.section-heading {
+    font-size: 14pt; /* Slightly larger heading for punch */
+    font-weight: 800;
+    color: #1a237e; /* Strong Navy */
+    text-transform: uppercase;
+    border-bottom: 3px solid #00a896; /* VIBRANT ACCENT BORDER */
+    padding-bottom: 4pt;
+    margin-bottom: 18pt; /* More spacing below heading */
+    letter-spacing: 1.5px; 
+}
+
+.section-heading.small-heading {
+    font-size: 12pt;
+    border-bottom: 2px solid #00a896;
+    margin-bottom: 10pt;
+}
+
+/* Summary is plain text for ATS */
+.summary-text {
+    margin-top: 0;
+    color: #343a40;
+    line-height: 1.6;
+}
+
+
+/* ---------------------------------------------------- */
+/* 4. Experience, Education & Projects Details */
+/* ---------------------------------------------------- */
+.detail-item {
+    margin-bottom: 18pt; /* Increased space between items */
+}
+
+/* ATS-friendly structure */
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5pt;
+    font-weight: 700; 
+    margin-bottom: 3pt;
+}
+
+.item-role, .item-degree {
+    color: #1f2937; /* Very dark text */
+}
+
+.item-company, .item-school {
+    font-weight: 400; 
+    font-style: italic;
+    color: #495057;
+    margin-left: 10px;
+}
+
+.item-duration, .item-year {
+    font-weight: 600; /* Duration is clearly visible */
+    color: #00a896; /* VIBRANT ACCENT for duration */
+    white-space: nowrap; 
+}
+
+/* Standard bullet points are essential for ATS */
+.item-bullet-points {
+    list-style-type: disc;
+    margin-left: 20pt;
+    padding-left: 0;
+    font-size: 10.5pt;
+    color: #343a40;
+}
+.item-bullet-points li {
+    margin-bottom: 4pt;
+}
+
+.description-text { 
+    font-size: 10.5pt;
+    color: #343a40;
+    margin-top: 3pt;
+}
+
+.project-link {
+    font-weight: 600;
+    font-size: 10.5pt;
+    color: #00a896; /* VIBRANT ACCENT for links */
+    text-decoration: none;
+    margin-left: 10px;
+}
+.project-link:hover {
+    text-decoration: underline;
+    color: #007c6f;
+}
+.project-tech {
+    font-size: 10pt;
+    color: #6c757d;
+    margin-top: 4pt;
+    font-style: italic;
+}
+
+/* ---------------------------------------------------- */
+/* 5. Skills and Misc Styling */
+/* ---------------------------------------------------- */
+.skills-list-text, .misc-list {
+    font-size: 11pt;
+    color: #343a40;
+    margin-top: 5pt;
+    line-height: 1.8; /* Better spacing for skills */
+}
+
+.skill-category-label {
+    font-weight: 700;
+    color: #1a237e; /* Navy for labels */
+    margin-right: 12px;
+}
+
+.misc-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 50pt; /* Increased space for clean separation */
+}
+.misc-sub-section {
+    flex: 1;
+}
+
+.education-grade {
+    font-size: 10.5pt;
+    color: #555555;
+    margin-top: 2pt;
+}
+
+/* Media Query for Print/Export (Ensuring ATS compatibility) */
+@media print {
+    .resume-page-wrapper {
+        padding: 0;
+        background-color: white;
+    }
+    .resume-container {
+        box-shadow: none;
+        margin: 0;
+        border: none;
+        padding: 0.6in;
+    }
+    .print-hide {
+        display: none;
+    }
+}

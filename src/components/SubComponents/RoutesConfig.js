@@ -1,14 +1,14 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from '../Main/Dashboard';
-import Signup from '../Main/Signup';
+import CreateUser from '../PermissionManage/CreateUser';
 import CategoryDetail from '../CategoryDetail';
 import Referal from '../Marketting/Referal'
-import Cookies from 'universal-cookie';
-import Login from '../Main/Login';
+import CertificatePage from '../Documents/CertificatePage';
+import Login from '../Authentication/Login';
 import Comics from '../Comics';
 import Users from '../users';
-import JokeList from '../Jokes/JokeList';
+import ContentManager from '../Jokes/ContentManager';
 import AdmobPage from '../AdmobPage';
 import Help from '../Help';
 import SuggestionsPage from '../SuggestionsPage';
@@ -16,21 +16,29 @@ import CouponPage from '../CouponPage';
 import UserLogs from '../UserLogs';
 import ActivityTracker from '../userLogs/ActivityTracker'
 import CourseSelectionPage from '../Course/CourseSelectionPage';  
-import AdminAssignmentPage from '../Assignment/AdminAssignmentPage';
+import AdminAssignmentPage from '../Assignment/CreateAssignment';
 import SubmitTaskPage from '../Assignment/SubmitTaskPage';
 import FinalReviewPage from '../Assignment/AdminReviewPage';
-import ReviewSubmissionPage from '../Assignment/ReviewSubmissionPage';
-import CompanyHierarchy from '../Profile/CompanyHierarchy';
+import CompanyHierarchy from '../Hierarchy/Profile/CompanyHierarchy';
+import HierarchyManagement from '../Hierarchy/HierarchyManagement';
 import NotFound from './NotFound'; // Your 404 component
 import AssignmentResults from '../Assignment/AssignmentResults';
 import SelectedCourse from '../Course/SelectedCourse';
 import AddCourse from '../Course/AddCourse';
-import ChangePassword from '../Main/ChangePassword';
+import ChangePassword from '../Authentication/ChangePassword';
 import Attendance from '../Main/Attendance';
-import PermissionManagement from '../Main/PermissionManagement';
-import PricingTable from '../Assignment/PricingTable'
+import PermissionManagement from '../PermissionManage/RBACManagement';
+import PricingTable from '../Authentication/PricingTable'
 import InternDashboard from '../Intern/InternDashboard'
 import ManagerReview from '../Assignment/ManagerReview';
+import AnimatedStepper from '../Authentication/AnimatedStepper';
+import ResumeCreator from '../Documents/ResumeCreator/ResumeCreator';
+import AbacManagement from '../PermissionManage/AbacManagement';
+import EntityManagement from '../PermissionManage/EntityManagement';
+import MethodManagement from '../PermissionManage/MethodManagement';
+import ModuleManagement from '../PermissionManage/ModuleManagement';
+import PositionManagement from '../PermissionManage/PositionManagement';
+import UbacManagement from '../PermissionManage/UbacManagement';
 const RoutesConfig = ({  setIsLoggedIn, isLoggedIn, history,token, settoken,setRole,role,setUserId,userId, element, ...rest}) => {
 
   const isAuthenticated = () => {
@@ -40,97 +48,134 @@ const RoutesConfig = ({  setIsLoggedIn, isLoggedIn, history,token, settoken,setR
   // setRole(localStorage.getItem('role'))
 
   return (
+
+
     <Routes>
+<Route path="/onboard" element={<AnimatedStepper />} />
+
                 <Route component={NotFound} /> {/* Catch-all route for 404 */}
-
-            <Route path="/" element={<Navigate to="/attendance" />} />
-            <Route path="/login" element={!isAuthenticated() ? <Login settoken={settoken} setIsLoggedIn={setIsLoggedIn} setRole={setRole} setUserId={setUserId} /> : <Navigate to="/attendance" />}  />
-            <Route path="*" element={<Navigate to="/attendance" />} />
-
+                <Route path="/" element={<Navigate to="/attendance" />} />
+                <Route
+        path="/login"
+        element={!isAuthenticated() ? <Login settoken={settoken} setIsLoggedIn={setIsLoggedIn} setRole={setRole} setUserId={setUserId} /> : <Navigate to="/login" />}
+      />
+      
+      
+                  <Route path="*" element={<Navigate to="/attendance" />} />
+          <Route
+              path="/entity/hierarchy"
+              element={isAuthenticated() ? <HierarchyManagement  />
+              : <Navigate to="/login" />}
+            />
+            
           <Route
               path="/profile"
               element={isAuthenticated() ? <CompanyHierarchy  />
-              : <Navigate to="/attendance" />}
+              : <Navigate to="/login" />}
             />
   <Route
               path="/plans"
               element={isAuthenticated() ? <PricingTable userId={userId}  />
-              : <Navigate to="/attendance" />}
+              : <Navigate to="/login" />}
             />
         <Route
               path="/attendance"
               element={isAuthenticated() ? <Attendance  />
-              : <Navigate to="/attendance" />}
+              : <Navigate to="/login" />}
             />
           <Route
               path="/referal"
               element={isAuthenticated() ? <Referal  />
-              : <Navigate to="/attendance" />}
+              : <Navigate to="/login" />}
             />
             <Route
               path="/dashboard"
-              element={isAuthenticated() ? <Dashboard /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}
             />
 
             <Route
             path='/interndashboard'
-            element={isAuthenticated() ? <InternDashboard /> : <Navigate to="/attendance" />}
+            element={isAuthenticated() ? <InternDashboard /> : <Navigate to="/login" />}
             />
-              <Route path="/category/:category" element={isAuthenticated() ? <CategoryDetail  />: <Navigate to="/attendance" />} />
+              <Route path="/category/:category" element={isAuthenticated() ? <CategoryDetail  />: <Navigate to="/login" />} />
 
               <Route
               path="/createuser"
-              element={isAuthenticated() ? <Signup /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <CreateUser /> : <Navigate to="/login" />}
             />
                 <Route
               path="/permission"
-              element={isAuthenticated() ? <PermissionManagement /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <PermissionManagement /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/abacpermission"
+              element={isAuthenticated() ? <AbacManagement /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/ubacpermission"
+              element={isAuthenticated() ? <UbacManagement /> : <Navigate to="/login" />}
+            />
+               <Route
+              path="/entity"
+              element={isAuthenticated() ? <EntityManagement /> : <Navigate to="/login" />}
+            />
+             <Route
+              path="/position"
+              element={isAuthenticated() ? <PositionManagement /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/module"
+              element={isAuthenticated() ? <ModuleManagement /> : <Navigate to="/login" />}
+            />
+               <Route
+              path="/method"
+              element={isAuthenticated() ? <MethodManagement /> : <Navigate to="/login" />}
             />
                  <Route
               path="/passwordchange"
-              element={isAuthenticated() ? <ChangePassword /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <ChangePassword /> : <Navigate to="/login" />}
             />
         
             <Route
   path="/userlogs"
-  element={isAuthenticated() ? <UserLogs /> : <Navigate to="/attendance" />}
+  element={isAuthenticated() ? <UserLogs /> : <Navigate to="/login" />}
 />
             <Route
               path="/coupons"
-              element={isAuthenticated() ? <CouponPage /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <CouponPage /> : <Navigate to="/login" />}
             />
               <Route
               path="/activitytrack"
-              element={isAuthenticated() ? <ActivityTracker /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <ActivityTracker /> : <Navigate to="/login" />}
             />
             <Route
               path="/jokes"
-              element={isAuthenticated() ? <JokeList /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <ContentManager /> : <Navigate to="/login" />}
             />
               <Route
               path="/comic"
-              element={isAuthenticated() ? <Comics role={role} userId={userId} /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <Comics role={role} userId={userId} /> : <Navigate to="/login" />}
             />
                 <Route
               path="/admob"
-              element={isAuthenticated() ? <AdmobPage role={role} userId={userId} /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <AdmobPage role={role} userId={userId} /> : <Navigate to="/login" />}
             />
                    <Route
               path="/help"
-              element={isAuthenticated() ? <Help role={role} userId={userId} /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <Help role={role} userId={userId} /> : <Navigate to="/login" />}
             />
             <Route
             path="/suggestions"
-            element={isAuthenticated() ? <SuggestionsPage /> : <Navigate to="/attendance" />}
+            element={isAuthenticated() ? <SuggestionsPage /> : <Navigate to="/login" />}
           />
              <Route
               path="/user"
-              element={isAuthenticated() ? <Users role={role} userId={userId} /> : <Navigate to="/attendance" />}
+              element={isAuthenticated() ? <Users role={role} userId={userId} /> : <Navigate to="/login" />}
             />
    {/* Add Course Selection Route */}
-   <Route path="/course-selection" element={isAuthenticated() ? <CourseSelectionPage /> : <Navigate to="/attendance" />} />
-   <Route path="/course/:courseId" element={isAuthenticated() ? <SelectedCourse /> : <Navigate to="/attendance" />} />
-   <Route path="/addcourse" element={isAuthenticated() ? <AddCourse /> : <Navigate to="/attendance" />} />
+   <Route path="/course-selection" element={isAuthenticated() ? <CourseSelectionPage /> : <Navigate to="/login" />} />
+   <Route path="/course/:courseId" element={isAuthenticated() ? <SelectedCourse /> : <Navigate to="/login" />} />
+   <Route path="/addcourse" element={isAuthenticated() ? <AddCourse /> : <Navigate to="/login" />} />
 
    <Route
           path="/assign-task"
@@ -159,12 +204,25 @@ const RoutesConfig = ({  setIsLoggedIn, isLoggedIn, history,token, settoken,setR
         />
             {/* <Route
               path="/create-user"
-              element={isAuthenticated()? <CreateUser /> : <Navigate to="/attendance" />}
+              element={isAuthenticated()? <CreateUser /> : <Navigate to="/login" />}
             /> */}
 
        
             <Route path="*" element={<Navigate to="/attendance" />} />
+
+
+            <Route
+          path="/certificate"
+          element={isAuthenticated() ?  <CertificatePage /> : <Navigate to="/not-authorized" />}
+        />
+
+<Route
+          path="/resume"
+          element={isAuthenticated() ?  <ResumeCreator /> : <Navigate to="/not-authorized" />}
+        />
           </Routes>
+
+          
   );
 };
 

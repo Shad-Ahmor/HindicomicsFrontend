@@ -1,65 +1,99 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Collapse,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 
-
-export default  function Row(props) {
-  const { row, isParent } = props;  // Add isParent flag to distinguish parent rows from child rows
-  const [open, setOpen] = React.useState(false);
+export default function Row({ row, isParent }) {
+  const [open, setOpen] = useState(false);
 
   return (
     <>
-      <TableRow >
-        <TableCell>
+      {/* 🔹 Parent Row */}
+      <TableRow hover>
+        <TableCell sx={{ width: 50 }}>
           {isParent && (
-            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen((prev) => !prev)}
+            >
+              {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             </IconButton>
           )}
         </TableCell>
-        <TableCell component="th" scope="row">
+
+        <TableCell component="th" scope="row" sx={{ fontWeight: 500 }}>
           {row.email}
         </TableCell>
-        <TableCell align="right">{row.points}</TableCell>
-        <TableCell align="right">{row.role}</TableCell>
-        <TableCell align="right">{row.referred ? 'Yes' : 'No'}</TableCell>
+        <TableCell align="right">{row.points ?? 0}</TableCell>
+        <TableCell align="right" sx={{ textTransform: 'capitalize' }}>
+          {row.role || '—'}
+        </TableCell>
+        <TableCell align="right">
+          {row.referred ? 'Yes' : 'No'}
+        </TableCell>
       </TableRow>
+
+      {/* 🔹 Child Rows (Collapsible Section) */}
       {isParent && (
         <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
+          <TableCell
+            style={{ paddingBottom: 0, paddingTop: 0 }}
+            colSpan={5}
+          >
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box margin={1}>
-                <Typography variant="h6" gutterBottom component="div">
+                <Typography
+                  variant="subtitle1"
+                  gutterBottom
+                  component="div"
+                  sx={{ fontWeight: 600 }}
+                >
                   Referred Users
                 </Typography>
-                <Table size="small" aria-label="referred users">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Email</TableCell>
-                      <TableCell align="right">Points</TableCell>
-                      <TableCell align="right">Role</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {row.referredUsers?.map((referredUser) => (
-                      <TableRow key={referredUser.uid}>
-                        <TableCell>{referredUser.email}</TableCell>
-                        <TableCell align="right">{referredUser.points}</TableCell>
-                        <TableCell align="right">{referredUser.role}</TableCell>
+
+                {row.referredUsers?.length ? (
+                  <Table size="small" aria-label="referred users">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Email</TableCell>
+                        <TableCell align="right">Points</TableCell>
+                        <TableCell align="right">Role</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHead>
+                    <TableBody>
+                      {row.referredUsers.map((referredUser) => (
+                        <TableRow hover key={referredUser.uid}>
+                          <TableCell>{referredUser.email}</TableCell>
+                          <TableCell align="right">
+                            {referredUser.points ?? 0}
+                          </TableCell>
+                          <TableCell align="right" sx={{ textTransform: 'capitalize' }}>
+                            {referredUser.role || '—'}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ p: 1 }}
+                  >
+                    No referred users found.
+                  </Typography>
+                )}
               </Box>
             </Collapse>
           </TableCell>
@@ -72,10 +106,17 @@ export default  function Row(props) {
 Row.propTypes = {
   row: PropTypes.shape({
     email: PropTypes.string.isRequired,
-    points: PropTypes.number.isRequired,
-    role: PropTypes.string.isRequired,
-    referred: PropTypes.bool.isRequired,
-    referredUsers: PropTypes.array,  // List of referred users
+    points: PropTypes.number,
+    role: PropTypes.string,
+    referred: PropTypes.bool,
+    referredUsers: PropTypes.arrayOf(
+      PropTypes.shape({
+        uid: PropTypes.string,
+        email: PropTypes.string,
+        points: PropTypes.number,
+        role: PropTypes.string,
+      })
+    ),
   }).isRequired,
-  isParent: PropTypes.bool.isRequired,  // Flag to distinguish parent rows from child rows
+  isParent: PropTypes.bool.isRequired,
 };

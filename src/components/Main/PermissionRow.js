@@ -62,11 +62,22 @@ const PermissionRow = ({ permission, onDelete, onEdit }) => {
 
       {/* Permission Column with styled URL */}
       <TableCell>
-        <Tooltip title={`Permission URL: ${permission.baseurl}${permission.url}`} arrow>
+        <Tooltip title={`Permission Module: ${permission.baseurl}`} arrow>
           <StyledPermissionText
-            aria-label={`Permission URL: ${permission.baseurl}${permission.url}`}
+            aria-label={`Permission Module: ${permission.baseurl}`}
           >
-            {`${permission.baseurl}${permission.url}`}
+            {`${permission.baseurl}`}
+          </StyledPermissionText>
+        </Tooltip>
+      </TableCell>
+
+
+      <TableCell>
+        <Tooltip title={`Permission URL: ${permission.url}`} arrow>
+          <StyledPermissionText
+            aria-label={`Permission URL: ${permission.url}`}
+          >
+            {`${permission.url}`}
           </StyledPermissionText>
         </Tooltip>
       </TableCell>

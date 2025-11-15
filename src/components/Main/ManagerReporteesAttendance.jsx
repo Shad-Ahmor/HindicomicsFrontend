@@ -106,7 +106,7 @@ const ManagerReporteesAttendance = () => {
     const fetchAttendance = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('https://hindicomicsbackend.onrender.com/auth/manager/attendance-reportees', {
+        const res = await axios.get('http://localhost:5000/auth/manager/attendance-reportees', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setReportees(res.data);
